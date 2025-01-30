@@ -1,5 +1,5 @@
 import { App } from "astal/gtk4";
-import { Variable } from "astal";
+import { bind, Variable } from "astal";
 
 import style from "./style.scss";
 
@@ -14,6 +14,7 @@ const verticalBar = Variable(true)
 
 App.start({
   css: style,
+  instanceName: "stash",
   main() {
     // notificationPopup();
     quicksettings(verticalBar);
@@ -21,5 +22,21 @@ App.start({
     applauncher();
     osd();
     bar(verticalBar);
+  },
+  client(message: (msg: string) => string, ...args: Array<string>) {
+    if (args[0] === "toggle") {
+      const res = message(JSON.stringify({
+        action: "toggle",
+        window: args[1]
+      }))
+      print(res)
+    }
+  },
+  requestHandler(request: string, res: (response: any) => void) {
+    const req = JSON.parse(request)
+    if (req.action === "toggle") {
+      App.toggle_window(req.window)
+    }
+    res(req)
   }
 });

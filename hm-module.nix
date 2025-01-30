@@ -12,13 +12,23 @@ in
 {
   options.programs.stash = {
     enable = lib.mkEnableOption "stash";
-    hyprland.blur.enable = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      example = true;
-      description = ''
-        Enable layer rules to blur the widget's background in hyprland.
-      '';
+    hyprland = {
+      binds.enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        example = true;
+        description = ''
+          Enable default binds to toggle the widgets in hyprland.
+        '';
+      };
+      blur.enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        example = true;
+        description = ''
+          Enable layer rules to blur the widget's background in hyprland.
+        '';
+      };
     };
     systemd.enable = lib.mkOption {
       type = lib.types.bool;
@@ -52,14 +62,17 @@ in
           };
         };
       })
+      (lib.mkIf cfg.hyprland.binds.enable {
+        wayland.windowManager.hyprland.extraConfig = ''
+          bind=SUPER,Space,exec, stash toggle applauncher
+          bind=SUPER,n,exec, ags stash quicksettings
+          bind=SUPERSHIFT,n,exec, stash toggle infopannel
+        '';
+      })
       (lib.mkIf cfg.hyprland.blur.enable {
         wayland.windowManager.hyprland.extraConfig = ''
           layerrule=blur,gtk4-layer-shell
           layerrule=ignorezero,gtk4-layer-shell
-           
-          bind=SUPER,Space,exec, ags toggle applauncher
-          bind=SUPER,n,exec, ags toggle quicksettings
-          bind=SUPERSHIFT,n,exec, ags toggle infopannel
         '';
       })
     ]
