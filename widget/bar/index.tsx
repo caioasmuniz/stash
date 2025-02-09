@@ -31,6 +31,7 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
       Astal.WindowAnchor.LEFT |
       Astal.WindowAnchor.RIGHT}>
     <centerbox
+    cssClasses={["bar-centerbox"]}
       orientation={vertical ?
         Gtk.Orientation.VERTICAL :
         Gtk.Orientation.HORIZONTAL}>

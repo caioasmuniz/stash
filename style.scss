@@ -41,7 +41,10 @@ window.bar.vert {
 
 window.bar {
     border-radius: 0 0 var(--window-radius) var(--window-radius);
-    padding: 2px;
+
+    .bar-centerbox {
+        padding: 2px;
+    }
 
     * {
         margin: 0px;
