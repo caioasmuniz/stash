@@ -54,7 +54,7 @@ window.bar {
         min-height: 30px;
 
         image {
-            -gtk-icon-size: 2em;
+            -gtk-icon-size: 24px;
         }
     }
 
@@ -79,7 +79,7 @@ window.bar {
     }
 
     .vert {
-        padding: 8px 0px;
+        padding: 4px 0px;
     }
 
     .sys-usage {
@@ -93,13 +93,18 @@ window.bar {
     }
 
     .ws-button {
-        padding: 2px;
+        padding: 0px 2px;
         min-width: 30px;
         min-height: 30px;
+        -gtk-icon-size: 24px;
 
-        image {
-            -gtk-icon-size: 24px;
+        .unfocused {
+            filter: brightness(150%) saturate(0%);
         }
+    }
+
+    .ws-button.vert {
+        padding: 2px 0px;
     }
 
     .special {
