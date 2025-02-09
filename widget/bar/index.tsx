@@ -14,8 +14,6 @@ const hyprland = Hyprland.get_default()
 const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
   <window
     visible
-    marginBottom={vertical ? 0 : 4}
-    marginRight={vertical ? 4 : 0}
     cssClasses={["bar", "background",
       vertical ? "vert" : ""]}
     application={App}
