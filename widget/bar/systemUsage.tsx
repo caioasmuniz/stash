@@ -56,7 +56,7 @@ const Indicator = ({ value, label, unit, vertical }:
       valign={Gtk.Align.CENTER}
       halign={Gtk.Align.CENTER}
       spacing={2}
-      vertical>
+      vertical={vertical}>
       <label
         label={label}
         cssClasses={["title"]} />

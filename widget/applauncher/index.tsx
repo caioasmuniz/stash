@@ -42,6 +42,7 @@ const AppButton = ({ app }: { app: Apps.Application }) =>
   </button>
 
 export default () => <window
+  defaultHeight={1}
   valign={Gtk.Align.CENTER}
   name={"applauncher"}
   margin={12}
@@ -49,7 +50,6 @@ export default () => <window
   visible={false}
   cssClasses={["applauncher", "background"]}
   keymode={Astal.Keymode.ON_DEMAND}
-  exclusivity={Astal.Exclusivity.EXCLUSIVE}
   monitor={bind(hyprland, "focusedMonitor").as(m => m.id)}
   anchor={Astal.WindowAnchor.LEFT | Astal.WindowAnchor.TOP}
   onShow={() => text.set("")}>
