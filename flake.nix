@@ -58,6 +58,7 @@
               extraPackages = deps;
             })
             pkgs.nixd
+            pkgs.brightnessctl
             pkgs.nixfmt-rfc-style
           ];
         };
