@@ -23,6 +23,18 @@ window.applauncher {
     }
 }
 
+window.notif-popup {
+    background-color: transparent;
+}
+
+.notification {
+    background: var(--window-bg-color);
+    color: var(--window-fg-color);
+    border-radius: 12px;
+    padding: 4px;
+    border: 1px solid var(--border-color);
+}
+
 .slider {
     min-width: 120px;
     padding: 8px;
@@ -33,10 +45,6 @@ window.applauncher {
     image {
         -gtk-icon-size: 1.5em;
     }
-}
-
-window.bar.vert {
-    border-radius: 0 var(--window-radius) var(--window-radius) 0;
 }
 
 window.bar {
@@ -51,6 +59,10 @@ window.bar {
         padding: 0px;
     }
 
+    &.vert {
+        border-radius: 0 var(--window-radius) var(--window-radius) 0;
+    }
+
     .launcher {
         padding: 0px;
         min-width: 30px;
@@ -62,7 +74,11 @@ window.bar {
     }
 
     .clock {
-        padding: 0px 8px;
+        padding: 0px 4px;
+
+        &.vert {
+            padding: 4px 0px;
+        }
 
         .date {
             font-size: 0.5em;
@@ -71,18 +87,19 @@ window.bar {
         .time {
             font-size: 1.75em;
         }
+
     }
 
     .sys-indicators {
         padding: 0px 8px;
 
+        &.vert {
+            padding: 4px 0px;
+        }
+
         image {
             -gtk-icon-size: 18px;
         }
-    }
-
-    .vert {
-        padding: 4px 0px;
     }
 
     .sys-usage {
@@ -101,32 +118,20 @@ window.bar {
         min-height: 30px;
         -gtk-icon-size: 24px;
 
+        &.vert {
+            padding: 2px 0px;
+        }
+
         .unfocused {
             filter: brightness(150%) saturate(0%);
         }
+
+        &.special {
+            background: oklab(from var(--success-bg-color) l a b / 0.25);
+
+            &.active {
+                background: var(--success-bg-color);
+            }
+        }
     }
-
-    .ws-button.vert {
-        padding: 2px 0px;
-    }
-
-    .special {
-        background: oklab(from var(--success-bg-color) l a b / 0.25);
-    }
-
-    .special.active {
-        background: var(--success-bg-color);
-    }
-}
-
-window.notif-popup {
-    background-color: transparent;
-}
-
-.notification {
-    background: var(--window-bg-color);
-    color: var(--window-fg-color);
-    border-radius: 12px;
-    padding: 4px;
-    border: 1px solid var(--border-color);
 }
