@@ -44,7 +44,12 @@ export default ({ monitor, vertical }:
       .filter(ws => ws.monitor === monitor)
       .sort((a, b) => a.id - b.id)
       .map(ws => <ToggleButton
+        active={workspaces.focusedWs === ws}
         cursor={Gdk.Cursor.new_from_name("pointer", null)}
+        cssClasses={["pill", "ws-button",
+          workspaces.focusedWs === ws ? "active" : "",
+          ws.id < 0 ? "special" : "",
+          vertical ? "vert" : ""]}
         onClicked={() => {
           if (workspaces.focusedWs.id < 0 || ws.id < 0)
             hyprland.message_async(
@@ -52,11 +57,7 @@ export default ({ monitor, vertical }:
               null)
           if (ws.id > 0 && workspaces.focusedWs.id !== ws.id)
             ws.focus()
-        }}
-        active={workspaces.focusedWs === ws}
-        cssClasses={["pill", "ws-button",
-          workspaces.focusedWs === ws ? "active" : "",
-          ws.id < 0 ? "special" : ""]}>
+        }}>
         <box
           spacing={4}
           vertical={vertical}
@@ -64,6 +65,11 @@ export default ({ monitor, vertical }:
           valign={Gtk.Align.CENTER}>
           {bind(ws, "clients").as(clients =>
             clients.map(client => <image
+              cssClasses={bind(hyprland, "focusedClient").as(focused => {
+                if (focused === client)
+                  return ["focused"]
+                return ["unfocused"]
+              })}
               iconName={getIcon(client)} />
             ))}
         </box>
