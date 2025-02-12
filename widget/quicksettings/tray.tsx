@@ -11,6 +11,12 @@ export default () => <box
     items.map(item =>
       <menubutton
         cssClasses={["circular"]}
+        setup={self => {
+          self.insert_action_group("dbusmenu", item.actionGroup)
+        }}
+        tooltipMarkup={bind(item, "tooltipMarkup")}
+        popover={undefined}
+        actionGroup={bind(item, "actionGroup").as(ag => ["dbusmenu", ag])}
         menuModel={item.menuModel}
         tooltip_markup={bind(item, "tooltip_markup")}>
         <image gicon={item.gicon} />
