@@ -43,6 +43,7 @@ export default () =>
       </box>
     </box>
     <ScrolledWindow
+      hscrollbarPolicy={Gtk.PolicyType.NEVER}
       propagateNaturalHeight
       maxContentHeight={400}>
       <box
@@ -59,5 +60,4 @@ export default () =>
         )}
       </box>
     </ScrolledWindow>
-
   </box>
