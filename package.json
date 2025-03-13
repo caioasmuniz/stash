@@ -1,6 +1,6 @@
 {
     "dependencies": {
-        "astal": "/nix/store/59qzvpfas28407sfdchch6yngnckxm6q-astal-gjs/share/astal/gjs"
+        "astal": "/nix/store/ddwv4v0im0hw0ga8ipw3cn9xh927zn8g-astal-gjs/share/astal/gjs"
     },
     "name": "stash"
 }
