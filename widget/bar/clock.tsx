@@ -1,24 +1,24 @@
-import { Variable, GLib, bind } from "astal"
-import { App, Gtk } from "astal/gtk4"
-import Gdk from "gi://Gdk?version=4.0"
-import { ToggleButton } from "../../lib/astalified"
+import { GLib } from "astal"
+import { bind, Poll, State } from "ags/state"
+import { Gtk, Gdk } from "ags/gtk4"
+import App from "ags/gtk4/app"
 
 export default ({ vertical }: { vertical: boolean }) => {
-  const day = Variable<string>("").poll(1000, () =>
+  const day = new Poll<string>("", 1000, () =>
     GLib.DateTime.new_now_local().get_day_of_month().toString())
-  const month = Variable<string>("").poll(1000, () =>
+  const month = new Poll<string>("", 1000, () =>
     GLib.DateTime.new_now_local().format("%b")!)
-  const hour = Variable<string>("").poll(1000, () =>
+  const hour = new Poll<string>("", 1000, () =>
     GLib.DateTime.new_now_local().format("%H")!)
-  const minute = Variable<string>("").poll(1000, () =>
+  const minute = new Poll<string>("", 1000, () =>
     GLib.DateTime.new_now_local().format("%M")!)
 
-  return <ToggleButton
+  return <Gtk.ToggleButton
     hexpand={vertical}
     cssClasses={["pill", "clock", vertical ? "vert" : ""]}
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
-    active={bind(App.get_window("infopannel")!, "visible")}
-    onClicked={() => App.toggle_window("infopannel")}>
+    // active={bind(App.get_window("infopannel")!, "visible")}
+    $clicked={() => App.toggle_window("infopannel")}>
     <box
       halign={Gtk.Align.CENTER}
       valign={Gtk.Align.CENTER}
@@ -46,5 +46,5 @@ export default ({ vertical }: { vertical: boolean }) => {
         />
       </box>
     </box>
-  </ToggleButton>
+  </Gtk.ToggleButton>
 }

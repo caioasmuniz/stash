@@ -1,12 +1,11 @@
-import { bind } from "astal";
-import { Gdk } from "astal/gtk4";
-import App from "astal/gtk4/app";
-import { ToggleButton } from "../../lib/astalified";
+import { bind } from "ags/state";
+import { Gdk, Gtk } from "ags/gtk4";
+import App from "ags/gtk4/app";
 
-export default () => <ToggleButton
+export default () => <Gtk.ToggleButton
   cursor={Gdk.Cursor.new_from_name("pointer", null)}
-  active={bind(App.get_window("applauncher")!, "visible")}
+  // active={bind(App.get_window("applauncher")!, "visible")}
   cssClasses={["circular", "launcher"]}
-  onClicked={() => App.toggle_window("applauncher")}>
+  $clicked={() => App.toggle_window("applauncher")}>
   <image iconName={"nix-snowflake"} />
-</ToggleButton>
+</Gtk.ToggleButton>

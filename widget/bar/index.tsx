@@ -1,4 +1,5 @@
-import { Astal, App, Gtk } from "astal/gtk4"
+import { Astal, Gtk } from "ags/gtk4"
+import App from "ags/gtk4/app"
 
 import Hyprland from "gi://AstalHyprland";
 
@@ -7,7 +8,7 @@ import SystemUsage from "./systemUsage";
 import Workspaces from "./workspaces";
 import Clock from "./clock";
 import Launcher from "./launcher";
-import { Variable } from "astal";
+// import { Variable } from "astal";
 
 const hyprland = Hyprland.get_default()
 
@@ -29,7 +30,7 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
       Astal.WindowAnchor.LEFT |
       Astal.WindowAnchor.RIGHT}>
     <centerbox
-    cssClasses={["bar-centerbox"]}
+      cssClasses={["bar-centerbox"]}
       orientation={vertical ?
         Gtk.Orientation.VERTICAL :
         Gtk.Orientation.HORIZONTAL}>
@@ -38,8 +39,8 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
         vertical={vertical}
         halign={Gtk.Align.START}>
         <Launcher />
-        <SystemUsage vertical={vertical} />
-        <Workspaces vertical={vertical} monitor={monitor} />
+        {/* <SystemUsage vertical={vertical} /> */}
+        {/* <Workspaces vertical={vertical} monitor={monitor} /> */}
       </box>
       <Clock vertical={vertical} />
       <box
@@ -47,21 +48,21 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
         vertical={vertical}
         valign={vertical ? Gtk.Align.END : Gtk.Align.FILL}
         halign={vertical ? Gtk.Align.FILL : Gtk.Align.END} >
-        <SystemIndicators vertical={vertical} />
+        {/* <SystemIndicators vertical={vertical} /> */}
       </box>
     </centerbox>
-  </window> as Astal.Window
+  </window>
 
-export default (vertical: Variable<boolean>) => {
+export default () => {
   const bars = new Map<Hyprland.Monitor, Astal.Window>()
 
   // initialize
   for (const monitor of hyprland.get_monitors()) {
-    bars.set(monitor, bar(monitor, vertical.get()))
+    bars.set(monitor, bar(monitor, true) as Astal.Window)
   }
 
   hyprland.connect("monitor-added", (_, monitor) => {
-    bars.set(monitor, bar(monitor, vertical.get()))
+    bars.set(monitor, bar(monitor, true) as Astal.Window)
   })
 
   hyprland.connect("monitor-removed", (_, id) => {
@@ -69,10 +70,10 @@ export default (vertical: Variable<boolean>) => {
     bars.delete(hyprland.get_monitor(id))
   })
 
-  vertical.subscribe(vert => {
-    const monitor = hyprland.focusedMonitor
-    bars.get(monitor)?.close()
-    bars.delete(monitor)
-    bars.set(monitor, bar(monitor, vert))
-  })
+  // vertical.subscribe(vert => {
+  //   const monitor = hyprland.focusedMonitor
+  //   bars.get(monitor)?.close()
+  //   bars.delete(monitor)
+  //   bars.set(monitor, bar(monitor, vert))
+  // })
 }
