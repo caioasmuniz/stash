@@ -21,46 +21,35 @@ const timeTo = Variable.derive([
     charging ? timeToFull : -timeToEmpty)
 
 export default () => <box
-  spacing={4}
-// css={`
-// border-radius:12px;
-// background:@theme_bg_color;
-// padding:4px;
-// border:1px solid @borders;`}
->
+  spacing={4}>
   <levelbar
     value={bind(battery, "percentage")}
     widthRequest={100}
-    heightRequest={50}
-  // css={"color:@theme_text_color;min-width:100px;"}
-  >
+    heightRequest={50}>
     <label
       label={bind(battery, "percentage")
-        .as(p => `${(p * 100).toFixed(0)}%`)}
-    // css={`
-    //   color:@theme_text_color;
-    //   font-weight:bold;
-    //   font-size:100%;`}
-    />
+        .as(p => `${(p * 100).toFixed(0)}%`)} />
   </levelbar>
-  <box vertical hexpand valign={Gtk.Align.CENTER}>
-    <label label={"Battery Info"} halign={Gtk.Align.CENTER}
-    // css={`color:@theme_text_color;font-weight:bold;font-size:2em;`} 
-    />
-
-    <label halign={Gtk.Align.START} label={bind(timeTo).as(timeTo =>
-      `${timeTo < 0 ? "Discharged" : "Charged"} in: ${lengthStr(Math.abs(timeTo))}`)}
-    // css={`color:@theme_text_color;font-weight:bold;`} 
-    />
-
-    <label halign={Gtk.Align.START} label={bind(battery, "energyRate").as(rate =>
-      `Rate of ${battery.get_charging() ? "Charge" : "discharge"}: ${rate.toFixed(2)}W`)}
-    // css={`color:@theme_text_color;font-weight:bold;`} 
-    />
-    <label halign={Gtk.Align.START} label={bind(battery, "energy").as(energy =>
-      `Energy: ${energy.toPrecision(2)}/${battery.energyFull}Wh`)}
-    // css={`color:@theme_text_color;font-weight:bold;`}
-    />
+  <box
+    vertical
+    hexpand
+    valign={Gtk.Align.CENTER}>
+    <label
+      label={"Battery Info"}
+      cssClasses={["title-2"]}
+      halign={Gtk.Align.CENTER} />
+    <label
+      halign={Gtk.Align.START}
+      label={bind(timeTo).as(timeTo =>
+        `${timeTo < 0 ? "Discharged" : "Charged"} in: ${lengthStr(Math.abs(timeTo))}`)} />
+    <label
+      halign={Gtk.Align.START}
+      label={bind(battery, "energyRate").as(rate =>
+        `Rate of ${battery.get_charging() ? "Charge" : "discharge"}: ${rate.toFixed(2)}W`)} />
+    <label
+      halign={Gtk.Align.START}
+      label={bind(battery, "energy").as(energy =>
+        `Energy: ${energy.toPrecision(2)}/${battery.energyFull}Wh`)} />
   </box>
 </box>
 

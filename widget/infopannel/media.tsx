@@ -51,7 +51,8 @@ export default () => <box
         <box>
           <label
             wrap
-            cssClasses={["title"]}
+            maxWidthChars={30}
+            cssClasses={["title-4"]}
             label={bind(player, "title")} />
           <image
             cssClasses={["icon"]}

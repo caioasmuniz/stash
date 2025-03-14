@@ -8,15 +8,18 @@ import Battery from "./battery"
 
 const Title = () =>
   <box halign={Gtk.Align.CENTER}>
-    <label label={"Info Pannel"} />
+    <label 
+    cssClasses={["title-1"]}
+    label={"Info Pannel"} />
   </box>
 
 export default (vertical: Variable<boolean>) => <window
   name="infopannel"
-  // cssClasses={["infopannel"]}
+  cssClasses={["infopannel"]}
   application={App}
   keymode={Astal.Keymode.ON_DEMAND}
-  margin={12} visible={false}
+  margin={12}
+  visible={false}
   anchor={bind(vertical).as(vertical => vertical ?
     Astal.WindowAnchor.LEFT :
     Astal.WindowAnchor.TOP)}
