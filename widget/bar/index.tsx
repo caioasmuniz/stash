@@ -8,7 +8,7 @@ import SystemUsage from "./systemUsage";
 import Workspaces from "./workspaces";
 import Clock from "./clock";
 import Launcher from "./launcher";
-// import { Variable } from "astal";
+import { Variable } from "astal";
 
 const hyprland = Hyprland.get_default()
 
@@ -35,20 +35,23 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
         Gtk.Orientation.VERTICAL :
         Gtk.Orientation.HORIZONTAL}>
       <box
+        _type="start"
         spacing={4}
-        vertical={vertical}
-        halign={Gtk.Align.START}>
+        vertical={vertical}>
         <Launcher />
         {/* <SystemUsage vertical={vertical} /> */}
         {/* <Workspaces vertical={vertical} monitor={monitor} /> */}
       </box>
-      <Clock vertical={vertical} />
+      <box _type="center">
+        <Clock vertical={vertical} />
+      </box>
       <box
+        _type="end"
         spacing={4}
         vertical={vertical}
         valign={vertical ? Gtk.Align.END : Gtk.Align.FILL}
         halign={vertical ? Gtk.Align.FILL : Gtk.Align.END} >
-        {/* <SystemIndicators vertical={vertical} /> */}
+        <SystemIndicators vertical={vertical} />
       </box>
     </centerbox>
   </window>

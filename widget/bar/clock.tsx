@@ -1,5 +1,5 @@
 import { GLib } from "astal"
-import { bind, Poll, State } from "ags/state"
+import { Poll } from "ags/state"
 import { Gtk, Gdk } from "ags/gtk4"
 import App from "ags/gtk4/app"
 
