@@ -29,7 +29,7 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
       Astal.WindowAnchor.LEFT |
       Astal.WindowAnchor.RIGHT}>
     <centerbox
-    cssClasses={["bar-centerbox"]}
+      cssClasses={["bar-centerbox"]}
       orientation={vertical ?
         Gtk.Orientation.VERTICAL :
         Gtk.Orientation.HORIZONTAL}>
@@ -39,14 +39,14 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
         halign={Gtk.Align.START}>
         <Launcher />
         <SystemUsage vertical={vertical} />
-        <Workspaces vertical={vertical} monitor={monitor} />
       </box>
-      <Clock vertical={vertical} />
+      <Workspaces vertical={vertical} monitor={monitor} />
       <box
         spacing={4}
         vertical={vertical}
         valign={vertical ? Gtk.Align.END : Gtk.Align.FILL}
         halign={vertical ? Gtk.Align.FILL : Gtk.Align.END} >
+        <Clock vertical={vertical} />
         <SystemIndicators vertical={vertical} />
       </box>
     </centerbox>
