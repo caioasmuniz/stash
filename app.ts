@@ -7,8 +7,9 @@ import applauncher from "./widget/applauncher";
 import quicksettings from "./widget/quicksettings";
 import notificationPopup from "./widget/notifications";
 import infopannel from "./widget/infopannel";
+import { State } from "ags/state";
 
-// const verticalBar = Variable(true)
+const verticalBar = new State<boolean>(true)
 
 App.start({
   css: style,
@@ -17,9 +18,9 @@ App.start({
     // notificationPopup();
     // quicksettings(verticalBar);
     // infopannel(verticalBar);
-    // applauncher();
-    // osd();
-    bar();
+    applauncher();
+    // osd(verticalBar);
+    bar(verticalBar);
   },
   client(message: (msg: string) => string, ...args: Array<string>) {
     if (args[0] === "toggle") {

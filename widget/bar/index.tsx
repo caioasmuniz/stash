@@ -8,8 +8,7 @@ import SystemUsage from "./systemUsage";
 import Workspaces from "./workspaces";
 import Clock from "./clock";
 import Launcher from "./launcher";
-import { Variable } from "astal";
-
+import { State } from "ags/state";
 const hyprland = Hyprland.get_default()
 
 const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
@@ -39,11 +38,10 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
         spacing={4}
         vertical={vertical}>
         <Launcher />
-        {/* <SystemUsage vertical={vertical} /> */}
-        {/* <Workspaces vertical={vertical} monitor={monitor} /> */}
+        <SystemUsage vertical={vertical} />
       </box>
       <box _type="center">
-        <Clock vertical={vertical} />
+        <Workspaces vertical={vertical} monitor={monitor} />
       </box>
       <box
         _type="end"
@@ -51,21 +49,22 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
         vertical={vertical}
         valign={vertical ? Gtk.Align.END : Gtk.Align.FILL}
         halign={vertical ? Gtk.Align.FILL : Gtk.Align.END} >
+        <Clock vertical={vertical} />
         <SystemIndicators vertical={vertical} />
       </box>
     </centerbox>
-  </window>
+  </window> as Astal.Window;
 
-export default () => {
+export default (vertical: State<boolean>) => {
   const bars = new Map<Hyprland.Monitor, Astal.Window>()
 
   // initialize
   for (const monitor of hyprland.get_monitors()) {
-    bars.set(monitor, bar(monitor, true) as Astal.Window)
+    bars.set(monitor, bar(monitor, vertical.get()) as Astal.Window)
   }
 
   hyprland.connect("monitor-added", (_, monitor) => {
-    bars.set(monitor, bar(monitor, true) as Astal.Window)
+    bars.set(monitor, bar(monitor, vertical.get()) as Astal.Window)
   })
 
   hyprland.connect("monitor-removed", (_, id) => {
@@ -73,10 +72,10 @@ export default () => {
     bars.delete(hyprland.get_monitor(id))
   })
 
-  // vertical.subscribe(vert => {
-  //   const monitor = hyprland.focusedMonitor
-  //   bars.get(monitor)?.close()
-  //   bars.delete(monitor)
-  //   bars.set(monitor, bar(monitor, vert))
-  // })
+  vertical.subscribe(vert => {
+    const monitor = hyprland.focusedMonitor
+    bars.get(monitor)?.close()
+    bars.delete(monitor)
+    bars.set(monitor, bar(monitor, vert))
+  })
 }
