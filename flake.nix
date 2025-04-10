@@ -33,6 +33,7 @@
         tray
         wireplumber
         pkgs.brightnessctl
+        pkgs.darkman
         pkgs.libgtop
         pkgs.libadwaita
       ];
