@@ -52,8 +52,8 @@ export default () => <window
   monitor={bind(hyprland, "focusedMonitor").as(m => m.id)}
   anchor={
     Astal.WindowAnchor.LEFT |
-    Astal.WindowAnchor.TOP |
-    Astal.WindowAnchor.BOTTOM}
+    Astal.WindowAnchor.BOTTOM |
+    Astal.WindowAnchor.TOP}
   onShow={() => text.set("")}>
   <box
     vertical

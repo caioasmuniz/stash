@@ -25,7 +25,7 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
       Astal.WindowAnchor.LEFT |
       Astal.WindowAnchor.BOTTOM
       :
-      Astal.WindowAnchor.TOP |
+      Astal.WindowAnchor.BOTTOM |
       Astal.WindowAnchor.LEFT |
       Astal.WindowAnchor.RIGHT}>
     <centerbox

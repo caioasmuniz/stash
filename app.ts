@@ -19,7 +19,7 @@ App.start({
     // notificationPopup();
     quicksettings(verticalBar);
     infopannel(verticalBar);
-    applauncher();
+    applauncher(verticalBar);
     osd();
     bar(verticalBar);
   },

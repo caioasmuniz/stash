@@ -19,7 +19,7 @@ const Lock = () => <button
 </button>
 
 const Poweroff = () => <button
-  cssClasses={["circular","destructive-action"]}
+  cssClasses={["circular", "destructive-action"]}
   onClicked={() => {
     execAsync(["bash", "-c", "systemctl poweroff"]);
   }}>
@@ -42,11 +42,11 @@ export default (vertical: Variable<boolean>) => <window
   name={"quicksettings"}
   cssClasses={["quicksettings", "background"]}
   keymode={Astal.Keymode.EXCLUSIVE}
-  anchor={bind(vertical).as(vertical => vertical ?
-    Astal.WindowAnchor.LEFT |
-    Astal.WindowAnchor.BOTTOM :
-    Astal.WindowAnchor.RIGHT |
-    Astal.WindowAnchor.TOP
+  anchor={bind(vertical).as(vertical =>
+    (vertical ?
+      Astal.WindowAnchor.LEFT :
+      Astal.WindowAnchor.RIGHT) |
+    Astal.WindowAnchor.BOTTOM
   )}
   monitor={bind(hyprland, "focusedMonitor")
     .as(m => m.id)}>
