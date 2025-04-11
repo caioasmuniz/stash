@@ -1,4 +1,4 @@
-import { type Binding, bind, sync } from "ags/state"
+import { bind } from "ags/state"
 import { Gtk, For, Gdk } from "ags/gtk4"
 import Hyprland from "gi://AstalHyprland"
 import Apps from "gi://AstalApps"
@@ -53,7 +53,7 @@ export default ({ monitor, vertical }:
               hyprland.message_async(
                 "dispatch togglespecialworkspace scratchpad",
                 null)
-            if (!special && !isFocused)
+            if (!special && !isFocused.get())
               ws.focus()
           }}>
           <box

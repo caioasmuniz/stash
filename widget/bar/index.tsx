@@ -47,13 +47,14 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
       </box>
       <box
         _type="end"
-        spacing={4}
+        cssClasses={["linked"]}
         orientation={vertical ?
           Gtk.Orientation.VERTICAL :
           Gtk.Orientation.HORIZONTAL}
         valign={vertical ? Gtk.Align.END : Gtk.Align.FILL}
         halign={vertical ? Gtk.Align.FILL : Gtk.Align.END} >
         <Clock vertical={vertical} />
+        <Gtk.Separator />
         <SystemIndicators vertical={vertical} />
       </box>
     </centerbox>

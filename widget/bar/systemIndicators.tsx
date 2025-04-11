@@ -7,7 +7,7 @@ import PowerProf from "gi://AstalPowerProfiles"
 import Gdk from "gi://Gdk?version=4.0"
 import { bind } from "ags/state"
 import { Gtk } from "ags/gtk4"
-import app from "ags/gtk4/app"
+import App from "ags/gtk4/app"
 
 const audio = Wireplumber.get_default()!.audio
 const battery = Batery.get_default()
@@ -59,8 +59,8 @@ export default ({ vertical }: { vertical: boolean }) =>
   <Gtk.ToggleButton
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     cssClasses={["pill", "sys-indicators", vertical ? "vert" : ""]}
-    // active={bind(App.get_window("quicksettings")!, "visible")}
-    $clicked={() => app.toggle_window("quicksettings")}
+    active={bind(App.get_window("quicksettings")!, "visible")}
+    $clicked={() => App.toggle_window("quicksettings")}
   // $scroll={(self, dx, dy) => dy > 0 ?
   // audio.default_speaker.volume -= 0.025 :
   // audio.default_speaker.volume += 0.025}
