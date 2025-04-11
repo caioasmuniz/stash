@@ -19,7 +19,7 @@ App.start({
     quicksettings(verticalBar);
     // infopannel(verticalBar);
     applauncher();
-    // osd(verticalBar);
+    osd();
     bar(verticalBar);
   },
   client(message: (msg: string) => string, ...args: Array<string>) {
