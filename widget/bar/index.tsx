@@ -36,7 +36,9 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
       <box
         _type="start"
         spacing={4}
-        vertical={vertical}>
+        orientation={vertical ?
+          Gtk.Orientation.VERTICAL :
+          Gtk.Orientation.HORIZONTAL}>
         <Launcher />
         <SystemUsage vertical={vertical} />
       </box>
@@ -46,7 +48,9 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
       <box
         _type="end"
         spacing={4}
-        vertical={vertical}
+        orientation={vertical ?
+          Gtk.Orientation.VERTICAL :
+          Gtk.Orientation.HORIZONTAL}
         valign={vertical ? Gtk.Align.END : Gtk.Align.FILL}
         halign={vertical ? Gtk.Align.FILL : Gtk.Align.END} >
         <Clock vertical={vertical} />

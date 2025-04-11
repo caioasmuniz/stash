@@ -1,4 +1,4 @@
-import { GLib } from "astal"
+import GLib from "gi://GLib"
 import { Poll } from "ags/state"
 import { Gtk, Gdk } from "ags/gtk4"
 import App from "ags/gtk4/app"
@@ -22,10 +22,14 @@ export default ({ vertical }: { vertical: boolean }) => {
     <box
       halign={Gtk.Align.CENTER}
       valign={Gtk.Align.CENTER}
-      vertical={vertical}
+      orientation={vertical ?
+        Gtk.Orientation.VERTICAL :
+        Gtk.Orientation.HORIZONTAL}
       spacing={vertical ? 0 : 4}>
       <box
-        vertical={vertical}
+        orientation={vertical ?
+          Gtk.Orientation.VERTICAL :
+          Gtk.Orientation.HORIZONTAL}
         spacing={vertical ? 0 : 4}>
         <label
           label={hour()}
@@ -34,8 +38,13 @@ export default ({ vertical }: { vertical: boolean }) => {
           label={minute()}
           cssClasses={["time"]} />
       </box>
-      <box vertical spacing={vertical ? 2 : 0}
-        halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
+      <box
+        orientation={vertical ?
+          Gtk.Orientation.VERTICAL :
+          Gtk.Orientation.HORIZONTAL}
+        spacing={vertical ? 2 : 0}
+        halign={Gtk.Align.CENTER}
+        valign={Gtk.Align.CENTER}>
         <label
           cssClasses={["date"]}
           label={day()}

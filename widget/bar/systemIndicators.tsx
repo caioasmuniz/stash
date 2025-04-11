@@ -61,11 +61,15 @@ export default ({ vertical }: { vertical: boolean }) =>
     cssClasses={["pill", "sys-indicators", vertical ? "vert" : ""]}
     // active={bind(App.get_window("quicksettings")!, "visible")}
     $clicked={() => app.toggle_window("quicksettings")}
-    // $scroll={(self, dx, dy) => dy > 0 ?
-      // audio.default_speaker.volume -= 0.025 :
-      // audio.default_speaker.volume += 0.025}
-      >
-    <box spacing={4} vertical={vertical}>
+  // $scroll={(self, dx, dy) => dy > 0 ?
+  // audio.default_speaker.volume -= 0.025 :
+  // audio.default_speaker.volume += 0.025}
+  >
+    <box
+      spacing={4}
+      orientation={vertical ?
+        Gtk.Orientation.VERTICAL :
+        Gtk.Orientation.HORIZONTAL}>
       {ProfileIndicator()}
       {BluetoothIndicator()}
       {NetworkIndicator()}

@@ -53,7 +53,9 @@ const Indicator = ({ value, label, unit, vertical }:
       valign={Gtk.Align.CENTER}
       halign={Gtk.Align.CENTER}
       spacing={2}
-      vertical={vertical}>
+      orientation={vertical ?
+        Gtk.Orientation.VERTICAL :
+        Gtk.Orientation.HORIZONTAL}>
       <label
         label={label}
         cssClasses={["title"]} />
@@ -74,7 +76,9 @@ export default ({ vertical }: { vertical: boolean }) =>
     <box
       hexpand={vertical}
       vexpand={!vertical}
-      vertical={vertical}
+      orientation={vertical ?
+        Gtk.Orientation.VERTICAL :
+        Gtk.Orientation.HORIZONTAL}
       spacing={4}>
       <Indicator
         vertical={vertical}
