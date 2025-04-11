@@ -12,17 +12,6 @@ const apps = new Apps.Apps({
   descriptionMultiplier: 1,
 })
 
-// const workspaces = Variable.derive([
-//   bind(hyprland, "focusedWorkspace"),
-//   bind(hyprland, "focusedClient"),
-//   bind(hyprland, "workspaces")],
-//   (focusWs, focusCli, ws) => ({
-//     data: ws,
-//     focusedWs: focusCli && focusCli?.workspace.id < 0 ?
-//       focusCli.workspace :
-//       focusWs
-//   }))
-
 const getIcon = (client: Hyprland.Client) => {
   switch (client.class) {
     case "code-url-handler":
@@ -37,32 +26,46 @@ const getIcon = (client: Hyprland.Client) => {
 
 export default ({ monitor, vertical }:
   { monitor: Hyprland.Monitor, vertical: boolean }) =>
-  <box vertical={vertical} spacing={4}>
-    <For each={bind(hyprland, "workspaces").as(ws => ws
-      .filter(ws => ws.monitor === monitor)
-      .sort((a, b) => a.id - b.id))}>
-      {ws =>
-        <Gtk.ToggleButton
-          // active={workspaces.focusedWs === ws}
+  <box
+    orientation={vertical ?
+      Gtk.Orientation.VERTICAL :
+      Gtk.Orientation.HORIZONTAL}
+    spacing={4}>
+    <For
+      each={bind(hyprland, "workspaces").as(ws => ws
+        .filter(ws => ws.monitor === monitor)
+        .sort((a, b) => a.id - b.id))}
+      cleanup={child => child.run_dispose()}>
+      {ws => {
+        const focusedWs = bind(hyprland, "focusedWorkspace")
+        const isFocused = focusedWs.as(focused =>
+          focused === ws)
+        const special = ws.id < 0
+        return <Gtk.ToggleButton
+          active={bind(hyprland, "focusedWorkspace").as(focused => focused === ws)}
           cursor={Gdk.Cursor.new_from_name("pointer", null)}
           cssClasses={["pill", "ws-button",
-            // workspaces.focusedWs === ws ? "active" : "",
-            ws.id < 0 ? "special" : "",
+            isFocused ? "active" : "",
+            special ? "special" : "",
             vertical ? "vert" : ""]}
           $clicked={() => {
-            // if (workspaces.focusedWs.id < 0 || ws.id < 0)
-            //   hyprland.message_async(
-            //     "dispatch togglespecialworkspace scratchpad",
-            //     null)
-            // if (ws.id > 0 && workspaces.focusedWs.id !== ws.id)
-            ws.focus()
+            if (special)
+              hyprland.message_async(
+                "dispatch togglespecialworkspace scratchpad",
+                null)
+            if (!special && !isFocused)
+              ws.focus()
           }}>
           <box
             spacing={4}
-            vertical={vertical}
+            orientation={vertical ?
+              Gtk.Orientation.VERTICAL :
+              Gtk.Orientation.HORIZONTAL}
             halign={Gtk.Align.CENTER}
             valign={Gtk.Align.CENTER}>
-            <For each={bind(ws, "clients")}>
+            <For
+              each={bind(ws, "clients")}
+              cleanup={child => child.run_dispose()}>
               {client => <image
                 cssClasses={bind(hyprland, "focusedClient")
                   .as(focused => {
@@ -73,7 +76,8 @@ export default ({ monitor, vertical }:
                 iconName={getIcon(client)} />}
             </For>
           </box>
-        </Gtk.ToggleButton >}
+        </Gtk.ToggleButton >
+      }}
     </For>
   </box>
 
