@@ -2,11 +2,11 @@ import App from "ags/gtk4/app"
 import style from "./style.scss";
 
 import bar from "./widget/bar/index";
-import osd from "./widget/osd";
+//import osd from "./widget/osd";
 import applauncher from "./widget/applauncher";
-import quicksettings from "./widget/quicksettings";
-import notificationPopup from "./widget/notifications";
-import infopannel from "./widget/infopannel";
+//import quicksettings from "./widget/quicksettings";
+//import notificationPopup from "./widget/notifications";
+//import infopannel from "./widget/infopannel";
 import { State } from "ags/state";
 
 const verticalBar = new State<boolean>(true)
