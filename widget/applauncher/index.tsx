@@ -3,6 +3,7 @@ import { Astal, Gtk, Gdk, For } from "ags/gtk4";
 import App from "ags/gtk4/app";
 import Hyprland from "gi://AstalHyprland"
 import { bind, State } from "ags/state";
+import AppButton from "./appButton";
 
 const hyprland = Hyprland.get_default()
 const apps = new Apps.Apps()
@@ -12,33 +13,6 @@ const list = bind(text)
   .as(text => apps
     .fuzzy_query(text))
 
-const AppButton = ({ app }: { app: Apps.Application }) =>
-  <button
-    cursor={Gdk.Cursor.new_from_name("pointer", null)}
-    cssClasses={["app-button"]}
-    $clicked={(self) => {
-      App.get_window("applauncher")!.hide()
-      app.launch();
-    }}>
-    <box spacing={8}>
-      <image
-        iconName={app.iconName || ""}
-        pixelSize={48} />
-      <box vertical>
-        <label
-          wrap
-          cssClasses={["title-2"]}
-          label={app.name}
-          xalign={0} />
-        <label
-          cssClasses={["body"]}
-          label={app.description}
-          xalign={0}
-          maxWidthChars={25}
-          wrap />
-      </box>
-    </box>
-  </button>
 
 export default () => <window
   valign={Gtk.Align.CENTER}
@@ -55,7 +29,7 @@ export default () => <window
     Astal.WindowAnchor.BOTTOM}
   $show={() => text.set("")}>
   <box
-    vertical
+    orientation={Gtk.Orientation.VERTICAL}
     cssClasses={["applauncher-body"]}
     spacing={8}>
     <entry
@@ -69,12 +43,14 @@ export default () => <window
       hscrollbarPolicy={Gtk.PolicyType.NEVER}
       propagateNaturalHeight>
       <box
-        vertical
+        orientation={Gtk.Orientation.VERTICAL}
         spacing={8}>
-        <For each={list}>
+        <For
+          each={list}
+          cleanup={self => self.run_dispose()}>
           {app => <AppButton app={app} />}
         </For>
       </box>
     </Gtk.ScrolledWindow>
-  </box>
-</window>
+  </box >
+</window >
