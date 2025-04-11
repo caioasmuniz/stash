@@ -1,8 +1,10 @@
 import Hyprland from "gi://AstalHyprland"
-import { App, Astal, Gtk } from "astal/gtk4";
-import { bind, execAsync, Variable } from "astal";
+import { Astal, Gtk } from "ags/gtk4";
+import { bind, State } from "ags/state";
+import { execAsync } from "ags/process";
 
-const hyprland = Hyprland.get_default()
+import App from "ags/gtk4/app";
+
 import { Slider, SliderType } from "../common/slider";
 import NotificationList from "./notificationList";
 import PwrProf from "./powerprofiles";
@@ -10,31 +12,33 @@ import DarkMode from "./darkMode";
 import Tray from "./tray";
 import AudioConfig from "./audioConfig";
 
+const hyprland = Hyprland.get_default()
+
 const Lock = () => <button
   cssClasses={["circular"]}
-  onClicked={() => {
+  $clicked={() => {
     execAsync(["bash", "-c", "hyprlock --immediate"]);
   }}>
   <image iconName={"system-lock-screen-symbolic"} />
 </button>
 
 const Poweroff = () => <button
-  cssClasses={["circular","destructive-action"]}
-  onClicked={() => {
+  cssClasses={["circular", "destructive-action"]}
+  $clicked={() => {
     execAsync(["bash", "-c", "systemctl poweroff"]);
   }}>
   <image iconName={"system-shutdown-symbolic"} />
 </button>
 
 const RotateButton = ({ vertical }:
-  { vertical: Variable<boolean> }) => <button
-    onClicked={() => vertical.set(!vertical.get())}
+  { vertical: State<boolean> }) => <button
+    $clicked={() => vertical.set(!vertical.get())}
     cssClasses={["circular"]}
   >
     <image iconName={"object-rotate-right-symbolic"} />
   </button>
 
-export default (vertical: Variable<boolean>) => <window
+export default (vertical: State<boolean>) => <window
   valign={Gtk.Align.CENTER}
   margin={12}
   visible={false}
@@ -52,7 +56,7 @@ export default (vertical: Variable<boolean>) => <window
     .as(m => m.id)}>
   <box
     cssClasses={["quicksettings-body"]}
-    vertical
+    orientation={Gtk.Orientation.VERTICAL}
     spacing={8}>
     <box spacing={4}>
       <PwrProf />

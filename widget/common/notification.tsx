@@ -9,7 +9,7 @@ export default (
     name={notif.id.toString()}
     cssClasses={["notification"]}
     spacing={8}
-    vertical>
+    orientation={Gtk.Orientation.VERTICAL}>
     <box spacing={8}>
       <image
         pixelSize={24}
@@ -23,7 +23,7 @@ export default (
         halign={Gtk.Align.END}
         valign={Gtk.Align.CENTER}
         cssClasses={["circular"]}
-        $clicked={() => closeAction}
+        $clicked={self => closeAction(notif, self)}
         iconName={"window-close-symbolic"} />
     </box>
     <label
@@ -32,7 +32,9 @@ export default (
       cssClasses={["body"]}
       label={notif.body} />
     <box cssClasses={["actions"]} spacing={4}>
-      <For each={bind(notif, "actions")}>
+      <For
+        each={bind(notif, "actions")}
+        cleanup={self => self.run_dispose()}>
         {action => <button
           $clicked={() =>
             notif.invoke(action.id)}>

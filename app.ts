@@ -16,7 +16,7 @@ App.start({
   instanceName: "stash",
   main() {
     // notificationPopup();
-    // quicksettings(verticalBar);
+    quicksettings(verticalBar);
     // infopannel(verticalBar);
     applauncher();
     // osd(verticalBar);

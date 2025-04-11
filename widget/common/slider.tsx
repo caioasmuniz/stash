@@ -1,6 +1,6 @@
+import { bind } from "ags/state"
 import Wireplumber from "gi://AstalWp"
 import Brightness from "../../lib/brightness"
-import { bind } from "astal"
 
 const brightness = Brightness.get_default()
 const audio = Wireplumber.get_default()!.audio
@@ -21,10 +21,10 @@ export const Slider = ({ type }: { type: SliderType }) =>
       hexpand
       min={0}
       max={100}
-      setup={self => type === SliderType.AUDIO ?
+      $={self => type === SliderType.AUDIO ?
         self.set_value(audio.defaultSpeaker.volume) :
         self.set_value(brightness.screen * 100)}
-      onChangeValue={({ value }) =>
+      $changeValue={({ value }) =>
         type === SliderType.AUDIO ?
           audio.defaultSpeaker.set_volume(value / 100) :
           brightness.set({ screen: value / 100 })

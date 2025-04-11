@@ -1,25 +1,28 @@
 import Tray from "gi://AstalTray";
-import { Gtk } from "astal/gtk4";
-import { bind } from "astal";
+import { Gtk, For } from "ags/gtk4";
+import { bind } from "ags/state";
 
 const tray = Tray.get_default();
 
 export default () => <box
   spacing={8}
   halign={Gtk.Align.FILL}>
-  {bind(tray, "items").as(items =>
-    items.map(item =>
-      <menubutton
+  <For
+    each={bind(tray, "items")}
+    cleanup={self => self.run_dispose()}>
+    {(item =>
+      <Gtk.MenuButton
         cssClasses={["circular"]}
-        setup={self => {
+        $={self => {
           self.insert_action_group("dbusmenu", item.actionGroup)
         }}
         tooltipMarkup={bind(item, "tooltipMarkup")}
         popover={undefined}
-        actionGroup={bind(item, "actionGroup").as(ag => ["dbusmenu", ag])}
+        //actionGroup={bind(item, "actionGroup").as(ag => ["dbusmenu", ag])}
         menuModel={item.menuModel}
         tooltip_markup={bind(item, "tooltip_markup")}>
         <image gicon={item.gicon} />
-      </menubutton>
-    ))}
+      </Gtk.MenuButton>
+    )}
+  </For>
 </box >
