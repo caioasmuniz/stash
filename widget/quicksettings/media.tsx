@@ -1,6 +1,7 @@
 import Mpris from "gi://AstalMpris";
 import Apps from "gi://AstalApps"
-import { bind } from "astal";
+import { bind } from "ags/state";
+import { For, Gtk } from "ags/gtk4";
 
 const mpris = Mpris.get_default();
 const apps = new Apps.Apps()
@@ -14,13 +15,13 @@ function lengthStr(length: number) {
 
 const PlaybackButtons = ({ player }: { player: Mpris.Player }) => <box>
   <button
-    onClicked={() => player.previous()}
+    $clicked={() => player.previous()}
     visible={player.canGoPrevious}>
     <image iconName={"media-skip-backwiconNameard-symbolic"} />
   </button>
 
   <button
-    onClicked={() =>
+    $clicked={() =>
       player.playbackStatus === Mpris.PlaybackStatus.PAUSED
         ? player.play() : player.pause()}>
     <image
@@ -30,28 +31,34 @@ const PlaybackButtons = ({ player }: { player: Mpris.Player }) => <box>
           : "media-playback-start-symbolic")} />
   </button>
   <button
-    onClicked={() => player.next()}
+    $clicked={() => player.next()}
     visible={player.canGoNext}>
     <image iconName={"media-skip-forward-symbolic"} />
   </button>
 </box>
 
 export default () => <box
-  vertical
+  orientation={Gtk.Orientation.VERTICAL}
   spacing={4}
   visible={bind(mpris, "players").as(p => p.length > 0)}>
-  {bind(mpris, "players").as(p => p.map(player =>
-    <box>
-      <image
-        file={player.coverArt}
-        hexpand />
+  <For
+    each={bind(mpris, "players")}
+    cleanup={self => self.run_dispose()}>
+    {player =>
       <box
-        vertical
+        cssClasses={["media"]}
+        orientation={Gtk.Orientation.VERTICAL}
         hexpand>
         <box>
+          <image
+            file={player.coverArt}
+            cssClasses={["thumbnail"]}
+            hexpand
+          />
           <label
             wrap
-            cssClasses={["title"]}
+            maxWidthChars={10}
+            cssClasses={["heading"]}
             label={bind(player, "title")} />
           <image
             cssClasses={["icon"]}
@@ -78,6 +85,6 @@ export default () => <box
           <label label={bind(player, "length").as(lengthStr)} />
         </centerbox>
       </box>
-    </box >
-  ))}
+    }
+  </For>
 </box >

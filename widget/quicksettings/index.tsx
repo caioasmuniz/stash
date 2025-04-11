@@ -11,6 +11,7 @@ import PwrProf from "./powerprofiles";
 import DarkMode from "./darkMode";
 import Tray from "./tray";
 import AudioConfig from "./audioConfig";
+import Media from "./media";
 
 const hyprland = Hyprland.get_default()
 
@@ -70,6 +71,7 @@ export default (vertical: State<boolean>) => <window
     </box>
     <Slider type={SliderType.BRIGHTNESS} />
     <AudioConfig />
+    <Media />
     <NotificationList />
   </box>
 </ window >
