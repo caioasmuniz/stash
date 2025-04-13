@@ -1,7 +1,8 @@
+import Adw from "gi://Adw?version=1";
 import Notifd from "gi://AstalNotifd";
 import { For, Gdk, Gtk } from "ags/gtk4";
 import { bind } from "ags/state";
-import notification from "../common/notification";
+import Notification from "../common/notification";
 
 const notifd = Notifd.get_default();
 
@@ -47,16 +48,24 @@ export default () =>
     </box>
     <Gtk.ScrolledWindow
       hscrollbarPolicy={Gtk.PolicyType.NEVER}
-      propagateNaturalHeight
-      maxContentHeight={400}>
+      vexpand>
       <box
         orientation={Gtk.Orientation.VERTICAL}
         spacing={6}>
-        <For
-          each={bind(notifd, "notifications")}
-          cleanup={self => self.run_dispose()}>
-          {n => notification(n, notif => notif.dismiss())}
+        <For each={bind(notifd, "notifications")
+          .as(n => n.sort((a, b) => b.time - a.time))}>
+          {n => <Notification
+            notif={n}
+            closeAction={n => n.dismiss()} />}
         </For>
+        <Adw.StatusPage
+          visible={bind(notifd, "notifications")
+            .as(n => n.length < 1)}
+          vexpand
+          cssClasses={["compact"]}
+          title={"No new Notifications"}
+          description={"You're up-to-date"}
+          iconName={"user-offline-symbolic"} />
       </box>
     </Gtk.ScrolledWindow>
   </box>

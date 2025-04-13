@@ -1,10 +1,12 @@
 import Notifd from "gi://AstalNotifd";
 import { bind } from "ags/state"
 import { For, Gtk } from "ags/gtk4";
+import GLib from "gi://GLib?version=2.0";
 
-export default (
+export default ({ notif, closeAction }: {
   notif: Notifd.Notification,
-  closeAction: (notif: Notifd.Notification, self: Gtk.Widget) => void) =>
+  closeAction: (notif: Notifd.Notification, self: Gtk.Widget) => void,
+}) =>
   <box
     name={notif.id.toString()}
     cssClasses={["notification"]}
@@ -23,7 +25,7 @@ export default (
         halign={Gtk.Align.END}
         valign={Gtk.Align.CENTER}
         cssClasses={["circular"]}
-        $clicked={self => closeAction(notif, self)}
+        $clicked={self => closeAction(notif, self.parent.parent)}
         iconName={"window-close-symbolic"} />
     </box>
     <label
@@ -31,6 +33,10 @@ export default (
       maxWidthChars={25}
       cssClasses={["body"]}
       label={notif.body} />
+    <label
+      label={GLib.DateTime
+        .new_from_unix_local(notif.time)
+        .format("%H:%M:%S") || "ERROR"} />
     <box cssClasses={["actions"]} spacing={4}>
       <For each={bind(notif, "actions")}>
         {action => <button
