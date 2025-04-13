@@ -6,21 +6,24 @@ import osd from "./widget/osd";
 import applauncher from "./widget/applauncher";
 import quicksettings from "./widget/quicksettings";
 import notificationPopup from "./widget/notifications";
-import infopannel from "./widget/infopannel";
 import { State } from "ags/state";
 
 const verticalBar = new State<boolean>(true)
+const visible = new State<{ applauncher: boolean, quicksettings: boolean }>(
+  { applauncher: false, quicksettings: false })
 
 App.start({
   css: style,
   instanceName: "stash",
   main() {
     notificationPopup();
-    quicksettings(verticalBar);
+    quicksettings(verticalBar, visible);
     // infopannel(verticalBar);
-    applauncher();
+    applauncher(verticalBar, visible);
     osd();
     bar(verticalBar);
+
+    visible.subscribe(v => console.log(v))
   },
   client(message: (msg: string) => string, ...args: Array<string>) {
     if (args[0] === "toggle") {

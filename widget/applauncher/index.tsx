@@ -14,41 +14,55 @@ const list = bind(text)
     .fuzzy_query(text))
 
 
-export default () => <window
-  valign={Gtk.Align.CENTER}
-  name={"applauncher"}
-  margin={12}
-  application={App}
-  visible={false}
-  cssClasses={["applauncher", "background"]}
-  keymode={Astal.Keymode.ON_DEMAND}
-  monitor={bind(hyprland, "focusedMonitor").as(m => m.id)}
-  anchor={
-    Astal.WindowAnchor.LEFT |
-    Astal.WindowAnchor.TOP |
-    Astal.WindowAnchor.BOTTOM}
-  $show={() => text.set("")}>
-  <box
-    orientation={Gtk.Orientation.VERTICAL}
-    cssClasses={["applauncher-body"]}
-    spacing={8}>
-    <entry
-      hexpand
-      $changed={self => text.set(self.text)}
-      $activate={self => {
-        App.get_window("applauncher")!.hide()
-        apps.fuzzy_query(self.text)[0].launch();
-      }} />
-    <Gtk.ScrolledWindow
-      hscrollbarPolicy={Gtk.PolicyType.NEVER}
-      propagateNaturalHeight>
-      <box
-        orientation={Gtk.Orientation.VERTICAL}
-        spacing={8}>
-        <For each={list}>
-          {app => <AppButton app={app} />}
-        </For>
-      </box>
-    </Gtk.ScrolledWindow>
-  </box >
-</window >
+export default (
+  vertical: State<boolean>,
+  visible: State<{
+    applauncher: boolean,
+    quicksettings: boolean
+  }>) =>
+  <window
+    $={self =>
+      bind(self, "visible").subscribe(v => {
+        visible.set({
+          quicksettings: v && vertical.get() ? false : visible.get().quicksettings,
+          applauncher: v
+        })
+      })
+    }
+    valign={Gtk.Align.CENTER}
+    name={"applauncher"}
+    margin={12}
+    application={App}
+    visible={bind(visible).as(v => v.applauncher)}
+    cssClasses={["applauncher", "background"]}
+    keymode={Astal.Keymode.ON_DEMAND}
+    monitor={bind(hyprland, "focusedMonitor").as(m => m.id)}
+    anchor={
+      Astal.WindowAnchor.LEFT |
+      Astal.WindowAnchor.TOP |
+      Astal.WindowAnchor.BOTTOM}
+    $show={() => text.set("")}>
+    <box
+      orientation={Gtk.Orientation.VERTICAL}
+      cssClasses={["applauncher-body"]}
+      spacing={8}>
+      <entry
+        hexpand
+        $changed={self => text.set(self.text)}
+        $activate={self => {
+          App.get_window("applauncher")!.hide()
+          apps.fuzzy_query(self.text)[0].launch();
+        }} />
+      <Gtk.ScrolledWindow
+        hscrollbarPolicy={Gtk.PolicyType.NEVER}
+        propagateNaturalHeight>
+        <box
+          orientation={Gtk.Orientation.VERTICAL}
+          spacing={8}>
+          <For each={list}>
+            {app => <AppButton app={app} />}
+          </For>
+        </box>
+      </Gtk.ScrolledWindow>
+    </box >
+  </window >

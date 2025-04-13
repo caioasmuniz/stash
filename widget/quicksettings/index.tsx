@@ -2,7 +2,7 @@ import Hyprland from "gi://AstalHyprland"
 import App from "ags/gtk4/app";
 import { execAsync } from "ags/process";
 import { Astal, Gtk } from "ags/gtk4";
-import { bind, State } from "ags/state";
+import { bind, State, sync } from "ags/state";
 
 import { Slider, SliderType } from "../common/slider";
 import NotificationList from "./notificationList";
@@ -38,41 +38,53 @@ const RotateButton = ({ vertical }:
     <image iconName={"object-rotate-right-symbolic"} />
   </button>
 
-export default (vertical: State<boolean>) => <window
-  valign={Gtk.Align.FILL}
-  margin={12}
-  visible={false}
-  application={App}
-  name={"quicksettings"}
-  cssClasses={["quicksettings", "background"]}
-  // keymode={Astal.Keymode.EXCLUSIVE}
-  anchor={bind(vertical).as(vertical =>
-    Astal.WindowAnchor.BOTTOM |
-    Astal.WindowAnchor.TOP |
-    (vertical ?
-      Astal.WindowAnchor.LEFT :
-      Astal.WindowAnchor.RIGHT)
-  )}
-  monitor={bind(hyprland, "focusedMonitor")
-    .as(m => m.id)}>
-  <box
-    cssClasses={["quicksettings-body"]}
-    orientation={Gtk.Orientation.VERTICAL}
-    spacing={8}>
-    <box spacing={8}>
-      <PwrProf />
-      <DarkMode />
+export default (vertical: State<boolean>,
+  visible: State<{ applauncher: boolean, quicksettings: boolean }>) => <window
+    $={self =>
+      bind(self, "visible").subscribe(v => {
+        visible.set({
+          applauncher: v && vertical.get() ? false : visible.get().applauncher,
+          quicksettings: v
+        })
+      })
+    }
+    valign={Gtk.Align.FILL}
+    margin={12}
+    visible={bind(visible).as(v => v.quicksettings)}
+    application={App}
+    name={"quicksettings"}
+    cssClasses={["quicksettings", "background"]}
+    anchor={
+      bind(vertical).as(vertical =>
+        Astal.WindowAnchor.BOTTOM |
+        Astal.WindowAnchor.TOP |
+        (vertical ?
+          Astal.WindowAnchor.LEFT :
+          Astal.WindowAnchor.RIGHT)
+      )
+    }
+    monitor={
+      bind(hyprland, "focusedMonitor")
+        .as(m => m.id)
+    } >
+    <box
+      cssClasses={["quicksettings-body"]}
+      orientation={Gtk.Orientation.VERTICAL}
+      spacing={8}>
+      <box spacing={8}>
+        <PwrProf />
+        <DarkMode />
+      </box>
+      <box halign={Gtk.Align.CENTER} spacing={8}>
+        <Tray />
+        <Lock />
+        <RotateButton vertical={vertical} />
+        <Poweroff />
+      </box>
+      <Slider type={SliderType.BRIGHTNESS} />
+      <AudioConfig />
+      <Media />
+      <NotificationList />
     </box>
-    <box halign={Gtk.Align.CENTER} spacing={8}>
-      <Tray />
-      <Lock />
-      <RotateButton vertical={vertical} />
-      <Poweroff />
-    </box>
-    <Slider type={SliderType.BRIGHTNESS} />
-    <AudioConfig />
-    <Media />
-    <NotificationList />
-  </box>
-</ window >
+  </ window >
 
