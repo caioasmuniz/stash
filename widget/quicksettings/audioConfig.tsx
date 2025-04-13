@@ -14,9 +14,7 @@ export default () =>
       <popover>
         <box
           orientation={Gtk.Orientation.VERTICAL}>
-          <For
-            each={bind(audio, "speakers")}
-            cleanup={self => self.run_dispose()}>
+          <For each={bind(audio, "speakers")}>
             {speaker =>
               <Gtk.CheckButton
                 label={speaker.description}

@@ -41,9 +41,7 @@ export default () => <box
   orientation={Gtk.Orientation.VERTICAL}
   spacing={4}
   visible={bind(mpris, "players").as(p => p.length > 0)}>
-  <For
-    each={bind(mpris, "players")}
-    cleanup={self => self.run_dispose()}>
+  <For each={bind(mpris, "players")}>
     {player =>
       <box
         cssClasses={["media"]}

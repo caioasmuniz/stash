@@ -7,9 +7,7 @@ const tray = Tray.get_default();
 export default () => <box
   spacing={8}
   halign={Gtk.Align.FILL}>
-  <For
-    each={bind(tray, "items")}
-    cleanup={self => self.run_dispose()}>
+  <For each={bind(tray, "items")}>
     {(item =>
       <Gtk.MenuButton
         cssClasses={["circular"]}

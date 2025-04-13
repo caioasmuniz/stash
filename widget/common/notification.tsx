@@ -32,9 +32,7 @@ export default (
       cssClasses={["body"]}
       label={notif.body} />
     <box cssClasses={["actions"]} spacing={4}>
-      <For
-        each={bind(notif, "actions")}
-        cleanup={self => self.run_dispose()}>
+      <For each={bind(notif, "actions")}>
         {action => <button
           $clicked={() =>
             notif.invoke(action.id)}>

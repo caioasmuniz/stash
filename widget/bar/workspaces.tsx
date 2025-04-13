@@ -31,11 +31,9 @@ export default ({ monitor, vertical }:
       Gtk.Orientation.VERTICAL :
       Gtk.Orientation.HORIZONTAL}
     spacing={4}>
-    <For
-      each={bind(hyprland, "workspaces").as(ws => ws
-        .filter(ws => ws.monitor === monitor)
-        .sort((a, b) => a.id - b.id))}
-      cleanup={child => child.run_dispose()}>
+    <For each={bind(hyprland, "workspaces").as(ws => ws
+      .filter(ws => ws.monitor === monitor)
+      .sort((a, b) => a.id - b.id))}>
       {ws => {
         const focusedWs = bind(hyprland, "focusedWorkspace")
         const isFocused = focusedWs.as(focused =>
@@ -63,9 +61,7 @@ export default ({ monitor, vertical }:
               Gtk.Orientation.HORIZONTAL}
             halign={Gtk.Align.CENTER}
             valign={Gtk.Align.CENTER}>
-            <For
-              each={bind(ws, "clients")}
-              cleanup={child => child.run_dispose()}>
+            <For each={bind(ws, "clients")}>
               {client => <image
                 cssClasses={bind(hyprland, "focusedClient")
                   .as(focused => {

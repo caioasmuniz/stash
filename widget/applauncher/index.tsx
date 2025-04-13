@@ -45,9 +45,7 @@ export default () => <window
       <box
         orientation={Gtk.Orientation.VERTICAL}
         spacing={8}>
-        <For
-          each={list}
-          cleanup={self => self.run_dispose()}>
+        <For each={list}>
           {app => <AppButton app={app} />}
         </For>
       </box>
