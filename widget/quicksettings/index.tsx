@@ -1,9 +1,8 @@
 import Hyprland from "gi://AstalHyprland"
+import App from "ags/gtk4/app";
+import { execAsync } from "ags/process";
 import { Astal, Gtk } from "ags/gtk4";
 import { bind, State } from "ags/state";
-import { execAsync } from "ags/process";
-
-import App from "ags/gtk4/app";
 
 import { Slider, SliderType } from "../common/slider";
 import NotificationList from "./notificationList";
@@ -40,18 +39,19 @@ const RotateButton = ({ vertical }:
   </button>
 
 export default (vertical: State<boolean>) => <window
-  valign={Gtk.Align.CENTER}
+  valign={Gtk.Align.FILL}
   margin={12}
   visible={false}
   application={App}
   name={"quicksettings"}
   cssClasses={["quicksettings", "background"]}
-  keymode={Astal.Keymode.EXCLUSIVE}
-  anchor={bind(vertical).as(vertical => vertical ?
-    Astal.WindowAnchor.LEFT |
-    Astal.WindowAnchor.BOTTOM :
-    Astal.WindowAnchor.RIGHT |
-    Astal.WindowAnchor.TOP
+  // keymode={Astal.Keymode.EXCLUSIVE}
+  anchor={bind(vertical).as(vertical =>
+    Astal.WindowAnchor.BOTTOM |
+    Astal.WindowAnchor.TOP |
+    (vertical ?
+      Astal.WindowAnchor.LEFT :
+      Astal.WindowAnchor.RIGHT)
   )}
   monitor={bind(hyprland, "focusedMonitor")
     .as(m => m.id)}>
@@ -59,7 +59,7 @@ export default (vertical: State<boolean>) => <window
     cssClasses={["quicksettings-body"]}
     orientation={Gtk.Orientation.VERTICAL}
     spacing={8}>
-    <box spacing={4}>
+    <box spacing={8}>
       <PwrProf />
       <DarkMode />
     </box>
