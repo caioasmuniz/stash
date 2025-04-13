@@ -15,7 +15,7 @@ App.start({
   css: style,
   instanceName: "stash",
   main() {
-    // notificationPopup();
+    notificationPopup();
     quicksettings(verticalBar);
     // infopannel(verticalBar);
     applauncher();
