@@ -39,9 +39,7 @@ export default ({ vertical }: { vertical: boolean }) => {
           cssClasses={["time"]} />
       </box>
       <box
-        orientation={vertical ?
-          Gtk.Orientation.VERTICAL :
-          Gtk.Orientation.HORIZONTAL}
+        orientation={Gtk.Orientation.VERTICAL}
         spacing={vertical ? 2 : 0}
         halign={Gtk.Align.CENTER}
         valign={Gtk.Align.CENTER}>
