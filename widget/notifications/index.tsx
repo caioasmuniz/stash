@@ -1,7 +1,7 @@
 import Notifd from "gi://AstalNotifd";
 import Hyprland from "gi://AstalHyprland";
 import App from "ags/gtk4/app";
-import { bind, derive, observe, State, sync } from "ags/state";
+import { bind, derive, State } from "ags/state";
 import { Astal, For, Gtk } from "ags/gtk4";
 
 import Notification from "../common/notification";
@@ -10,7 +10,6 @@ import { timeout } from "ags/time";
 const notifd = Notifd.get_default();
 const hyprland = Hyprland.get_default();
 
-// const notifs = new State<Notifd.Notification[]>([]);
 const notifs = new State<Notifd.Notification[]>([])
 const visible = derive(bind(notifs), bind(notifd, "dontDisturb"),
   (notifs, dnd) => notifs.length > 0 && !dnd)

@@ -1,7 +1,7 @@
 import App from "ags/gtk4/app"
 import style from "./style.scss";
 
-import bar from "./widget/bar/index";
+import bar from "./widget/bar";
 import osd from "./widget/osd";
 import applauncher from "./widget/applauncher";
 import quicksettings from "./widget/quicksettings";

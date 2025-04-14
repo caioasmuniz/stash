@@ -1,5 +1,5 @@
 import Apps from "gi://AstalApps"
-import { Astal, Gtk, Gdk, For } from "ags/gtk4";
+import { Astal, Gtk, For } from "ags/gtk4";
 import App from "ags/gtk4/app";
 import Hyprland from "gi://AstalHyprland"
 import { bind, State } from "ags/state";
