@@ -24,9 +24,11 @@
       ...
     }:
     let
+      name = "stash";
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-      deps = with ags.packages.${system}; [
+      entry = "app.ts";
+      extraPackages = with ags.packages.${system}; [
         apps
         battery
         bluetooth
@@ -44,32 +46,47 @@
       ];
     in
     {
-      packages.${system} = {
-        default = ags.lib.bundle {
-          inherit pkgs;
-          src = ./.;
-          name = "stash";
-          entry = "app.ts";
-          gtk4 = true;
-          extraPackages = deps;
-        };
+      packages.${system}.default = pkgs.stdenv.mkDerivation {
+        inherit name;
+        src = ./.;
+
+        nativeBuildInputs = [
+          ags.packages.${system}.default
+          pkgs.wrapGAppsHook
+          pkgs.gobject-introspection
+        ];
+
+        buildInputs = extraPackages ++ [
+          pkgs.gjs
+          ags.packages.${system}.astal4
+        ];
+
+        installPhase = ''
+          runHook preInstall
+
+          mkdir -p $out/bin
+          mkdir -p $out/share
+          cp -r * $out/share
+          ags bundle ${entry} $out/bin/${name} -d "SRC='$out/share'"
+
+          runHook postInstall
+        '';
       };
+
       homeManagerModules = {
         default = self.homeManagerModules.stash;
         stash = import ./hm-module.nix self;
       };
 
-      devShells.${system} = {
-        default = pkgs.mkShell {
-          buildInputs = [
-            (ags.packages.${pkgs.system}.default.override {
-              extraPackages = deps;
-            })
-            pkgs.nixd
-            pkgs.brightnessctl
-            pkgs.nixfmt-rfc-style
-          ];
-        };
+      devShells.${system}.default = pkgs.mkShell {
+        buildInputs = [
+          (ags.packages.${pkgs.system}.default.override {
+            inherit extraPackages;
+          })
+          pkgs.nixd
+          pkgs.brightnessctl
+          pkgs.nixfmt-rfc-style
+        ];
       };
     };
 }
