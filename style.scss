@@ -16,10 +16,12 @@ window.quicksettings {
     border-radius: var(--window-radius);
     background: var(--window-bg-color);
     padding: 4px;
+  }
 
-    .thumbnail {
-      overflow: hidden;
-    }
+  .battery {
+    border-radius: var(--window-radius);
+    background: var(--window-bg-color);
+    padding: 4px;
   }
 }
 
