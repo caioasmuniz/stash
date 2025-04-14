@@ -22,8 +22,6 @@ App.start({
     applauncher(verticalBar, visible);
     osd();
     bar(verticalBar);
-
-    visible.subscribe(v => console.log(v))
   },
   client(message: (msg: string) => string, ...args: Array<string>) {
     if (args[0] === "toggle") {
