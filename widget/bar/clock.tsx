@@ -1,31 +1,41 @@
-import { Variable, GLib, bind } from "astal"
-import { App, Gtk } from "astal/gtk4"
-import Gdk from "gi://Gdk?version=4.0"
-import { ToggleButton } from "../../lib/astalified"
+import GLib from "gi://GLib"
+import { Poll } from "ags/state"
+import { Gtk, Gdk } from "ags/gtk4"
 
 export default ({ vertical }: { vertical: boolean }) => {
-  const day = Variable<string>("").poll(1000, () =>
+  const day = new Poll<string>("", 1000, () =>
     GLib.DateTime.new_now_local().get_day_of_month().toString())
-  const month = Variable<string>("").poll(1000, () =>
+  const month = new Poll<string>("", 1000, () =>
     GLib.DateTime.new_now_local().format("%b")!)
-  const hour = Variable<string>("").poll(1000, () =>
+  const hour = new Poll<string>("", 1000, () =>
     GLib.DateTime.new_now_local().format("%H")!)
-  const minute = Variable<string>("").poll(1000, () =>
+  const minute = new Poll<string>("", 1000, () =>
     GLib.DateTime.new_now_local().format("%M")!)
 
-  return <ToggleButton
+  return <Gtk.MenuButton
+    direction={vertical ?
+      Gtk.ArrowType.RIGHT :
+      Gtk.ArrowType.UP}
     hexpand={vertical}
     cssClasses={["pill", "clock", vertical ? "vert" : ""]}
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
-    active={bind(App.get_window("infopannel")!, "visible")}
-    onClicked={() => App.toggle_window("infopannel")}>
+    popover={<Gtk.Popover
+      valign={Gtk.Align.CENTER}
+      halign={Gtk.Align.CENTER}
+      hasArrow={false}>
+      <Gtk.Calendar />
+    </Gtk.Popover> as Gtk.Popover}>
     <box
       halign={Gtk.Align.CENTER}
       valign={Gtk.Align.CENTER}
-      vertical={vertical}
+      orientation={vertical ?
+        Gtk.Orientation.VERTICAL :
+        Gtk.Orientation.HORIZONTAL}
       spacing={vertical ? 0 : 4}>
       <box
-        vertical={vertical}
+        orientation={vertical ?
+          Gtk.Orientation.VERTICAL :
+          Gtk.Orientation.HORIZONTAL}
         spacing={vertical ? 0 : 4}>
         <label
           label={hour()}
@@ -34,8 +44,11 @@ export default ({ vertical }: { vertical: boolean }) => {
           label={minute()}
           cssClasses={["time"]} />
       </box>
-      <box vertical spacing={vertical ? 2 : 0}
-        halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
+      <box
+        orientation={Gtk.Orientation.VERTICAL}
+        spacing={vertical ? 2 : 0}
+        halign={Gtk.Align.CENTER}
+        valign={Gtk.Align.CENTER}>
         <label
           cssClasses={["date"]}
           label={day()}
@@ -46,5 +59,5 @@ export default ({ vertical }: { vertical: boolean }) => {
         />
       </box>
     </box>
-  </ToggleButton>
+  </Gtk.MenuButton >
 }

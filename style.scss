@@ -1,137 +1,149 @@
 window {
-    border-radius: var(--window-radius);
-    background: oklab(from var(--window-bg-color) l a b / 0.75);
+  border-radius: var(--window-radius);
+  background: oklab(from var(--window-bg-color) l a b / 0.75);
 }
 
 window.osd-popup {
-    background: transparent;
+  background: transparent;
 }
 
 window.quicksettings {
-    .quicksettings-body {
-        padding: 8px;
-    }
+  .quicksettings-body {
+    padding: 8px;
+  }
+
+  .media {
+    border-radius: var(--window-radius);
+    background: var(--window-bg-color);
+    padding: 4px;
+  }
+
+  .battery {
+    border-radius: var(--window-radius);
+    background: var(--window-bg-color);
+    padding: 4px;
+  }
 }
 
 window.applauncher {
-    .applauncher-body {
-        padding: 8px;
+  .applauncher-body {
+    padding: 8px;
 
-        .app-button {
-            padding: 4px;
-        }
+    .app-button {
+      padding: 4px;
     }
+  }
 }
 
 window.notif-popup {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 .notification {
-    background: var(--window-bg-color);
-    color: var(--window-fg-color);
-    border-radius: 12px;
-    padding: 4px;
-    border: 1px solid var(--border-color);
+  background: var(--window-bg-color);
+  color: var(--window-fg-color);
+  border-radius: 12px;
+  padding: 4px;
+  border: 1px solid var(--border-color);
 }
 
 .slider {
-    min-width: 120px;
-    padding: 8px;
-    border-radius: 12px;
-    color: var(--window-fg-color);
-    background: oklab(from var(--window-bg-color) l a b / 0.4);
+  min-width: 120px;
+  padding: 8px;
+  border-radius: 12px;
+  color: var(--window-fg-color);
+  background: oklab(from var(--window-bg-color) l a b / 0.4);
 
-    image {
-        -gtk-icon-size: 1.5em;
-    }
+  image {
+    -gtk-icon-size: 1.5em;
+  }
 }
 
 window.bar {
-    border-radius: 0 0 var(--window-radius) var(--window-radius);
+  border-radius: var(--window-radius) var(--window-radius) 0 0;
 
-    .bar-centerbox {
-        padding: 2px;
+  .bar-centerbox {
+    padding: 2px;
+  }
+
+  * {
+    margin: 0px;
+    padding: 0px;
+  }
+
+  &.vert {
+    border-radius: 0 var(--window-radius) var(--window-radius) 0;
+  }
+
+  .launcher {
+    padding: 0px;
+    min-width: 30px;
+    min-height: 30px;
+
+    image {
+      -gtk-icon-size: 24px;
+    }
+  }
+
+  .clock {
+    //   padding: 0px 4px;
+
+    //   &.vert {
+    //     padding: 4px 0px;
+    //   }
+
+    .date {
+      font-size: 0.5em;
     }
 
-    * {
-        margin: 0px;
-        padding: 0px;
+    .time {
+      font-size: 1.75em;
     }
+
+  }
+
+  .sys-indicators {
+    padding: 0px 8px;
 
     &.vert {
-        border-radius: 0 var(--window-radius) var(--window-radius) 0;
+      padding: 4px 0px;
     }
 
-    .launcher {
-        padding: 0px;
-        min-width: 30px;
-        min-height: 30px;
+    image {
+      -gtk-icon-size: 18px;
+    }
+  }
 
-        image {
-            -gtk-icon-size: 24px;
-        }
+  .sys-usage {
+    padding: 4px;
+
+    label {
+      margin: 0;
+      font-size: 0.6em;
     }
 
-    .clock {
-        padding: 0px 4px;
+  }
 
-        &.vert {
-            padding: 4px 0px;
-        }
+  .ws-button {
+    padding: 0px 2px;
+    min-width: 30px;
+    min-height: 30px;
+    -gtk-icon-size: 24px;
 
-        .date {
-            font-size: 0.5em;
-        }
-
-        .time {
-            font-size: 1.75em;
-        }
-
+    &.vert {
+      padding: 2px 0px;
     }
 
-    .sys-indicators {
-        padding: 0px 8px;
-
-        &.vert {
-            padding: 4px 0px;
-        }
-
-        image {
-            -gtk-icon-size: 18px;
-        }
+    .unfocused {
+      filter: brightness(150%) saturate(0%);
     }
 
-    .sys-usage {
-        padding: 4px;
+    &.special {
+      background: oklab(from var(--success-bg-color) l a b / 0.25);
 
-        label {
-            margin: 0;
-            font-size: 0.6em;
-        }
-
+      &.active {
+        background: var(--success-bg-color);
+      }
     }
-
-    .ws-button {
-        padding: 0px 2px;
-        min-width: 30px;
-        min-height: 30px;
-        -gtk-icon-size: 24px;
-
-        &.vert {
-            padding: 2px 0px;
-        }
-
-        .unfocused {
-            filter: brightness(150%) saturate(0%);
-        }
-
-        &.special {
-            background: oklab(from var(--success-bg-color) l a b / 0.25);
-
-            &.active {
-                background: var(--success-bg-color);
-            }
-        }
-    }
+  }
 }

@@ -4,10 +4,10 @@ import Network from "gi://AstalNetwork"
 import Batery from "gi://AstalBattery"
 import Wireplumber from "gi://AstalWp"
 import PowerProf from "gi://AstalPowerProfiles"
-import { App } from "astal/gtk4";
-import { bind } from "astal";
 import Gdk from "gi://Gdk?version=4.0"
-import { ToggleButton } from "../../lib/astalified"
+import { bind } from "ags/state"
+import { Gtk } from "ags/gtk4"
+import App from "ags/gtk4/app"
 
 const audio = Wireplumber.get_default()!.audio
 const battery = Batery.get_default()
@@ -56,15 +56,20 @@ const BatteryIndicator = () => <image
 
 
 export default ({ vertical }: { vertical: boolean }) =>
-  <ToggleButton
+  <Gtk.ToggleButton
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     cssClasses={["pill", "sys-indicators", vertical ? "vert" : ""]}
     active={bind(App.get_window("quicksettings")!, "visible")}
-    onClicked={() => App.toggle_window("quicksettings")}
-    onScroll={(self, dx, dy) => dy > 0 ?
-      audio.default_speaker.volume -= 0.025 :
-      audio.default_speaker.volume += 0.025}>
-    <box spacing={4} vertical={vertical}>
+    $clicked={() => App.toggle_window("quicksettings")}
+  // $scroll={(self, dx, dy) => dy > 0 ?
+  // audio.default_speaker.volume -= 0.025 :
+  // audio.default_speaker.volume += 0.025}
+  >
+    <box
+      spacing={4}
+      orientation={vertical ?
+        Gtk.Orientation.VERTICAL :
+        Gtk.Orientation.HORIZONTAL}>
       {ProfileIndicator()}
       {BluetoothIndicator()}
       {NetworkIndicator()}
@@ -73,4 +78,4 @@ export default ({ vertical }: { vertical: boolean }) =>
       {AudioIndicator()}
       {DNDIndicator()}
     </box>
-  </ToggleButton>
+  </Gtk.ToggleButton>

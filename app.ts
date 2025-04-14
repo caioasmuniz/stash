@@ -1,25 +1,24 @@
-import { App } from "astal/gtk4";
-import { bind, Variable } from "astal";
-
+import App from "ags/gtk4/app"
 import style from "./style.scss";
 
-import bar from "./widget/bar";
+import bar from "./widget/bar/index";
 import osd from "./widget/osd";
 import applauncher from "./widget/applauncher";
 import quicksettings from "./widget/quicksettings";
 import notificationPopup from "./widget/notifications";
-import infopannel from "./widget/infopannel";
+import { State } from "ags/state";
 
-const verticalBar = Variable(true)
+const verticalBar = new State<boolean>(true)
+const visible = new State<{ applauncher: boolean, quicksettings: boolean }>(
+  { applauncher: false, quicksettings: false })
 
 App.start({
   css: style,
   instanceName: "stash",
   main() {
-    // notificationPopup();
-    quicksettings(verticalBar);
-    infopannel(verticalBar);
-    applauncher(verticalBar);
+    notificationPopup();
+    quicksettings(verticalBar, visible);
+    applauncher(verticalBar, visible);
     osd();
     bar(verticalBar);
   },

@@ -1,8 +1,8 @@
+import Adw from "gi://Adw?version=1";
 import Notifd from "gi://AstalNotifd";
-import { Gdk, Gtk } from "astal/gtk4";
-import { bind } from "astal";
-import notification from "../common/notification";
-import { ScrolledWindow, StatusPage } from "../../lib/astalified";
+import { For, Gdk, Gtk } from "ags/gtk4";
+import { bind } from "ags/state";
+import Notification from "../common/notification";
 
 const notifd = Notifd.get_default();
 
@@ -13,7 +13,7 @@ const DNDButton = () => <box spacing={4}>
     valign={Gtk.Align.CENTER}
     active={bind(notifd, "dontDisturb")}
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
-    setup={self =>
+    $={self =>
       self.connect("notify::active", self =>
         notifd.dontDisturb = self.state)} />
 </box>
@@ -21,7 +21,7 @@ const DNDButton = () => <box spacing={4}>
 const ClearAllButton = () => <button
   halign={Gtk.Align.END}
   cursor={Gdk.Cursor.new_from_name("pointer", null)}
-  onClicked={() => notifd.get_notifications().
+  $clicked={() => notifd.get_notifications().
     forEach(n => n.dismiss())}>
   <box spacing={4}>
     <image iconName={"edit-clear-all-symbolic"} />
@@ -30,8 +30,12 @@ const ClearAllButton = () => <button
 </button >
 
 export default () =>
-  <box vertical spacing={4}>
-    <box vertical spacing={4}>
+  <box
+    orientation={Gtk.Orientation.VERTICAL}
+    spacing={4}>
+    <box
+      orientation={Gtk.Orientation.VERTICAL}
+      spacing={4}>
       <label
         label={"Notifications"}
         cssClasses={["title-2"]} />
@@ -42,22 +46,26 @@ export default () =>
         <ClearAllButton />
       </box>
     </box>
-    <ScrolledWindow
+    <Gtk.ScrolledWindow
       hscrollbarPolicy={Gtk.PolicyType.NEVER}
-      propagateNaturalHeight
-      maxContentHeight={400}>
+      vexpand>
       <box
-        vertical
+        orientation={Gtk.Orientation.VERTICAL}
         spacing={6}>
-        {bind(notifd, "notifications").as(n =>
-          n.length > 0 ?
-            n.map(notification) :
-            <StatusPage
-              cssClasses={["compact"]}
-              title={"No new Notifications"}
-              description={"You're up-to-date"}
-              iconName={"user-offline-symbolic"} />
-        )}
+        <For each={bind(notifd, "notifications")
+          .as(n => n.sort((a, b) => b.time - a.time))}>
+          {n => <Notification
+            notif={n}
+            closeAction={n => n.dismiss()} />}
+        </For>
+        <Adw.StatusPage
+          visible={bind(notifd, "notifications")
+            .as(n => n.length < 1)}
+          vexpand
+          cssClasses={["compact"]}
+          title={"No new Notifications"}
+          description={"You're up-to-date"}
+          iconName={"user-offline-symbolic"} />
       </box>
-    </ScrolledWindow>
+    </Gtk.ScrolledWindow>
   </box>

@@ -1,17 +1,21 @@
 import Notifd from "gi://AstalNotifd";
-import { bind } from "astal"
-import { Gtk } from "astal/gtk4";
+import { bind } from "ags/state"
+import { For, Gtk } from "ags/gtk4";
+import GLib from "gi://GLib?version=2.0";
 
-export default (notif: Notifd.Notification) =>
+export default ({ notif, closeAction }: {
+  notif: Notifd.Notification,
+  closeAction: (notif: Notifd.Notification, self: Gtk.Widget) => void,
+}) =>
   <box
     name={notif.id.toString()}
     cssClasses={["notification"]}
     spacing={8}
-    vertical>
+    orientation={Gtk.Orientation.VERTICAL}>
     <box spacing={8}>
-      <image 
-      pixelSize={24}
-      iconName={notif.app_icon} />
+      <image
+        pixelSize={24}
+        iconName={notif.app_icon} />
       <label
         wrap
         hexpand
@@ -21,7 +25,7 @@ export default (notif: Notifd.Notification) =>
         halign={Gtk.Align.END}
         valign={Gtk.Align.CENTER}
         cssClasses={["circular"]}
-        onClicked={() => notif.dismiss()}
+        $clicked={self => closeAction(notif, self.parent.parent)}
         iconName={"window-close-symbolic"} />
     </box>
     <label
@@ -29,14 +33,18 @@ export default (notif: Notifd.Notification) =>
       maxWidthChars={25}
       cssClasses={["body"]}
       label={notif.body} />
+    <label
+      label={GLib.DateTime
+        .new_from_unix_local(notif.time)
+        .format("%H:%M:%S") || "ERROR"} />
     <box cssClasses={["actions"]} spacing={4}>
-      {bind(notif, "actions").as(n =>
-        n.map((action) =>
-          <button
-            onClicked={() =>
-              notif.invoke(action.id)}>
-            <label label={action.label} />
-          </button>
-        ))}
+      <For each={bind(notif, "actions")}>
+        {action => <button
+          $clicked={() =>
+            notif.invoke(action.id)}>
+          <label label={action.label} />
+        </button>
+        }
+      </For>
     </box>
-  </box>
+  </box> as Gtk.Widget
