@@ -18,7 +18,6 @@ App.start({
   main() {
     notificationPopup();
     quicksettings(verticalBar, visible);
-    // infopannel(verticalBar);
     applauncher(verticalBar, visible);
     osd();
     bar(verticalBar);

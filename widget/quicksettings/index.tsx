@@ -2,7 +2,7 @@ import Hyprland from "gi://AstalHyprland"
 import App from "ags/gtk4/app";
 import { execAsync } from "ags/process";
 import { Astal, Gtk } from "ags/gtk4";
-import { bind, State, sync } from "ags/state";
+import { bind, State } from "ags/state";
 
 import { Slider, SliderType } from "../common/slider";
 import NotificationList from "./notificationList";
@@ -11,6 +11,7 @@ import DarkMode from "./darkMode";
 import Tray from "./tray";
 import AudioConfig from "./audioConfig";
 import Media from "./media";
+import Battery from "./battery";
 
 const hyprland = Hyprland.get_default()
 
@@ -83,6 +84,7 @@ export default (vertical: State<boolean>,
       </box>
       <Slider type={SliderType.BRIGHTNESS} />
       <AudioConfig />
+      <Battery />
       <Media />
       <NotificationList />
     </box>
