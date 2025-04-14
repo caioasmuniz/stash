@@ -1,7 +1,6 @@
 import GLib from "gi://GLib"
 import { Poll } from "ags/state"
 import { Gtk, Gdk } from "ags/gtk4"
-import App from "ags/gtk4/app"
 
 export default ({ vertical }: { vertical: boolean }) => {
   const day = new Poll<string>("", 1000, () =>
@@ -13,12 +12,19 @@ export default ({ vertical }: { vertical: boolean }) => {
   const minute = new Poll<string>("", 1000, () =>
     GLib.DateTime.new_now_local().format("%M")!)
 
-  return <Gtk.ToggleButton
+  return <Gtk.MenuButton
+    direction={vertical ?
+      Gtk.ArrowType.RIGHT :
+      Gtk.ArrowType.UP}
     hexpand={vertical}
     cssClasses={["pill", "clock", vertical ? "vert" : ""]}
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
-    // active={bind(App.get_window("infopannel")!, "visible")}
-    $clicked={() => App.toggle_window("infopannel")}>
+    popover={<Gtk.Popover
+      valign={Gtk.Align.CENTER}
+      halign={Gtk.Align.CENTER}
+      hasArrow={false}>
+      <Gtk.Calendar />
+    </Gtk.Popover> as Gtk.Popover}>
     <box
       halign={Gtk.Align.CENTER}
       valign={Gtk.Align.CENTER}
@@ -53,5 +59,5 @@ export default ({ vertical }: { vertical: boolean }) => {
         />
       </box>
     </box>
-  </Gtk.ToggleButton>
+  </Gtk.MenuButton >
 }
