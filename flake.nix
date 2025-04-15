@@ -48,6 +48,7 @@
     {
       packages.${system}.default = pkgs.stdenv.mkDerivation {
         inherit name;
+        meta.mainProgram = "${name}";
         src = ./.;
 
         nativeBuildInputs = [
