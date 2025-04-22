@@ -32,6 +32,7 @@ const ClearAllButton = () => <button
 export default () =>
   <box
     orientation={Gtk.Orientation.VERTICAL}
+    cssClasses={["notif-list"]}
     spacing={4}>
     <box
       orientation={Gtk.Orientation.VERTICAL}
@@ -53,10 +54,47 @@ export default () =>
         orientation={Gtk.Orientation.VERTICAL}
         spacing={6}>
         <For each={bind(notifd, "notifications")
-          .as(n => n.sort((a, b) => b.time - a.time))}>
-          {n => <Notification
-            notif={n}
-            closeAction={n => n.dismiss()} />}
+          .as(n => n
+            .sort((a, b) => b.time - a.time)
+            .reduce((res, notif) => {
+              const i = res.findIndex(n =>
+                n[0].appName === notif.appName)
+              if (i === -1)
+                res.push([notif]);
+              else
+                res[i].push(notif);
+              return res;
+            }, [] as Notifd.Notification[][]))
+        }>
+          {n => {
+            if (n.length === 1)
+              return <Notification
+                notif={n[0]}
+                closeAction={n => n.dismiss()}
+              />
+            return <Gtk.Expander
+              cssClasses={["notif-expander"]}>
+              <Notification
+                _type="label"
+                notif={n[0]}
+                closeAction={n => n.dismiss()}
+              />
+              <box
+                marginTop={4}
+                spacing={4}
+                orientation={Gtk.Orientation.VERTICAL}
+              >
+                {n.slice(1).map(notif =>
+                  <Notification
+                    notif={notif}
+                    closeAction={n => n.dismiss()}
+                  />
+                )}
+              </box>
+            </Gtk.Expander>
+          }
+
+          }
         </For>
         <Adw.StatusPage
           visible={bind(notifd, "notifications")
@@ -67,5 +105,5 @@ export default () =>
           description={"You're up-to-date"}
           iconName={"user-offline-symbolic"} />
       </box>
-    </Gtk.ScrolledWindow>
-  </box>
+    </Gtk.ScrolledWindow >
+  </box >

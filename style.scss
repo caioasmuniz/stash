@@ -23,6 +23,25 @@ window.quicksettings {
     background: var(--window-bg-color);
     padding: 4px;
   }
+
+  .notif-list {
+    .notif-expander {
+      border-radius: var(--window-radius);
+      border: 1px solid var(--border-color);
+      padding: 2px;
+
+      &:hover {
+        color: var(--view-bg-color);
+        background: var(--view-bg-color);
+      }
+
+      expander {
+        -gtk-icon-source: none;
+        -gtk-icon-size: 0px;
+        min-width: 0px;
+      }
+    }
+  }
 }
 
 window.applauncher {
