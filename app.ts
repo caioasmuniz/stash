@@ -1,4 +1,6 @@
+import { State } from "ags/state";
 import App from "ags/gtk4/app"
+
 import style from "./style.scss";
 
 import bar from "./widget/bar";
@@ -6,7 +8,7 @@ import osd from "./widget/osd";
 import applauncher from "./widget/applauncher";
 import quicksettings from "./widget/quicksettings";
 import notificationPopup from "./widget/notifications";
-import { State } from "ags/state";
+import screenshare from "./widget/screenshare";
 
 const verticalBar = new State<boolean>(true)
 const visible = new State<{ applauncher: boolean, quicksettings: boolean }>(
@@ -16,6 +18,7 @@ App.start({
   css: style,
   instanceName: "stash",
   main() {
+    screenshare();
     notificationPopup();
     quicksettings(verticalBar, visible);
     applauncher(verticalBar, visible);
