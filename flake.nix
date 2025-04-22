@@ -84,10 +84,11 @@
           (ags.packages.${pkgs.system}.default.override {
             inherit extraPackages;
           })
+pkgs.libnotify
           pkgs.nixd
           pkgs.brightnessctl
           pkgs.nixfmt-rfc-style
-        ];
+        ] ++ extraPackages;
       };
     };
 }
