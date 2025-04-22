@@ -1,7 +1,7 @@
 import Notifd from "gi://AstalNotifd";
 import { bind } from "ags/state"
 import { For, Gtk } from "ags/gtk4";
-import GLib from "gi://GLib?version=2.0";
+import GLib from "gi://GLib";
 
 export default ({ notif, closeAction }: {
   notif: Notifd.Notification,

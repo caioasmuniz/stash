@@ -1,7 +1,7 @@
 import AstalBattery from "gi://AstalBattery";
 import { Gtk } from "ags/gtk4";
 import { bind, derive } from "ags/state";
-import GLib from "gi://GLib?version=2.0";
+import GLib from "gi://GLib";
 
 const battery = AstalBattery.get_default()
 
