@@ -92,6 +92,7 @@
           pkgs.libnotify
           pkgs.nixd
           pkgs.nixfmt-rfc-style
+          pkgs.brightnessctl
         ] ++ extraPackages;
       };
     };
