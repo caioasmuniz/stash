@@ -24,6 +24,13 @@ window.quicksettings {
     padding: 4px;
   }
 
+  .audio-config {
+    button {
+      padding: 0px;
+      border-radius: var(--window-radius);
+    }
+  }
+
   .notif-list {
     .notif-expander {
       border-radius: var(--window-radius);
