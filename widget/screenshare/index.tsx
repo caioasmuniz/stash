@@ -11,6 +11,13 @@ const outputs = new State<{
   clients: Hyprland.Client[]
 }>({ monitors: [], clients: [] })
 
+
+let response: (response: any) => void = () => { }
+
+export function updateResponse(res: (response: any) => void) {
+  response = res
+}
+
 export default () =>
   <window
     defaultWidth={300}
@@ -32,42 +39,40 @@ export default () =>
         title={"monitors"}
         iconName={"preferences-desktop-display-symbolic"}
       >
-        <box orientation={Gtk.Orientation.VERTICAL}>
-
-          <For each={bind(hyprland, "monitors")}>
-            {monitor =>
-              <Adw.ActionRow
-                title={`${monitor.name} (${monitor.id})`}
-                subtitle={monitor.description}
-                iconName={"preferences-desktop-display-symbolic"}
-                activatable
-                selectable
-                $activated={self => {
-                  console.log(monitor.id)
-                  App.get_window("screenshare")!.visible = false;
-                }} />}
-          </For>
-        </box>
+        <For each={bind(hyprland, "monitors")}>
+          {monitor =>
+            <Adw.ActionRow
+              title={`${monitor.name} (${monitor.id})`}
+              subtitle={monitor.description}
+              iconName={"preferences-desktop-display-symbolic"}
+              activatable
+              selectable
+              $activated={self => {
+                console.log(monitor.id)
+                response(monitor.id)
+                App.get_window("screenshare")!.visible = false;
+              }} />}
+        </For>
       </Adw.ExpanderRow>
+
       <Adw.ExpanderRow
         title={"Windows"}
         iconName={"tablet-symbolic"}
       >
-        <box orientation={Gtk.Orientation.VERTICAL}>
-          <For each={bind(hyprland, "clients")}>
-            {client =>
-              <Adw.ActionRow
-                title={`${client.title} (${client.workspace.name})`}
-                subtitle={client.class}
-                iconName={"tablet-symbolic"}
-                activatable
-                selectable
-                $activated={self => {
-                  console.log(client.address)
-                  App.get_window("screenshare")!.visible = false;
-                }} />}
-          </For>
-        </box>
+        <For each={bind(hyprland, "clients")}>
+          {client =>
+            <Adw.ActionRow
+              title={`${client.title} (${client.workspace.name})`}
+              subtitle={client.class}
+              iconName={"tablet-symbolic"}
+              activatable
+              selectable
+              $activated={self => {
+                console.log(client.address)
+                response(client.address)
+                App.get_window("screenshare")!.visible = false;
+              }} />}
+        </For>
       </Adw.ExpanderRow>
     </box >
   </window >
