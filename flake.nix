@@ -22,7 +22,7 @@
       nixpkgs,
       ags,
       ...
-    }:
+    }@inputs:
     let
       name = "stash";
       system = "x86_64-linux";
@@ -98,6 +98,7 @@
             nixd
             nixfmt-rfc-style
             brightnessctl
+            nix-output-monitor
           ]
           ++ astalPackages;
       };
