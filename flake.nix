@@ -27,7 +27,7 @@
       name = "stash";
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-      extraPackages = with ags.packages.${system}; [
+      astalPackages = with ags.packages.${system}; [
         apps
         battery
         bluetooth
@@ -38,9 +38,14 @@
         powerprofiles
         tray
         wireplumber
-        pkgs.libadwaita
-        pkgs.libgtop
       ];
+      extraPackages =
+        with pkgs;
+        [
+          libadwaita
+          libgtop
+        ]
+        ++ astalPackages;
     in
     {
       packages.${system}.default = pkgs.stdenv.mkDerivation {
@@ -71,8 +76,6 @@
               pkgs.lib.makeBinPath [
                 pkgs.brightnessctl
                 pkgs.darkman
-                pkgs.libgtop
-                pkgs.libadwaita
               ]
             }
           )
@@ -93,7 +96,7 @@
           pkgs.nixd
           pkgs.nixfmt-rfc-style
           pkgs.brightnessctl
-        ] ++ extraPackages;
+        ] ++ astalPackages;
       };
     };
 }
