@@ -88,15 +88,18 @@
       };
 
       devShells.${system}.default = pkgs.mkShell {
-        buildInputs = [
-          (ags.packages.${pkgs.system}.default.override {
-            inherit extraPackages;
-          })
-          pkgs.libnotify
-          pkgs.nixd
-          pkgs.nixfmt-rfc-style
-          pkgs.brightnessctl
-        ] ++ astalPackages;
+        buildInputs =
+          with pkgs;
+          [
+            (inputs.ags.packages.${pkgs.system}.default.override {
+              inherit extraPackages;
+            })
+            libnotify
+            nixd
+            nixfmt-rfc-style
+            brightnessctl
+          ]
+          ++ astalPackages;
       };
     };
 }
