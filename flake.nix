@@ -40,6 +40,8 @@
         wireplumber
         pkgs.libadwaita
         pkgs.libgtop
+        pkgs.libgweather
+        pkgs.glib-networking
       ];
     in
     {
