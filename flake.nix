@@ -52,6 +52,7 @@
       wrapperPackages = with pkgs; [
         brightnessctl
         darkman
+        hyprshot
       ];
     in
     {
