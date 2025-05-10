@@ -22,13 +22,12 @@
       nixpkgs,
       ags,
       ...
-    }:
+    }@inputs:
     let
       name = "stash";
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-      entry = "app.ts";
-      extraPackages = with ags.packages.${system}; [
+      astalPackages = with ags.packages.${system}; [
         apps
         battery
         bluetooth
@@ -39,11 +38,14 @@
         powerprofiles
         tray
         wireplumber
-        pkgs.brightnessctl
-        pkgs.darkman
-        pkgs.libgtop
-        pkgs.libadwaita
       ];
+      extraPackages =
+        with pkgs;
+        [
+          libadwaita
+          libgtop
+        ]
+        ++ astalPackages;
     in
     {
       packages.${system}.default = pkgs.stdenv.mkDerivation {
@@ -52,25 +54,31 @@
         src = ./.;
 
         nativeBuildInputs = [
-          ags.packages.${system}.default
           pkgs.wrapGAppsHook
           pkgs.gobject-introspection
+          ags.packages.${system}.default
         ];
 
         buildInputs = extraPackages ++ [
           pkgs.gjs
+          pkgs.glib
           ags.packages.${system}.astal4
         ];
 
         installPhase = ''
-          runHook preInstall
-
           mkdir -p $out/bin
-          mkdir -p $out/share
-          cp -r * $out/share
-          ags bundle ${entry} $out/bin/${name} -d "SRC='$out/share'"
+          ags bundle app.ts $out/bin/${name}
+        '';
 
-          runHook postInstall
+        preFixup = ''
+          gappsWrapperArgs+=(
+            --prefix PATH : ${
+              pkgs.lib.makeBinPath [
+                pkgs.brightnessctl
+                pkgs.darkman
+              ]
+            }
+          )
         '';
       };
 
@@ -80,15 +88,19 @@
       };
 
       devShells.${system}.default = pkgs.mkShell {
-        buildInputs = [
-          (ags.packages.${pkgs.system}.default.override {
-            inherit extraPackages;
-          })
-pkgs.libnotify
-          pkgs.nixd
-          pkgs.brightnessctl
-          pkgs.nixfmt-rfc-style
-        ] ++ extraPackages;
+        buildInputs =
+          with pkgs;
+          [
+            (inputs.ags.packages.${pkgs.system}.default.override {
+              inherit extraPackages;
+            })
+            libnotify
+            nixd
+            nixfmt-rfc-style
+            brightnessctl
+            nix-output-monitor
+          ]
+          ++ astalPackages;
       };
     };
 }
