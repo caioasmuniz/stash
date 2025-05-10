@@ -36,6 +36,7 @@ export default () => <window
   visible
   widthRequest={250}
   application={App}
+  margin={24}
   monitor={bind(hyprland, "focusedMonitor").as(m => m.id)}
   cssClasses={["osd-popup"]}
   anchor={Astal.WindowAnchor.BOTTOM}>
