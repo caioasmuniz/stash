@@ -60,21 +60,24 @@ export default ({ vertical }: { vertical: boolean }) =>
     cssClasses={["pill", "sys-indicators", vertical ? "vert" : ""]}
     active={bind(App.get_window("quicksettings")!, "visible")}
     $clicked={() => App.toggle_window("quicksettings")}
-  // $scroll={(self, dx, dy) => dy > 0 ?
-  // audio.default_speaker.volume -= 0.025 :
-  // audio.default_speaker.volume += 0.025}
-  >
+    $={self => self.add_controller(
+      <Gtk.EventControllerScroll
+        flags={Gtk.EventControllerScrollFlags.VERTICAL}
+        $scroll={(self, dx, dy) => dy > 0 ?
+          audio.default_speaker.volume -= 0.025 :
+          audio.default_speaker.volume += 0.025}
+      /> as Gtk.EventController)}>
     <box
       spacing={4}
       orientation={vertical ?
         Gtk.Orientation.VERTICAL :
         Gtk.Orientation.HORIZONTAL}>
-      {ProfileIndicator()}
-      {BluetoothIndicator()}
-      {NetworkIndicator()}
-      {BatteryIndicator()}
-      {MicrophoneIndicator()}
-      {AudioIndicator()}
-      {DNDIndicator()}
+      <ProfileIndicator />
+      <BluetoothIndicator />
+      <NetworkIndicator />
+      <BatteryIndicator />
+      <MicrophoneIndicator />
+      <AudioIndicator />
+      <DNDIndicator />
     </box>
   </Gtk.ToggleButton>

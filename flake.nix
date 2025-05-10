@@ -22,12 +22,12 @@
       nixpkgs,
       ags,
       ...
-    }:
+    }@inputs:
     let
       name = "stash";
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-      extraPackages = with ags.packages.${system}; [
+      astalPackages = with ags.packages.${system}; [
         apps
         battery
         bluetooth
@@ -38,11 +38,14 @@
         powerprofiles
         tray
         wireplumber
-        pkgs.libadwaita
-        pkgs.libgtop
-        pkgs.libgweather
-        pkgs.glib-networking
       ];
+      extraPackages =
+        with pkgs;
+        [
+          libadwaita
+          libgtop
+        ]
+        ++ astalPackages;
     in
     {
       packages.${system}.default = pkgs.stdenv.mkDerivation {
@@ -73,8 +76,6 @@
               pkgs.lib.makeBinPath [
                 pkgs.brightnessctl
                 pkgs.darkman
-                pkgs.libgtop
-                pkgs.libadwaita
               ]
             }
           )
@@ -87,15 +88,19 @@
       };
 
       devShells.${system}.default = pkgs.mkShell {
-        buildInputs = [
-          (ags.packages.${pkgs.system}.default.override {
-            inherit extraPackages;
-          })
-          pkgs.libnotify
-          pkgs.nixd
-          pkgs.nixfmt-rfc-style
-          pkgs.brightnessctl
-        ] ++ extraPackages;
+        buildInputs =
+          with pkgs;
+          [
+            (inputs.ags.packages.${pkgs.system}.default.override {
+              inherit extraPackages;
+            })
+            libnotify
+            nixd
+            nixfmt-rfc-style
+            brightnessctl
+            nix-output-monitor
+          ]
+          ++ astalPackages;
       };
     };
 }
