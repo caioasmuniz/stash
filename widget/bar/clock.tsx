@@ -17,7 +17,7 @@ export default ({ vertical }: { vertical: boolean }) => {
       Gtk.ArrowType.RIGHT :
       Gtk.ArrowType.UP}
     hexpand={vertical}
-    cssClasses={["pill", "clock", vertical ? "vert" : ""]}
+    cssClasses={["pill"]}
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     popover={<Gtk.Popover
       valign={Gtk.Align.CENTER}
@@ -26,6 +26,7 @@ export default ({ vertical }: { vertical: boolean }) => {
       <Gtk.Calendar />
     </Gtk.Popover> as Gtk.Popover}>
     <box
+      cssClasses={["clock", vertical ? "vert" : ""]}
       halign={Gtk.Align.CENTER}
       valign={Gtk.Align.CENTER}
       orientation={vertical ?

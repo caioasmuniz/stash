@@ -112,11 +112,11 @@ window.bar {
   }
 
   .clock {
-    //   padding: 0px 4px;
+    padding: 0px 4px;
 
-    //   &.vert {
-    //     padding: 4px 0px;
-    //   }
+    &.vert {
+      padding: 4px 0px;
+    }
 
     .date {
       font-size: 0.5em;
