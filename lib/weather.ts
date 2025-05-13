@@ -29,10 +29,8 @@ export default class Weather extends GObject.Object {
   #iconName = String()
   #lastUpdated = new GLib.DateTime
   #location = new GWeather.Location
-  #moon = {
-    phase: Number(),
-    lat: Number()
-  }
+  #moonPhase = Number()
+  #moonLat = Number()
   #pressure = Number()
   #sunrise = new GLib.DateTime
   #sunset = new GLib.DateTime
@@ -41,32 +39,109 @@ export default class Weather extends GObject.Object {
   // #tempMin: number,
   #tempSummary = String()
   #visibility = Number()
-  #wind = {
-    direction: Number(),
-    speed: Number(),
-    summary: String()
-  }
-
+  #windDirection = Number()
+  #windSpeed = Number()
+  #windSummary = String()
+  
   @property(Number)
   get apparent() {
     return this.#apparent
   }
 
+  @property(String)
+  get attribution() {
+    return this.#attribution
+  }
 
+  @property(String)
+  get conditions() {
+    return this.#conditions
+  }
+  
+  @property(Number)
+  get dew() {
+    return this.#dew
+  }
+  
   @property(Weather)
   get forecast() {
     return this.#forecast
   }
-
+  
+  @property(String)
+  get humidity() {
+    return this.#humidity
+  }
+  
   @property(String)
   get iconName() {
     return this.#iconName
+  }
+
+  @property(GLib.DateTime)
+  get lastUpdated() {
+    return this.#lastUpdated
+  }
+
+  @property(GWeather.Location)
+  get location() {
+    return this.#location
+  }
+
+  @property(Number)
+  get moonPhase() {
+    return this.#moonPhase
+  }
+  
+  @property(Number)
+  get moonLat() {
+    return this.#moonLat
+  }
+
+  @property(Number)
+  get pressure() {
+    return this.#pressure
+  }
+
+  @property(GLib.DateTime)
+  get sunrise() {
+    return this.#sunrise
+  }
+
+  @property(GLib.DateTime)
+  get sunset() {
+    return this.#sunset
+  }
+
+  @property(Number)
+  get temp() {
+    return this.#temp
   }
 
   @property(String)
   get tempSummary() {
     return this.#tempSummary
   }
+
+  @property(Number)
+  get visibility() {
+    return this.#visibility
+  }
+
+  @property(Number)
+  get windDirection() {
+    return this.#windDirection
+  }
+
+  @property(Number)
+  get windSpeed() {
+    return this.#windSpeed
+  }
+  
+  @property(Number)
+  get windSummary() {
+    return this.#windSummary
+  } 
 
   private toDate(time: number) {
     return GLib.DateTime.new_from_unix_local(time)
@@ -99,11 +174,11 @@ export default class Weather extends GObject.Object {
       this.#apparent = weather.get_value_apparent(this.#unit.temp)[1]
       this.notify("apparent")
       this.#attribution = this.#weather.get_attribution()
-      // this.notify("attribution")
+      this.notify("attribution")
       this.#conditions = this.#weather.get_conditions()
-      // this.notify("conditions")
+      this.notify("conditions")
       this.#dew = this.#weather.get_value_dew(this.#unit.temp)[1]
-      // this.notify("dew")
+      this.notify("dew")
       if (weatherInfo) {
         this.#forecast = [] as Weather[]
       } else {
@@ -114,38 +189,35 @@ export default class Weather extends GObject.Object {
         this.notify("forecast")
       }
       this.#humidity = this.#weather.get_humidity()
-      // this.notify("humidity")
+      this.notify("humidity")
       this.#iconName = this.#weather.get_symbolic_icon_name()
       this.notify("icon-name")
       this.#lastUpdated = this.toDate(this.#weather.get_value_update()[1])
-      // this.notify("last-updated")
+      this.notify("last-updated")
       this.#location = this.#weather.get_location()
-      // this.notify("location")
-      this.#moon = {
-        phase: this.#weather.get_value_moonphase()[1],
-        lat: this.#weather.get_value_moonphase()[2]
-      }
-      // this.notify("moon")
+      this.notify("location")
+      this.#moonPhase = this.#weather.get_value_moonphase()[1]
+      this.notify("moon-phase")
+      this.#moonLat = this.#weather.get_value_moonphase()[1]
+      this.notify("moon-lat")
       this.#pressure = this.#weather.get_value_pressure(this.#unit.pressure)[1]
-      // this.notify("pressure")
+      this.notify("pressure")
       this.#sunrise = this.toDate(this.#weather.get_value_sunrise()[1])
-      // this.notify("sunrise")
+      this.notify("sunrise")
       this.#sunset = this.toDate(this.#weather.get_value_sunset()[1])
-      // this.notify("sunset")
+      this.notify("sunset")
       this.#temp = this.#weather.get_value_temp(this.#unit.temp)[1]
-      // this.notify("temp")
-      // #tempMax: number,
-      // #tempMin: number,
+      this.notify("temp")
       this.#tempSummary = this.#weather.get_temp_summary()
       this.notify("temp-summary")
       this.#visibility = this.#weather.get_value_visibility(this.#unit.distance)[1]
-      // this.notify("visibility")
-      this.#wind = {
-        direction: this.#weather.get_value_wind(this.#unit.speed)[2],
-        speed: this.#weather.get_value_wind(this.#unit.speed)[1],
-        summary: this.#weather.get_wind()
-      }
-      // this.notify("wind")
+      this.notify("visibility")
+      this.#windDirection = this.#weather.get_value_wind(this.#unit.speed)[2]
+      this.notify("wind-direction")
+      this.#windSpeed = this.#weather.get_value_wind(this.#unit.speed)[1]
+      this.notify("wind-speed")
+      this.#windSummary = this.#weather.get_wind()
+      this.notify("wind-summary")
     })
   }
 }
