@@ -9,7 +9,6 @@ import Workspaces from "./workspaces";
 import Clock from "./clock";
 import Launcher from "./launcher";
 import { State } from "ags/state";
-import Weather from "./weather";
 const hyprland = Hyprland.get_default()
 
 const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
@@ -54,8 +53,6 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
           Gtk.Orientation.HORIZONTAL}
         valign={vertical ? Gtk.Align.END : Gtk.Align.FILL}
         halign={vertical ? Gtk.Align.FILL : Gtk.Align.END} >
-        <Weather vertical={vertical} />
-        <Gtk.Separator />
         <Clock vertical={vertical} />
         <Gtk.Separator />
         <SystemIndicators vertical={vertical} />
