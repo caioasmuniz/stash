@@ -78,7 +78,7 @@ export default class Weather extends GObject.Object {
     return this.#iconName
   }
 
-  @property(GLib.DateTime)
+  @property(Object)
   get lastUpdated() {
     return this.#lastUpdated
   }
@@ -103,12 +103,12 @@ export default class Weather extends GObject.Object {
     return this.#pressure
   }
 
-  @property(GLib.DateTime)
+  @property(Object)
   get sunrise() {
     return this.#sunrise
   }
 
-  @property(GLib.DateTime)
+  @property(Object)
   get sunset() {
     return this.#sunset
   }
