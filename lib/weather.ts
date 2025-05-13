@@ -27,6 +27,7 @@ export default class Weather extends GObject.Object {
   #forecast = [] as Weather[]
   #humidity = String()
   #iconName = String()
+  #isDaytime = Boolean()
   #lastUpdated = new GLib.DateTime
   #location = new GWeather.Location
   #moonPhase = Number()
@@ -76,6 +77,11 @@ export default class Weather extends GObject.Object {
   @property(String)
   get iconName() {
     return this.#iconName
+  }
+  
+  @property(Boolean)
+  get isDaytime() {
+    return this.#isDaytime
   }
 
   @property(Object)
@@ -192,6 +198,8 @@ export default class Weather extends GObject.Object {
       this.notify("humidity")
       this.#iconName = this.#weather.get_symbolic_icon_name()
       this.notify("icon-name")
+      this.#isDaytime = this.#weather.is_daytime()
+      this.notify("is-daytime")
       this.#lastUpdated = this.toDate(this.#weather.get_value_update()[1])
       this.notify("last-updated")
       this.#location = this.#weather.get_location()
