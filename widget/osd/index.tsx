@@ -16,7 +16,7 @@ const popupList: Gtk.Revealer[] = [
     observable={bind(audio.defaultSpeaker, "volume")}
     widget={Slider({
       iconName: bind(audio.defaultSpeaker, "volumeIcon"),
-      binding: bind(brightness, "screen"),
+      binding: bind(audio.defaultSpeaker,"volume"),
     })} /> as Gtk.Revealer,
 
   <Popup

@@ -2,7 +2,7 @@ import { Gtk } from "ags/gtk4"
 import { Binding } from "ags/state"
 import { timeout } from "ags/time"
 
-const TIMEOUT_MS = 5000
+const TIMEOUT_MS = 2000
 
 export default ({ widget, observable }: {
   widget: Gtk.Widget,
