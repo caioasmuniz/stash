@@ -1,33 +1,24 @@
-import { Astal, Gtk } from "ags/gtk4"
-import app from "ags/gtk4/app"
-import { bind, Binding, State } from "ags/state"
+import { Gtk } from "ags/gtk4"
+import { Binding } from "ags/state"
 import { timeout } from "ags/time"
-import AstalHyprland from "gi://AstalHyprland?version=0.1"
 
-const hyprland = AstalHyprland.get_default()
+const TIMEOUT_MS = 5000
 
-export default ({ subscribable, widget }: {
-  subscribable: State<any> | Binding<any>,
-  widget: Gtk.Widget
+export default ({ widget, observable }: {
+  widget: Gtk.Widget,
+  observable: Binding<number>,
 }) =>
-  <window
-    name={`osd-${subscribable.toString()}`}
-    widthRequest={250}
-    application={app}
-    margin={24}
-    layer={Astal.Layer.OVERLAY}
-    monitor={bind(hyprland, "focusedMonitor").as(m => m.id)}
-    cssClasses={["osd-popup"]}
-    anchor={Astal.WindowAnchor.BOTTOM}
-    $={self => {
-      subscribable.subscribe(() => {
-        if (!self.visible) {
-          self.visible = true
-          timeout(1500, () =>
-            self.visible = false)
+  <revealer
+    transitionDuration={200}
+    revealChild={false}
+    transitionType={Gtk.RevealerTransitionType.SWING_DOWN}
+    $={self =>
+      observable.subscribe(() => {
+        if (!self.revealChild) {
+          self.revealChild = true
+          timeout(TIMEOUT_MS, () =>
+            self.revealChild = false)
         }
-      })
-    }}
-  >
+      })}>
     {widget}
-  </window>
+  </revealer>
