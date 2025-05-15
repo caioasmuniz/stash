@@ -26,12 +26,12 @@ const popupList: Gtk.Revealer[] = [
     widget={Slider({
       iconName: "display-brightness-symbolic",
       binding: bind(brightness, "screen"),
-    })} /> as Gtk.Revealer
+    })} /> as Gtk.Revealer,
 ];
 
 export default () =>
   <window
-    name={`osd`}
+    name={"osd"}
     widthRequest={250}
     application={app}
     margin={24}
@@ -44,10 +44,14 @@ export default () =>
         bind(p, "revealChild")),
       (...r) => r.reduce(
         (a, b) => a || b)
-    ))}>
+    ))}
+  >
     <box
+      cssClasses={["linked", "background", "osd-container"]}
       orientation={Gtk.Orientation.VERTICAL}
-      valign={Gtk.Align.END}>
+      valign={Gtk.Align.END}
+      spacing={12}
+    >
       {popupList}
     </box>
   </window>

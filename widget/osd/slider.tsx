@@ -7,7 +7,7 @@ export default ({ binding, iconName }: {
 }) =>
   <box
     cssClasses={["slider"]}
-    spacing={4}>
+    spacing={8}>
     <image iconName={iconName} />
     <levelbar
       hexpand
