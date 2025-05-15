@@ -7,6 +7,7 @@ import applauncher from "./widget/applauncher";
 import quicksettings from "./widget/quicksettings";
 import notificationPopup from "./widget/notifications";
 import { State } from "ags/state";
+import screenshot from "./widget/screenshot";
 
 const verticalBar = new State<boolean>(true)
 const visible = new State<{ applauncher: boolean, quicksettings: boolean }>(
@@ -21,6 +22,7 @@ App.start({
     applauncher(verticalBar, visible);
     osd();
     bar(verticalBar);
+    screenshot();
   },
   client(message: (msg: string) => string, ...args: Array<string>) {
     if (args[0] === "toggle") {

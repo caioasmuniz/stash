@@ -1,5 +1,5 @@
 import Hyprland from "gi://AstalHyprland"
-import App from "ags/gtk4/app";
+import app from "ags/gtk4/app";
 import { execAsync } from "ags/process";
 import { Astal, Gtk } from "ags/gtk4";
 import { bind, State } from "ags/state";
@@ -39,6 +39,18 @@ const RotateButton = ({ vertical }:
     <image iconName={"object-rotate-right-symbolic"} />
   </button>
 
+const Screenshot = () => <button
+  $clicked={() => {
+    app.get_window("quicksettings")!
+      .visible = false
+    app.get_window("screenshot")!
+      .visible = true
+  }}
+  cssClasses={["circular"]}
+>
+  <image iconName={"applets-screenshooter-symbolic"} />
+</button>
+
 export default (vertical: State<boolean>,
   visible: State<{ applauncher: boolean, quicksettings: boolean }>) => <window
     $={self =>
@@ -52,7 +64,7 @@ export default (vertical: State<boolean>,
     valign={Gtk.Align.FILL}
     margin={12}
     visible={bind(visible).as(v => v.quicksettings)}
-    application={App}
+    application={app}
     name={"quicksettings"}
     cssClasses={["quicksettings", "background"]}
     anchor={
@@ -80,6 +92,7 @@ export default (vertical: State<boolean>,
         <Tray />
         <Lock />
         <RotateButton vertical={vertical} />
+        <Screenshot />
         <Poweroff />
       </box>
       <Slider type={SliderType.BRIGHTNESS} />

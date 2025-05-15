@@ -64,6 +64,7 @@ in
       })
       (lib.mkIf cfg.hyprland.binds.enable {
         wayland.windowManager.hyprland.extraConfig = ''
+          bind=, PRINT, exec, stash toggle screenshot
           bind=SUPER,Space,exec, stash toggle applauncher
           bind=SUPER,n,exec, stash toggle quicksettings
           bind=SUPERSHIFT,n,exec, stash toggle infopannel
