@@ -13,14 +13,16 @@ const hyprland = AstalHyprland.get_default()
 
 const popupList: Gtk.Revealer[] = [
   <Popup
-    observable={bind(audio.defaultSpeaker, "volume")}
+    connectable={audio.defaultSpeaker}
+    signal={"notify::volume"}
     widget={Slider({
       iconName: bind(audio.defaultSpeaker, "volumeIcon"),
-      binding: bind(audio.defaultSpeaker,"volume"),
+      binding: bind(audio.defaultSpeaker, "volume")
     })} /> as Gtk.Revealer,
 
   <Popup
-    observable={bind(brightness, "screen")}
+    connectable={brightness}
+    signal={"notify::screen"}
     widget={Slider({
       iconName: "display-brightness-symbolic",
       binding: bind(brightness, "screen"),
@@ -34,7 +36,7 @@ export default () =>
     application={app}
     margin={24}
     layer={Astal.Layer.OVERLAY}
-    monitor={bind(hyprland.focusedMonitor,"id")}
+    monitor={bind(hyprland, "focusedMonitor").as(m => m.id)}
     cssClasses={["osd-popup"]}
     anchor={Astal.WindowAnchor.BOTTOM}
     visible={bind(derive(
