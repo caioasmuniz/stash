@@ -2,7 +2,7 @@
   description = "Stash - Skill's terrific astal shell";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable-small";
     astal.url = "github:aylur/astal";
     gjsx = {
       url = "github:aylur/gjsx";
