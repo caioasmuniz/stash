@@ -39,6 +39,14 @@ const RotateButton = ({ vertical }:
     <image iconName={"object-rotate-right-symbolic"} />
   </button>
 
+const Settings = () => <button
+  cssClasses={["circular"]}
+  $clicked={() => {
+    App.get_window("settings")!.visible = true;
+  }}>
+  <image iconName={"preferences-system-symbolic"} />
+</button>
+
 export default (vertical: State<boolean>,
   visible: State<{ applauncher: boolean, quicksettings: boolean }>) => <window
     $={self =>
@@ -79,6 +87,7 @@ export default (vertical: State<boolean>,
       <box halign={Gtk.Align.CENTER} spacing={8}>
         <Tray />
         <Lock />
+        <Settings />
         <RotateButton vertical={vertical} />
         <Poweroff />
       </box>
