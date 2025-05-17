@@ -6,7 +6,7 @@ import osd from "./widget/osd";
 import applauncher from "./widget/applauncher";
 import quicksettings from "./widget/quicksettings";
 import notificationPopup from "./widget/notifications";
-import { bind, State } from "ags/state";
+import { State } from "ags/state";
 import settings, { Config } from "./widget/settings";
 
 const config = new State<Config>({})
@@ -20,9 +20,9 @@ App.start({
     notificationPopup();
     settings(config);
     quicksettings(config, visible);
-    applauncher(bind(config).as(c => c.barOrientation!), visible);
+    applauncher(config, visible);
     osd();
-    bar(bind(config).as(c => c.barOrientation!));
+    bar(config);
   },
   client(message: (msg: string) => string, ...args: Array<string>) {
     if (args[0] === "toggle") {

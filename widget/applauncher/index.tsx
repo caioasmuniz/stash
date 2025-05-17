@@ -2,8 +2,9 @@ import Apps from "gi://AstalApps"
 import { Astal, Gtk, For } from "ags/gtk4";
 import App from "ags/gtk4/app";
 import Hyprland from "gi://AstalHyprland"
-import { bind, Binding, State } from "ags/state";
+import { bind, State } from "ags/state";
 import AppButton from "./appButton";
+import { Config } from "../settings";
 
 const hyprland = Hyprland.get_default()
 const apps = new Apps.Apps()
@@ -15,22 +16,20 @@ const list = bind(text)
 
 
 export default (
-  orientation: Binding<Gtk.Orientation>,
+  config: State<Config>,
   visible: State<{
     applauncher: boolean,
     quicksettings: boolean
   }>) =>
   <window
-    $={self =>
-      bind(self, "visible").subscribe(v => {
-        visible.set({
-          quicksettings: v &&
-            (orientation.get() === Gtk.Orientation.VERTICAL) ?
-            false : visible.get().quicksettings,
-          applauncher: v
-        })
+    $$visible={self => {
+      visible.set({
+        applauncher: self.visible,
+        quicksettings: self.visible &&
+          (config.get().barOrientation === Gtk.Orientation.VERTICAL) ?
+          false : visible.get().quicksettings
       })
-    }
+    }}
     valign={Gtk.Align.CENTER}
     name={"applauncher"}
     margin={12}

@@ -8,7 +8,8 @@ import SystemUsage from "./systemUsage";
 import Workspaces from "./workspaces";
 import Clock from "./clock";
 import Launcher from "./launcher";
-import { Binding } from "ags/state";
+import { bind, State } from "ags/state";
+import { Config } from "../settings";
 const hyprland = Hyprland.get_default()
 
 const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
@@ -60,10 +61,10 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
     </centerbox>
   </window> as Astal.Window;
 
-export default (config: Binding<Gtk.Orientation>) => {
+export default (config: State<Config>) => {
   const bars = new Map<number, Astal.Window>()
-  const vertical = config.as(c =>
-    c === Gtk.Orientation.VERTICAL)
+  const vertical = bind(config).as(c =>
+    c.barOrientation === Gtk.Orientation.VERTICAL)
 
   // initialize
   for (const monitor of hyprland.get_monitors()) {
