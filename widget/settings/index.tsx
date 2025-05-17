@@ -23,7 +23,8 @@ export default (config: State<Config>) => {
   }];
 
   const stack =
-    <Adw.ViewStack>
+    <Adw.ViewStack
+      enableTransitions>
       {pages.map(page =>
         <Adw.ViewStackPage
           title={page.title}
@@ -36,6 +37,7 @@ export default (config: State<Config>) => {
     name={"settings"}
     application={app}
     cssClasses={["background"]}
+    title={"Stash Settings"}
     $={() => {
       readFileAsync(PATH)
         .then(v => config.set(JSON.parse(v)))
@@ -46,13 +48,12 @@ export default (config: State<Config>) => {
         await writeFileAsync(PATH, JSON.stringify(c))
       )
     }}>
-    <Adw.NavigationPage>
-      <box orientation={Gtk.Orientation.VERTICAL}>
-        <Adw.HeaderBar>
-          <Adw.ViewSwitcher stack={stack} />
-        </Adw.HeaderBar>
-        {stack}
-      </box>
-    </Adw.NavigationPage>
+    <box orientation={Gtk.Orientation.VERTICAL}>
+      <Adw.InlineViewSwitcher
+        cssClasses={["round"]}
+        displayMode={Adw.InlineViewSwitcherDisplayMode.BOTH}
+        stack={stack} />
+      {stack}
+    </box>
   </Adw.Window >
 }
