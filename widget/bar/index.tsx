@@ -61,28 +61,28 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
   </window> as Astal.Window;
 
 export default (config: Binding<Gtk.Orientation>) => {
-  const bars = new Map<Hyprland.Monitor, Astal.Window>()
+  const bars = new Map<number, Astal.Window>()
   const vertical = config.as(c =>
     c === Gtk.Orientation.VERTICAL)
 
   // initialize
   for (const monitor of hyprland.get_monitors()) {
-    bars.set(monitor, bar(monitor, vertical.get()) as Astal.Window)
+    bars.set(monitor.id, bar(monitor, vertical.get()) as Astal.Window)
   }
 
   hyprland.connect("monitor-added", (_, monitor) => {
-    bars.set(monitor, bar(monitor, vertical.get()) as Astal.Window)
+    bars.set(monitor.id, bar(monitor, vertical.get()) as Astal.Window)
   })
 
   hyprland.connect("monitor-removed", (_, id) => {
-    bars.get(hyprland.get_monitor(id))?.close()
-    bars.delete(hyprland.get_monitor(id))
+    bars.get(id)!.close()
+    bars.delete(id)
   })
 
   vertical.subscribe(vert => {
-    const monitor = hyprland.focusedMonitor
-    bars.get(monitor)?.close()
-    bars.delete(monitor)
-    bars.set(monitor, bar(monitor, vert))
+    const { id } = hyprland.focusedMonitor
+    bars.get(id)?.close()
+    bars.delete(id)
+    bars.set(id, bar(hyprland.get_monitor(id), vert))
   })
 }
