@@ -12,6 +12,7 @@ import Tray from "./tray";
 import AudioConfig from "./audioConfig";
 import Media from "./media";
 import Battery from "./battery";
+import { Config } from "../settings";
 
 const hyprland = Hyprland.get_default()
 
@@ -31,9 +32,14 @@ const Poweroff = () => <button
   <image iconName={"system-shutdown-symbolic"} />
 </button>
 
-const RotateButton = ({ vertical }:
-  { vertical: State<boolean> }) => <button
-    $clicked={() => vertical.set(!vertical.get())}
+const RotateButton = ({ config }:
+  { config: State<Config> }) => <button
+    $clicked={() => config.set({
+      ...config.get(),
+      barOrientation:
+        config.get().barOrientation === Gtk.Orientation.VERTICAL ?
+          Gtk.Orientation.HORIZONTAL : Gtk.Orientation.VERTICAL
+    })}
     cssClasses={["circular"]}
   >
     <image iconName={"object-rotate-right-symbolic"} />
@@ -47,12 +53,12 @@ const Settings = () => <button
   <image iconName={"preferences-system-symbolic"} />
 </button>
 
-export default (vertical: State<boolean>,
+export default (config: State<Config>,
   visible: State<{ applauncher: boolean, quicksettings: boolean }>) => <window
     $={self =>
       bind(self, "visible").subscribe(v => {
         visible.set({
-          applauncher: v && vertical.get() ? false : visible.get().applauncher,
+          applauncher: v && config.get() ? false : visible.get().applauncher,
           quicksettings: v
         })
       })
@@ -64,10 +70,10 @@ export default (vertical: State<boolean>,
     name={"quicksettings"}
     cssClasses={["quicksettings", "background"]}
     anchor={
-      bind(vertical).as(vertical =>
+      bind(config).as(c =>
         Astal.WindowAnchor.BOTTOM |
         Astal.WindowAnchor.TOP |
-        (vertical ?
+        (c.barOrientation === Gtk.Orientation.VERTICAL ?
           Astal.WindowAnchor.LEFT :
           Astal.WindowAnchor.RIGHT)
       )
@@ -88,7 +94,7 @@ export default (vertical: State<boolean>,
         <Tray />
         <Lock />
         <Settings />
-        <RotateButton vertical={vertical} />
+        <RotateButton config={config} />
         <Poweroff />
       </box>
       <Slider type={SliderType.BRIGHTNESS} />

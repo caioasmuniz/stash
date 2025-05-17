@@ -2,37 +2,50 @@ import { Gtk } from "ags/gtk4";
 import app from "ags/gtk4/app";
 import Adw from "gi://Adw?version=1";
 import general from "./general";
-import GObject from "ags/gobject";
+import { readFileAsync, writeFileAsync } from "ags/file";
+import { State } from "ags/state";
 
-const pages: {
-  title: string,
-  iconName: string,
-  widget: GObject.Object
-}[] = [{
-  title: "General",
-  iconName: "preferences-desktop-appearance-symbolic",
-  widget: general()
-}, {
-  title: "Desktop",
-  iconName: "preferences-desktop-display-symbolic",
-  widget: <label label={"view 2"} /> as Gtk.Widget
-}];
+export type Config = {
+  barOrientation?: Gtk.Orientation
+}
 
-const stack =
-  <Adw.ViewStack>
-    {pages.map(page =>
-      <Adw.ViewStackPage
-        title={page.title}
-        iconName={page.iconName}
-        child={page.widget as Gtk.Widget} />)}
-  </Adw.ViewStack> as Adw.ViewStack
+const PATH = "/run/user/1000/stash.json"
 
-export default () =>
-  <Adw.Window
-    visible
+export default (config: State<Config>) => {
+  const pages = [{
+    title: "General",
+    iconName: "preferences-desktop-appearance-symbolic",
+    widget: general(config)
+  }, {
+    title: "Desktop",
+    iconName: "preferences-desktop-display-symbolic",
+    widget: <label label={"view 2"} /> as Gtk.Widget
+  }];
+
+  const stack =
+    <Adw.ViewStack>
+      {pages.map(page =>
+        <Adw.ViewStackPage
+          title={page.title}
+          iconName={page.iconName}
+          child={page.widget as Gtk.Widget} />)}
+    </Adw.ViewStack> as Adw.ViewStack
+
+  return <Adw.Window
+    hideOnClose
     name={"settings"}
     application={app}
-    cssClasses={["background"]}>
+    cssClasses={["background"]}
+    $={() => {
+      readFileAsync(PATH)
+        .then(v => config.set(JSON.parse(v)))
+        .catch(() => config.set({
+          barOrientation: Gtk.Orientation.VERTICAL
+        }))
+      config.subscribe(async c =>
+        await writeFileAsync(PATH, JSON.stringify(c))
+      )
+    }}>
     <Adw.NavigationPage>
       <box orientation={Gtk.Orientation.VERTICAL}>
         <Adw.HeaderBar>
@@ -42,3 +55,4 @@ export default () =>
       </box>
     </Adw.NavigationPage>
   </Adw.Window >
+}

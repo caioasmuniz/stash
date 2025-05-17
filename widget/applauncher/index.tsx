@@ -2,7 +2,7 @@ import Apps from "gi://AstalApps"
 import { Astal, Gtk, For } from "ags/gtk4";
 import App from "ags/gtk4/app";
 import Hyprland from "gi://AstalHyprland"
-import { bind, State } from "ags/state";
+import { bind, Binding, State } from "ags/state";
 import AppButton from "./appButton";
 
 const hyprland = Hyprland.get_default()
@@ -15,7 +15,7 @@ const list = bind(text)
 
 
 export default (
-  vertical: State<boolean>,
+  orientation: Binding<Gtk.Orientation>,
   visible: State<{
     applauncher: boolean,
     quicksettings: boolean
@@ -24,7 +24,9 @@ export default (
     $={self =>
       bind(self, "visible").subscribe(v => {
         visible.set({
-          quicksettings: v && vertical.get() ? false : visible.get().quicksettings,
+          quicksettings: v &&
+            (orientation.get() === Gtk.Orientation.VERTICAL) ?
+            false : visible.get().quicksettings,
           applauncher: v
         })
       })
