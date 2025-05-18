@@ -27,6 +27,7 @@
       name = "stash";
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+
       astalPackages = with ags.packages.${system}; [
         apps
         battery
@@ -39,6 +40,7 @@
         tray
         wireplumber
       ];
+
       extraPackages =
         with pkgs;
         [
@@ -48,6 +50,11 @@
           glib-networking
         ]
         ++ astalPackages;
+
+      wrapperPackages = with pkgs; [
+        brightnessctl
+        darkman
+      ];
     in
     {
       packages.${system}.default = pkgs.stdenv.mkDerivation {
@@ -74,12 +81,7 @@
 
         preFixup = ''
           gappsWrapperArgs+=(
-            --prefix PATH : ${
-              pkgs.lib.makeBinPath [
-                pkgs.brightnessctl
-                pkgs.darkman
-              ]
-            }
+            --prefix PATH : ${pkgs.lib.makeBinPath wrapperPackages}
           )
         '';
       };
@@ -99,10 +101,10 @@
             libnotify
             nixd
             nixfmt-rfc-style
-            brightnessctl
             nix-output-monitor
           ]
-          ++ astalPackages;
+          ++ astalPackages
+          ++ wrapperPackages;
       };
     };
 }

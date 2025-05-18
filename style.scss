@@ -49,6 +49,17 @@ window.quicksettings {
       }
     }
   }
+
+  .slider {
+    min-width: 120px;
+    padding: 8px;
+    color: var(--window-fg-color);
+    background: oklab(from var(--window-bg-color) l a b / 0.4);
+
+    image {
+      -gtk-icon-size: 1.5em;
+    }
+  }
 }
 
 window.applauncher {
@@ -65,6 +76,19 @@ window.notif-popup {
   background-color: transparent;
 }
 
+window#osd {
+  .osd-container {
+    color: var(--window-fg-color);
+    background: oklab(from var(--window-bg-color) l a b / 0.4);
+    border-radius: calc(var(--window-radius)*2);
+    padding: 12px;
+  }
+
+  image {
+    -gtk-icon-size: 1.5em;
+  }
+}
+
 .notification {
   background: var(--window-bg-color);
   color: var(--window-fg-color);
@@ -73,17 +97,6 @@ window.notif-popup {
   border: 1px solid var(--border-color);
 }
 
-.slider {
-  min-width: 120px;
-  padding: 8px;
-  border-radius: 12px;
-  color: var(--window-fg-color);
-  background: oklab(from var(--window-bg-color) l a b / 0.4);
-
-  image {
-    -gtk-icon-size: 1.5em;
-  }
-}
 
 window.bar {
   border-radius: var(--window-radius) var(--window-radius) 0 0;
@@ -112,11 +125,11 @@ window.bar {
   }
 
   .clock {
-    //   padding: 0px 4px;
+    padding: 0px 4px;
 
-    //   &.vert {
-    //     padding: 4px 0px;
-    //   }
+    &.vert {
+      padding: 4px 0px;
+    }
 
     .date {
       font-size: 0.5em;
@@ -159,26 +172,11 @@ window.bar {
 
   }
 
-  .ws-button {
-    padding: 0px 2px;
-    min-width: 30px;
-    min-height: 30px;
+  .ws-toggle {
     -gtk-icon-size: 24px;
 
-    &.vert {
-      padding: 2px 0px;
-    }
-
-    .unfocused {
-      filter: brightness(150%) saturate(0%);
-    }
-
     &.special {
-      background: oklab(from var(--success-bg-color) l a b / 0.25);
-
-      &.active {
-        background: var(--success-bg-color);
-      }
+      background: oklab(from var(--accent-bg-color) l a b / 0.25);
     }
   }
 }
