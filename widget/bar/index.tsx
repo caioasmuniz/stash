@@ -8,8 +8,11 @@ import SystemUsage from "./systemUsage";
 import Workspaces from "./workspaces";
 import Clock from "./clock";
 import Launcher from "./launcher";
-import { State } from "ags/state";
+import { bind } from "ags/state";
+import Settings from "../../lib/settings";
+
 const hyprland = Hyprland.get_default()
+const settings = Settings.get_default()
 
 const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
   <window
@@ -60,27 +63,28 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
     </centerbox>
   </window> as Astal.Window;
 
-export default (vertical: State<boolean>) => {
+export default () => {
   const bars = new Map<number, Astal.Window>()
+  const vertical = bind(settings, "barOrientation")
+    .as(orientation => orientation === Gtk.Orientation.VERTICAL)
 
-  // initialize
-  for (const monitor of hyprland.get_monitors()) {
-    bars.set(monitor.id, bar(monitor, vertical.get()) as Astal.Window)
-  }
+  hyprland.get_monitors().forEach(monitor =>
+    bars.set(monitor.id, bar(monitor, vertical.get())))
 
-  hyprland.connect("monitor-added", (_, monitor) => {
-    bars.set(monitor.id, bar(monitor, vertical.get()) as Astal.Window)
-  })
+  hyprland.connect("monitor-added", (_, monitor) =>
+    bars.set(monitor.id, bar(monitor, vertical.get())))
 
   hyprland.connect("monitor-removed", (_, id) => {
     bars.get(id)!.close()
     bars.delete(id)
   })
 
-  vertical.subscribe(vert => {
-    const { id } = hyprland.focusedMonitor
-    bars.get(id)?.close()
-    bars.delete(id)
-    bars.set(id, bar(hyprland.get_monitor(id), vert))
+  vertical.subscribe(v => {
+    hyprland.get_monitors()
+      .forEach(monitor => {
+        bars.get(monitor.id)!.close()
+        bars.delete(monitor.id)
+        bars.set(monitor.id, bar(monitor, v))
+      })
   })
 }

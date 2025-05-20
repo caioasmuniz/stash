@@ -4,7 +4,9 @@ import App from "ags/gtk4/app";
 import Hyprland from "gi://AstalHyprland"
 import { bind, State } from "ags/state";
 import AppButton from "./appButton";
+import Settings from "../../lib/settings";
 
+const settings = Settings.get_default()
 const hyprland = Hyprland.get_default()
 const apps = new Apps.Apps()
 
@@ -15,20 +17,19 @@ const list = bind(text)
 
 
 export default (
-  vertical: State<boolean>,
   visible: State<{
     applauncher: boolean,
     quicksettings: boolean
   }>) =>
   <window
-    $={self =>
-      bind(self, "visible").subscribe(v => {
-        visible.set({
-          quicksettings: v && vertical.get() ? false : visible.get().quicksettings,
-          applauncher: v
-        })
+    $$visible={self => {
+      visible.set({
+        applauncher: self.visible,
+        quicksettings: self.visible &&
+          (settings.barOrientation === Gtk.Orientation.VERTICAL) ?
+          false : visible.get().quicksettings
       })
-    }
+    }}
     valign={Gtk.Align.CENTER}
     name={"applauncher"}
     margin={12}
