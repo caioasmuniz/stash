@@ -12,8 +12,9 @@ import Tray from "./tray";
 import AudioConfig from "./audioConfig";
 import Media from "./media";
 import Battery from "./battery";
-import { Config } from "../settings";
+import Settings from "../../lib/settings";
 
+const settings = Settings.get_default()
 const hyprland = Hyprland.get_default()
 
 const Lock = () => <button
@@ -32,20 +33,18 @@ const Poweroff = () => <button
   <image iconName={"system-shutdown-symbolic"} />
 </button>
 
-const RotateButton = ({ config }:
-  { config: State<Config> }) => <button
-    $clicked={() => config.set({
-      ...config.get(),
-      barOrientation:
-        config.get().barOrientation === Gtk.Orientation.VERTICAL ?
-          Gtk.Orientation.HORIZONTAL : Gtk.Orientation.VERTICAL
-    })}
-    cssClasses={["circular"]}
-  >
-    <image iconName={"object-rotate-right-symbolic"} />
-  </button>
+const RotateButton = () => <button
+  $clicked={() =>
+    settings.barOrientation === Gtk.Orientation.VERTICAL ?
+      settings.barOrientation = Gtk.Orientation.HORIZONTAL :
+      settings.barOrientation = Gtk.Orientation.VERTICAL
+  }
+  cssClasses={["circular"]}
+>
+  <image iconName={"object-rotate-right-symbolic"} />
+</button>
 
-const Settings = () => <button
+const SettingsButton = () => <button
   cssClasses={["circular"]}
   $clicked={() => {
     App.get_window("settings")!.visible = true;
@@ -53,35 +52,37 @@ const Settings = () => <button
   <image iconName={"preferences-system-symbolic"} />
 </button>
 
-export default (config: State<Config>,
-  visible: State<{ applauncher: boolean, quicksettings: boolean }>) => <window
-    $={self =>
-      bind(self, "visible").subscribe(v => {
-        visible.set({
-          applauncher: v && config.get() ? false : visible.get().applauncher,
-          quicksettings: v
-        })
+export default (visible: State<{
+  applauncher: boolean,
+  quicksettings: boolean
+}>) => <window
+  $={self =>
+    bind(self, "visible").subscribe(v => {
+      visible.set({
+        applauncher: v ? false : visible.get().applauncher,
+        quicksettings: v
       })
-    }
-    valign={Gtk.Align.FILL}
-    margin={12}
-    visible={bind(visible).as(v => v.quicksettings)}
-    application={App}
-    name={"quicksettings"}
-    cssClasses={["quicksettings", "background"]}
-    anchor={
-      bind(config).as(c =>
-        Astal.WindowAnchor.BOTTOM |
-        Astal.WindowAnchor.TOP |
-        (c.barOrientation === Gtk.Orientation.VERTICAL ?
-          Astal.WindowAnchor.LEFT :
-          Astal.WindowAnchor.RIGHT)
-      )
-    }
-    monitor={
-      bind(hyprland, "focusedMonitor")
-        .as(m => m.id)
-    } >
+    })
+  }
+  valign={Gtk.Align.FILL}
+  margin={12}
+  visible={bind(visible).as(v => v.quicksettings)}
+  application={App}
+  name={"quicksettings"}
+  cssClasses={["quicksettings", "background"]}
+  anchor={bind(settings, "barOrientation")
+    .as(orientation =>
+      Astal.WindowAnchor.BOTTOM |
+      Astal.WindowAnchor.TOP |
+      (orientation === Gtk.Orientation.VERTICAL ?
+        Astal.WindowAnchor.LEFT :
+        Astal.WindowAnchor.RIGHT)
+    )
+  }
+  monitor={
+    bind(hyprland, "focusedMonitor")
+      .as(m => m.id)
+  } >
     <box
       cssClasses={["quicksettings-body"]}
       orientation={Gtk.Orientation.VERTICAL}
@@ -93,8 +94,8 @@ export default (config: State<Config>,
       <box halign={Gtk.Align.CENTER} spacing={8}>
         <Tray />
         <Lock />
-        <Settings />
-        <RotateButton config={config} />
+        <SettingsButton />
+        <RotateButton />
         <Poweroff />
       </box>
       <Slider type={SliderType.BRIGHTNESS} />

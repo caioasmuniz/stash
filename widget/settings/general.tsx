@@ -1,9 +1,11 @@
 import { Gtk } from "ags/gtk4";
 import { bind, State } from "ags/state";
 import Adw from "gi://Adw?version=1";
-import { Config } from ".";
+import Settings from "../../lib/settings";
 
-export default (config: State<Config>) =>
+const settings = Settings.get_default()
+
+export default () =>
   <Adw.PreferencesPage>
     <Adw.PreferencesGroup
       title={"Appearance"}
@@ -29,20 +31,21 @@ export default (config: State<Config>) =>
 
       <Adw.ActionRow
         title={"Bar Orientation"}
-        subtitle={bind(config).as(c =>
-          c.barOrientation! === Gtk.Orientation.HORIZONTAL ?
-          "Horizontal" : "Vertical")}>
+        subtitle={bind(settings, "barOrientation")
+          .as(orientation =>
+            orientation === Gtk.Orientation.HORIZONTAL ?
+              "Horizontal" : "Vertical")}>
         <Adw.ToggleGroup
           _type="suffix"
           cssClasses={["round"]}
           valign={Gtk.Align.CENTER}
-          $$active={self => config.set({
-            ...config.get(),
-            barOrientation: self.active as Gtk.Orientation
-          })}
-          active={bind(config).as(c =>
-            c.barOrientation as number ?? 0
-          )}>
+          $$active={self => settings.barOrientation =
+            self.active as Gtk.Orientation
+          }
+          active={bind(settings, "barOrientation")
+            .as(orientation => orientation as number ?? 0)
+          }
+        >
           <Adw.Toggle
             label={"Horizontal"}
             iconName={"object-flip-horizontal-symbolic"}
@@ -54,4 +57,4 @@ export default (config: State<Config>) =>
         </Adw.ToggleGroup>
       </Adw.ActionRow>
     </Adw.PreferencesGroup>
-  </Adw.PreferencesPage> as Gtk.Widget
+  </Adw.PreferencesPage > as Gtk.Widget

@@ -2,20 +2,12 @@ import { Gtk } from "ags/gtk4";
 import app from "ags/gtk4/app";
 import Adw from "gi://Adw?version=1";
 import general from "./general";
-import { readFileAsync, writeFileAsync } from "ags/file";
-import { State } from "ags/state";
 
-export type Config = {
-  barOrientation?: Gtk.Orientation
-}
-
-const PATH = "/run/user/1000/stash.json"
-
-export default (config: State<Config>) => {
+export default () => {
   const pages = [{
     title: "General",
     iconName: "preferences-desktop-appearance-symbolic",
-    widget: general(config)
+    widget: general()
   }, {
     title: "Desktop",
     iconName: "preferences-desktop-display-symbolic",
@@ -37,17 +29,7 @@ export default (config: State<Config>) => {
     name={"settings"}
     application={app}
     cssClasses={["background"]}
-    title={"Stash Settings"}
-    $={() => {
-      readFileAsync(PATH)
-        .then(v => config.set(JSON.parse(v)))
-        .catch(() => config.set({
-          barOrientation: Gtk.Orientation.VERTICAL
-        }))
-      config.subscribe(async c =>
-        await writeFileAsync(PATH, JSON.stringify(c))
-      )
-    }}>
+    title={"Stash Settings"}>
     <box orientation={Gtk.Orientation.VERTICAL}>
       <Adw.InlineViewSwitcher
         cssClasses={["round"]}

@@ -7,9 +7,8 @@ import applauncher from "./widget/applauncher";
 import quicksettings from "./widget/quicksettings";
 import notificationPopup from "./widget/notifications";
 import { State } from "ags/state";
-import settings, { Config } from "./widget/settings";
+import settings from "./widget/settings";
 
-const config = new State<Config>({})
 const visible = new State<{ applauncher: boolean, quicksettings: boolean }>(
   { applauncher: false, quicksettings: false })
 
@@ -18,11 +17,11 @@ App.start({
   instanceName: "stash",
   main() {
     notificationPopup();
-    settings(config);
-    quicksettings(config, visible);
-    applauncher(config, visible);
+    settings();
+    quicksettings(visible);
+    applauncher(visible);
     osd();
-    bar(config);
+    bar();
   },
   client(message: (msg: string) => string, ...args: Array<string>) {
     if (args[0] === "toggle") {
