@@ -1,6 +1,6 @@
 import { readFile, writeFileAsync } from "ags/file";
 import GObject, { register, property } from "ags/gobject";
-import { Gtk } from "ags/gtk4";
+import { Astal, Gtk } from "ags/gtk4";
 import GLib from "gi://GLib?version=2.0";
 
 const PATH = GLib.build_filenamev([
@@ -14,11 +14,11 @@ export default class Settings extends GObject.Object {
     return this.instance;
   }
 
-  #barOrientation: Gtk.Orientation
+  #barPosition: Astal.WindowAnchor
 
   @property(Number)
-  get barOrientation() {
-    return this.#barOrientation;
+  get barPosition() {
+    return this.#barPosition;
   }
 
   #updateFile(key: string, value: any) {
@@ -28,16 +28,19 @@ export default class Settings extends GObject.Object {
     }))
   }
 
-  set barOrientation(orientation) {
-    this.#updateFile("barOrientation", orientation)
-    this.#barOrientation = orientation;
-    this.notify("bar-orientation")
+  set barPosition(position) {
+    if (Object.values(Astal.WindowAnchor)
+      .find(w => position === w)) {
+      this.#updateFile("barPosition", position)
+      this.#barPosition = position;
+      this.notify("bar-position")
+    }
   }
 
   constructor() {
     super();
     let config = {
-      barOrientation: Gtk.Orientation.VERTICAL
+      barPosition: Astal.WindowAnchor.LEFT
     }
     try {
       let file = readFile(PATH)
@@ -45,6 +48,6 @@ export default class Settings extends GObject.Object {
     } catch (error) {
       writeFileAsync(PATH, JSON.stringify(config))
     }
-    this.#barOrientation = config.barOrientation
+    this.#barPosition = config.barPosition
   }
 }

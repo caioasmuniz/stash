@@ -9,12 +9,12 @@ import Settings from "../../lib/settings";
 const settings = Settings.get_default()
 const hyprland = Hyprland.get_default()
 const apps = new Apps.Apps()
+const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
 
 const text = new State<string>("")
 const list = bind(text)
   .as(text => apps
     .fuzzy_query(text))
-
 
 export default (
   visible: State<{
@@ -26,8 +26,10 @@ export default (
       visible.set({
         applauncher: self.visible,
         quicksettings: self.visible &&
-          (settings.barOrientation === Gtk.Orientation.VERTICAL) ?
-          false : visible.get().quicksettings
+          (settings.barPosition === LEFT ||
+            settings.barPosition === RIGHT) ?
+          false :
+          visible.get().quicksettings
       })
     }}
     valign={Gtk.Align.CENTER}
@@ -38,10 +40,8 @@ export default (
     cssClasses={["applauncher", "background"]}
     keymode={Astal.Keymode.ON_DEMAND}
     monitor={bind(hyprland, "focusedMonitor").as(m => m.id)}
-    anchor={
-      Astal.WindowAnchor.LEFT |
-      Astal.WindowAnchor.TOP |
-      Astal.WindowAnchor.BOTTOM}
+    anchor={bind(settings, "barPosition").as(p =>
+      TOP | (p === RIGHT ? RIGHT : LEFT) | BOTTOM)}
     $show={() => text.set("")}>
     <box
       orientation={Gtk.Orientation.VERTICAL}
