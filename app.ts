@@ -7,7 +7,6 @@ import applauncher from "./widget/applauncher";
 import quicksettings from "./widget/quicksettings";
 import notificationPopup from "./widget/notifications";
 import { State } from "ags/state";
-import settings from "./widget/settings";
 
 const visible = new State<{ applauncher: boolean, quicksettings: boolean }>(
   { applauncher: false, quicksettings: false })
@@ -17,7 +16,6 @@ App.start({
   instanceName: "stash",
   main() {
     notificationPopup();
-    settings();
     quicksettings(visible);
     applauncher(visible);
     osd();
