@@ -42,7 +42,7 @@ export default ({ monitor, vertical }:
         cssClasses={["round", "ws-toggle",
           ws.id < 0 ? "special" : ""]}
         $$active={self => {
-          if (hyprland.focusedClient &&
+          if (hyprland.focusedClient && self.active !== 0 &&
             hyprland.focusedClient.address !== self.activeName
           )
             hyprland.get_client(self.get_active_name() ?? "")
