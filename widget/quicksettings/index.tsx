@@ -1,38 +1,49 @@
-import Hyprland from "gi://AstalHyprland"
+import Hyprland from "gi://AstalHyprland";
 import App from "ags/gtk4/app";
 import { execAsync } from "ags/process";
 import { Astal, Gtk } from "ags/gtk4";
 import { bind, State } from "ags/state";
 
-import { Slider, SliderType } from "../common/slider";
+import { Slider } from "../common/slider";
 import NotificationList from "./notificationList";
 import PwrProf from "./powerprofiles";
 import DarkMode from "./darkMode";
 import Tray from "./tray";
-import AudioConfig from "./audioConfig";
+import { AudioConfig, MicConfig } from "./audioConfig";
 import Media from "./media";
 import Battery from "./battery";
 import Settings from "../../lib/settings";
+
+
+import Brightness from "../../lib/brightness";
+
+const brightness = Brightness.get_default();
 
 const settings = Settings.get_default()
 const hyprland = Hyprland.get_default()
 const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
 
-const Lock = () => <button
-  cssClasses={["circular"]}
-  $clicked={() => {
-    execAsync(["bash", "-c", "hyprlock --immediate"]);
-  }}>
-  <image iconName={"system-lock-screen-symbolic"} />
-</button>
+const Lock = () => (
+  <button
+    cssClasses={["circular"]}
+    $clicked={() => {
+      execAsync(["bash", "-c", "hyprlock --immediate"]);
+    }}
+  >
+    <image iconName={"system-lock-screen-symbolic"} />
+  </button>
+);
 
-const Poweroff = () => <button
-  cssClasses={["circular", "destructive-action"]}
-  $clicked={() => {
-    execAsync(["bash", "-c", "systemctl poweroff"]);
-  }}>
-  <image iconName={"system-shutdown-symbolic"} />
-</button>
+const Poweroff = () => (
+  <button
+    cssClasses={["circular", "destructive-action"]}
+    $clicked={() => {
+      execAsync(["bash", "-c", "systemctl poweroff"]);
+    }}
+  >
+    <image iconName={"system-shutdown-symbolic"} />
+  </button>
+);
 
 const RotateButton = () => <button
   $clicked={() => {
@@ -84,11 +95,17 @@ export default (visible: State<{
         <RotateButton />
         <Poweroff />
       </box>
-      <Slider type={SliderType.BRIGHTNESS} />
+      <Slider
+        icon={"display-brightness-symbolic"}
+        min={0}
+        max={100}
+        value={bind(brightness, "screen").as((v) => v * 100)}
+        setValue={(value) => (brightness.set({ screen: value / 100 }))}
+      />
       <AudioConfig />
+      <MicConfig />
       <Battery />
       <Media />
       <NotificationList />
     </box>
-  </ window >
-
+  </window>

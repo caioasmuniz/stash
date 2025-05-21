@@ -1,47 +1,28 @@
-import { bind } from "ags/state"
-import Wireplumber from "gi://AstalWp"
-import Brightness from "../../lib/brightness"
+import { Binding } from "ags/state"
 
-const brightness = Brightness.get_default()
-const audio = Wireplumber.get_default()!.audio
-
-export enum SliderType {
-  AUDIO,
-  BRIGHTNESS,
+type SliderProps = {
+  icon: Binding<string> | string,
+  min: number,
+  max: number,
+  value: Binding<number>,
+  setValue: (value: number) => void,
 }
-
-export const Slider = ({ type }: { type: SliderType }) =>
+export const Slider = (props: SliderProps) =>
   <box
     cssClasses={["slider"]}
     spacing={4}>
-    <image iconName={type === SliderType.AUDIO ?
-      bind(audio.defaultSpeaker, "volume_icon") :
-      "display-brightness-symbolic"} />
+    <image iconName={props.icon} />
     <slider
       hexpand
-      min={0}
-      max={100}
-      $={self => type === SliderType.AUDIO ?
-        self.set_value(audio.defaultSpeaker.volume) :
-        self.set_value(brightness.screen * 100)}
+      min={props.min}
+      max={props.max}
+      $={self => self.set_value(props.value.get())}
       $changeValue={({ value }) =>
-        type === SliderType.AUDIO ?
-          audio.defaultSpeaker.set_volume(value / 100) :
-          brightness.set({ screen: value / 100 })
+        props.setValue(value)
       }
-      value={type === SliderType.AUDIO ?
-        bind(audio.defaultSpeaker, "volume").as(v => v * 100) :
-        bind(brightness, "screen").as(v => v * 100)} />
+      value={props.value} />
     <label
       cssClasses={["heading"]}
-      label={type === SliderType.AUDIO ?
-        bind(audio.defaultSpeaker, "volume").as(v =>
-          Math.floor(v * 100)
-            .toString()
-            .concat("%")) :
-        bind(brightness, "screen").as(v =>
-          Math.floor(v * 100)
-            .toString()
-            .concat("%"))} />
+      label={props.value.as(v => v.toFixed(0).toString()
+        .concat("%"))} />
   </box>
-
