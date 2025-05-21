@@ -1,6 +1,6 @@
 import { readFile, writeFileAsync } from "ags/file";
 import GObject, { register, property } from "ags/gobject";
-import { Astal, Gtk } from "ags/gtk4";
+import { Astal } from "ags/gtk4";
 import GLib from "gi://GLib?version=2.0";
 
 const PATH = GLib.build_filenamev([
@@ -15,17 +15,22 @@ export default class Settings extends GObject.Object {
   }
 
   #barPosition: Astal.WindowAnchor
+  #tempPath: string | null
+  #systemMonitor: string | null
+
+  @property(String)
+  get tempPath() {
+    return this.#tempPath;
+  }
+
+  @property(String)
+  get systemMonitor() {
+    return this.#systemMonitor
+  }
 
   @property(Number)
   get barPosition() {
     return this.#barPosition;
-  }
-
-  #updateFile(key: string, value: any) {
-    writeFileAsync(PATH, JSON.stringify({
-      ...JSON.parse(readFile(PATH)),
-      [key]: value
-    }))
   }
 
   set barPosition(position) {
@@ -37,10 +42,20 @@ export default class Settings extends GObject.Object {
     }
   }
 
+  #updateFile(key: string, value: any) {
+    writeFileAsync(PATH, JSON.stringify({
+      ...JSON.parse(readFile(PATH)),
+      [key]: value
+    }))
+  }
+
+
   constructor() {
     super();
     let config = {
-      barPosition: Astal.WindowAnchor.LEFT
+      barPosition: Astal.WindowAnchor.LEFT,
+      tempPath: null,
+      systemMonitor: null
     }
     try {
       let file = readFile(PATH)
@@ -48,6 +63,8 @@ export default class Settings extends GObject.Object {
     } catch (error) {
       writeFileAsync(PATH, JSON.stringify(config))
     }
-    this.#barPosition = config.barPosition
+    this.#barPosition = config.barPosition;
+    this.#tempPath = config.tempPath;
+    this.#systemMonitor = config.systemMonitor;
   }
 }
