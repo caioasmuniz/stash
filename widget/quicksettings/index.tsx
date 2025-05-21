@@ -12,6 +12,8 @@ import Tray from "./tray";
 import AudioConfig from "./audioConfig";
 import Media from "./media";
 import Battery from "./battery";
+import Bluetooth from "./bluetooth";
+
 import Settings from "../../lib/settings";
 
 const settings = Settings.get_default()
@@ -73,11 +75,14 @@ export default (visible: State<{
     <box
       cssClasses={["quicksettings-body"]}
       orientation={Gtk.Orientation.VERTICAL}
-      spacing={8}>
-      <box spacing={8}>
-        <PwrProf />
-        <DarkMode />
-      </box>
+      spacing={8}
+    >
+      <Gtk.Grid rowSpacing={2} columnSpacing={2} $={(self) => {
+        self.attach(<PwrProf /> as Gtk.Widget, 0, 0, 1, 1)
+        self.attach(<DarkMode /> as Gtk.Widget, 1, 0, 1, 1)
+        self.attach(<Bluetooth /> as Gtk.Widget, 0, 1, 1, 1)
+      }}>
+      </Gtk.Grid>
       <box halign={Gtk.Align.CENTER} spacing={8}>
         <Tray />
         <Lock />
