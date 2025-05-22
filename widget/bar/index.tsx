@@ -56,6 +56,9 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
           Gtk.Orientation.HORIZONTAL}
         valign={vertical ? Gtk.Align.END : Gtk.Align.FILL}
         halign={vertical ? Gtk.Align.FILL : Gtk.Align.END} >
+        <button $clicked={() => App.toggle_window("screenshare")}>
+          <image icon_name={"screen-shared-symbolic"} />
+        </button>
         <Clock vertical={vertical} />
         <Gtk.Separator />
         <SystemIndicators vertical={vertical} />
