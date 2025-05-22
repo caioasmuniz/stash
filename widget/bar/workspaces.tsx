@@ -2,6 +2,7 @@ import { bind } from "ags/state"
 import { Gtk, For, Gdk } from "ags/gtk4"
 import Hyprland from "gi://AstalHyprland"
 import Apps from "gi://AstalApps"
+import Adw from "gi://Adw?version=1"
 
 const hyprland = Hyprland.get_default()
 
@@ -34,46 +35,38 @@ export default ({ monitor, vertical }:
     <For each={bind(hyprland, "workspaces").as(ws => ws
       .filter(ws => ws.monitor === monitor)
       .sort((a, b) => a.id - b.id))}>
-      {ws => {
-        const focusedWs = bind(hyprland, "focusedWorkspace")
-        const isFocused = focusedWs.as(focused =>
-          focused === ws)
-        const special = ws.id < 0
-        return <Gtk.ToggleButton
-          active={bind(hyprland, "focusedWorkspace").as(focused => focused === ws)}
-          cursor={Gdk.Cursor.new_from_name("pointer", null)}
-          cssClasses={["pill", "ws-button",
-            isFocused ? "active" : "",
-            special ? "special" : "",
-            vertical ? "vert" : ""]}
-          $clicked={() => {
-            if (special)
-              hyprland.message_async(
-                "dispatch togglespecialworkspace scratchpad",
-                null)
-            if (!special && !isFocused.get())
-              ws.focus()
-          }}>
-          <box
-            spacing={4}
-            orientation={vertical ?
-              Gtk.Orientation.VERTICAL :
-              Gtk.Orientation.HORIZONTAL}
-            halign={Gtk.Align.CENTER}
-            valign={Gtk.Align.CENTER}>
-            <For each={bind(ws, "clients")}>
-              {client => <image
-                cssClasses={bind(hyprland, "focusedClient")
-                  .as(focused => {
-                    if (focused === client)
-                      return ["focused"]
-                    return ["unfocused"]
-                  })}
-                iconName={getIcon(client)} />}
-            </For>
-          </box>
-        </Gtk.ToggleButton >
-      }}
+      {ws => <Adw.ToggleGroup
+        orientation={vertical ?
+          Gtk.Orientation.VERTICAL :
+          Gtk.Orientation.HORIZONTAL}
+        cssClasses={["round", "ws-toggle",
+          ws.id < 0 ? "special" : ""]}
+        $$active={self => {
+          if (hyprland.focusedClient && self.active !== 0 &&
+            hyprland.focusedClient.address !== self.activeName
+          )
+            hyprland.get_client(self.get_active_name() ?? "")
+              ?.focus()
+        }}
+        $={self => bind(hyprland, "focusedClient")
+          .subscribe(self, f => {
+            if (f) {
+              if (f.workspace === ws)
+                self.activeName = f.address
+              else
+                self.active = 128
+            }
+          })
+        }>
+        <For each={bind(ws, "clients")}>
+          {client =>
+            <Adw.Toggle
+              name={client.address}
+              iconName={getIcon(client)}
+            />
+          }
+        </For>
+      </Adw.ToggleGroup>}
     </For>
-  </box>
+  </box >
 
