@@ -6,23 +6,26 @@ import { bind, State } from "ags/state";
 import AppButton from "./appButton";
 import Settings from "../../lib/settings";
 
-const settings = Settings.get_default()
-const hyprland = Hyprland.get_default()
-const apps = new Apps.Apps()
 const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
-
-const text = new State<string>("")
-const list = bind(text)
-  .as(text => apps
-    .fuzzy_query(text))
 
 export default (
   visible: State<{
     applauncher: boolean,
     quicksettings: boolean
-  }>) =>
-  <window
+  }>) => {
+  const settings = Settings.get_default()
+  const hyprland = Hyprland.get_default()
+  const apps = new Apps.Apps()
+
+  const list = new State(apps.list)
+
+  let searchEntry = new Gtk.Entry()
+
+  return <window
     $$visible={self => {
+      self.visible ?
+        searchEntry.grab_focus() :
+        searchEntry.set_text("")
       visible.set({
         applauncher: self.visible,
         quicksettings: self.visible &&
@@ -38,18 +41,22 @@ export default (
     application={App}
     visible={bind(visible).as(v => v.applauncher)}
     cssClasses={["applauncher", "background"]}
-    keymode={Astal.Keymode.ON_DEMAND}
+    keymode={Astal.Keymode.EXCLUSIVE}
     monitor={bind(hyprland, "focusedMonitor").as(m => m.id)}
     anchor={bind(settings, "barPosition").as(p =>
       TOP | (p === RIGHT ? RIGHT : LEFT) | BOTTOM)}
-    $show={() => text.set("")}>
+  >
     <box
       orientation={Gtk.Orientation.VERTICAL}
       cssClasses={["applauncher-body"]}
       spacing={8}>
       <entry
+        $={self => self = searchEntry}
         hexpand
-        $changed={self => text.set(self.text)}
+        placeholderText={"Search your apps"}
+        $$text={self => list.set(
+          apps.fuzzy_query(self.text)
+        )}
         $activate={self => {
           App.get_window("applauncher")!.hide()
           apps.fuzzy_query(self.text)[0].launch();
@@ -60,10 +67,11 @@ export default (
         <box
           orientation={Gtk.Orientation.VERTICAL}
           spacing={8}>
-          <For each={list}>
+          <For each={bind(list)}>
             {app => <AppButton app={app} />}
           </For>
         </box>
       </Gtk.ScrolledWindow>
     </box >
   </window >
+}
