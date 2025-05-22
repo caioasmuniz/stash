@@ -2,6 +2,7 @@ import { Gtk } from "ags/gtk4";
 import app from "ags/gtk4/app";
 import Adw from "gi://Adw?version=1";
 import general from "./general";
+import General from "./general";
 
 export default () => {
   const pages = [{
@@ -14,15 +15,14 @@ export default () => {
     widget: <label label={"view 2"} /> as Gtk.Widget
   }];
 
-  const stack =
-    <Adw.ViewStack
-      enableTransitions>
-      {pages.map(page =>
-        <Adw.ViewStackPage
-          title={page.title}
-          iconName={page.iconName}
-          child={page.widget as Gtk.Widget} />)}
-    </Adw.ViewStack> as Adw.ViewStack
+  const stack = <Adw.ViewStack
+    enableTransitions>
+    <General />
+    <Adw.ViewStackPage
+      title={"Desktop"}
+      iconName={"preferences-desktop-display-symbolic"}
+      child={<label label={"view 2"} /> as Gtk.Widget} />
+  </Adw.ViewStack>
 
   return <Adw.Window
     hideOnClose
@@ -34,7 +34,7 @@ export default () => {
       <Adw.InlineViewSwitcher
         cssClasses={["round"]}
         displayMode={Adw.InlineViewSwitcherDisplayMode.BOTH}
-        stack={stack} />
+        stack={stack as Adw.ViewStack} />
       {stack}
     </box>
   </Adw.Window >
