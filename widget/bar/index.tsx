@@ -25,7 +25,7 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
     monitor={monitor.id}
     name={`bar-${monitor.id}`}
     exclusivity={Astal.Exclusivity.EXCLUSIVE}
-    anchor={bind(settings, "barPosition").as(p =>
+    anchor={bind(settings.bar, "position").as(p =>
       p === TOP ? (TOP | LEFT | RIGHT) :
         p === LEFT ? (TOP | LEFT | BOTTOM) :
           p === BOTTOM ? (RIGHT | LEFT | BOTTOM) :
@@ -65,7 +65,7 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
 
 export default () => {
   const bars = new Map<number, Astal.Window>()
-  const vertical = bind(settings, "barPosition")
+  const vertical = bind(settings.bar, "position")
     .as(p => p === LEFT || p === RIGHT)
 
   hyprland.get_monitors().forEach(monitor =>
