@@ -1,9 +1,10 @@
-import { Gtk } from "ags/gtk4";
+import { Astal, Gtk } from "ags/gtk4";
 import { bind, State } from "ags/state";
 import Adw from "gi://Adw?version=1";
 import Settings from "../../lib/settings";
 
 const settings = Settings.get_default()
+const { TOP, LEFT, RIGHT, BOTTOM } = Astal.WindowAnchor
 
 export default () =>
   <Adw.ViewStackPage
@@ -34,28 +35,51 @@ export default () =>
 
         <Adw.ActionRow
           title={"Bar Orientation"}
-          subtitle={bind(settings, "barOrientation")
-            .as(orientation =>
-              orientation === Gtk.Orientation.HORIZONTAL ?
-                "Horizontal" : "Vertical")}>
+          subtitle={bind(settings.bar, "position")
+            .as(position => {
+              switch (position) {
+                case TOP:
+                  return "Top";
+                case LEFT:
+                  return "Left";
+                case RIGHT:
+                  return "Right";
+                case BOTTOM:
+                  return "Bottom";
+                default:
+                  return "";
+              }
+            })
+          }>
           <Adw.ToggleGroup
             _type="suffix"
             cssClasses={["round"]}
             valign={Gtk.Align.CENTER}
-            $$active={self => settings.barOrientation =
-              self.active as Gtk.Orientation
+            $$activeName={self => settings.bar.position =
+              Number(self.activeName) as Astal.WindowAnchor
             }
-            active={bind(settings, "barOrientation")
-              .as(orientation => orientation as number ?? 0)
-            }
-          >
+            activeName={bind(settings.bar, "position")
+              .as(position => position.toString() ?? "")
+            }>
             <Adw.Toggle
-              label={"Horizontal"}
-              iconName={"object-flip-horizontal-symbolic"}
+              name={TOP.toString()}
+              label={"Top"}
+              iconName={"orientation-landscape-symbolic"}
             />
             <Adw.Toggle
-              label={"Vertical"}
-              iconName={"object-flip-vertical-symbolic"}
+              name={LEFT.toString()}
+              label={"Left"}
+              iconName={"orientation-portrait-inverse-symbolic"}
+            />
+            <Adw.Toggle
+              name={RIGHT.toString()}
+              label={"Right"}
+              iconName={"orientation-portrait-right-symbolic"}
+            />
+            <Adw.Toggle
+              name={BOTTOM.toString()}
+              label={"Bottom"}
+              iconName={"orientation-landscape-inverse-symbolic"}
             />
           </Adw.ToggleGroup>
         </Adw.ActionRow>

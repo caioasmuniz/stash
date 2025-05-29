@@ -24,25 +24,25 @@ const hyprland = Hyprland.get_default()
 const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
 
 const Lock = () => (
-<button
-  cssClasses={["circular"]}
-  $clicked={() => {
-    execAsync(["bash", "-c", "hyprlock --immediate"]);
-  }}
->
-  <image iconName={"system-lock-screen-symbolic"} />
-</button>
+  <button
+    cssClasses={["circular"]}
+    $clicked={() => {
+      execAsync(["bash", "-c", "hyprlock --immediate"]);
+    }}
+  >
+    <image iconName={"system-lock-screen-symbolic"} />
+  </button>
 );
 
 const Poweroff = () => (
-<button
-  cssClasses={["circular", "destructive-action"]}
-  $clicked={() => {
-    execAsync(["bash", "-c", "systemctl poweroff"]);
-  }}
->
-  <image iconName={"system-shutdown-symbolic"} />
-</button>
+  <button
+    cssClasses={["circular", "destructive-action"]}
+    $clicked={() => {
+      execAsync(["bash", "-c", "systemctl poweroff"]);
+    }}
+  >
+    <image iconName={"system-shutdown-symbolic"} />
+  </button>
 );
 
 const RotateButton = () => <button
@@ -61,6 +61,7 @@ const SettingsButton = () => <button
   cssClasses={["circular"]}
   $clicked={() => {
     App.get_window("settings")!.visible = true;
+    App.get_window("quicksettings")!.visible = false;
   }}>
   <image iconName={"preferences-system-symbolic"} />
 </button>
@@ -70,14 +71,14 @@ export default (visible: State<{
   quicksettings: boolean
 }>) => <window
   $$visible={self => {
-      visible.set({
+    visible.set({
       quicksettings: self.visible,
       applauncher: self.visible &&
         (settings.bar.position === LEFT ||
           settings.bar.position === RIGHT) ?
         false :
         visible.get().applauncher
-      })
+    })
   }}
   valign={Gtk.Align.FILL}
   margin={12}
