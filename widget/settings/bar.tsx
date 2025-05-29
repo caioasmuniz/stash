@@ -1,9 +1,9 @@
 import { Astal, Gtk } from "ags/gtk4";
-import { bind, State } from "ags/state";
+import { bind } from "ags/state";
 import Adw from "gi://Adw?version=1";
 import Settings from "../../lib/settings";
 
-const settings = Settings.get_default()
+const { bar } = Settings.get_default()
 const { TOP, LEFT, RIGHT, BOTTOM } = Astal.WindowAnchor
 
 export default () =>
@@ -11,8 +11,8 @@ export default () =>
     title={"Bar"}
     description={"Bar widget settings"}>
     <Adw.ActionRow
-      title={"Bar Orientation"}
-      subtitle={bind(settings.bar, "position")
+      title={"Position"}
+      subtitle={bind(bar, "position")
         .as(position => {
           switch (position) {
             case TOP:
@@ -32,10 +32,10 @@ export default () =>
         _type="suffix"
         cssClasses={["round"]}
         valign={Gtk.Align.CENTER}
-        $$activeName={self => settings.bar.position =
+        $$activeName={self => bar.position =
           Number(self.activeName) as Astal.WindowAnchor
         }
-        activeName={bind(settings.bar, "position")
+        activeName={bind(bar, "position")
           .as(position => position.toString() ?? "")
         }>
         <Adw.Toggle
@@ -60,4 +60,18 @@ export default () =>
         />
       </Adw.ToggleGroup>
     </Adw.ActionRow>
+    <Adw.EntryRow
+      title={"Temperature Path"}
+      showApplyButton
+      text={bar.tempPath ?? ""}
+      $entryActivated={self => bar.tempPath = self.text}
+      $apply={self => bar.tempPath = self.text}
+    />
+    <Adw.EntryRow
+      title={"System Monitor"}
+      showApplyButton
+      text={bar.systemMonitor ?? ""}
+      $entryActivated={self => bar.systemMonitor = self.text}
+      $apply={self => bar.systemMonitor = self.text}
+    />
   </Adw.PreferencesGroup>

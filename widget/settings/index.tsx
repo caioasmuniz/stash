@@ -7,6 +7,7 @@ import Bar from "./bar";
 export default () => {
   return <Adw.Window
     hideOnClose
+    visible
     name={"settings"}
     application={app}
     cssClasses={["background"]}

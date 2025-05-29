@@ -15,9 +15,21 @@ export default class BarSettings extends GObject.Object {
     return this.#tempPath;
   }
 
+  set tempPath(path) {
+    this.#tempPath = path
+    this.notify("temp-path")
+    this.emit("update-file")
+  }
+
   @property(String)
   get systemMonitor() {
     return this.#systemMonitor
+  }
+
+  set systemMonitor(path) {
+    this.#systemMonitor = path
+    this.notify("system-monitor")
+    this.emit("update-file")
   }
 
   @property(Number)
