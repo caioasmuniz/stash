@@ -2,6 +2,7 @@ import { Gtk } from "ags/gtk4";
 import app from "ags/gtk4/app";
 import Adw from "gi://Adw?version=1";
 import General from "./general";
+import Bar from "./bar";
 
 export default () => {
   return <Adw.Window
@@ -13,6 +14,7 @@ export default () => {
     <box orientation={Gtk.Orientation.VERTICAL}>
       <Adw.PreferencesPage>
         <General />
+        <Bar />
       </Adw.PreferencesPage>
     </box>
   </Adw.Window >
