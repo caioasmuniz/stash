@@ -34,9 +34,10 @@ const disk = new Poll<number>(0, INTERVAL, () => {
 })
 
 const temp = new Poll<number>(0, INTERVAL,
-  settings.tempPath ? `cat ${settings.tempPath}` : 'echo 0',
+  settings.bar.tempPath ?
+    `cat ${settings.bar.tempPath}` :
+    'echo 0',
   out => parseInt(out) / 100000)
-
 
 const Indicator = ({ value, label, unit, vertical, visible = true }:
   {
@@ -76,7 +77,9 @@ const Indicator = ({ value, label, unit, vertical, visible = true }:
 export default ({ vertical }: { vertical: boolean }) =>
   <button
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
-    $clicked={() => settings.systemMonitor ? execAsync([settings.systemMonitor]) : null}
+    $clicked={() =>
+      settings.bar.systemMonitor ?
+        execAsync([settings.bar.systemMonitor]) : null}
     cssClasses={["pill", "sys-usage"]}>
     <box
       hexpand={vertical}

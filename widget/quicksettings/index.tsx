@@ -15,8 +15,6 @@ import Battery from "./battery";
 import Bluetooth from "./bluetooth";
 
 import Settings from "../../lib/settings";
-
-
 import Brightness from "../../lib/brightness";
 
 const brightness = Brightness.get_default();
@@ -49,10 +47,10 @@ const Poweroff = () => (
 
 const RotateButton = () => <button
   $clicked={() => {
-    if (settings.barPosition > 8)
-      settings.barPosition = 2
+    if (settings.bar.position > 8)
+      settings.bar.position = 2
     else
-      settings.barPosition *= 2
+      settings.bar.position *= 2
   }}
   cssClasses={["circular"]}
 >
@@ -75,8 +73,8 @@ export default (visible: State<{
       visible.set({
       quicksettings: self.visible,
       applauncher: self.visible &&
-        (settings.barPosition === LEFT ||
-          settings.barPosition === RIGHT) ?
+        (settings.bar.position === LEFT ||
+          settings.bar.position === RIGHT) ?
         false :
         visible.get().applauncher
       })
@@ -87,7 +85,7 @@ export default (visible: State<{
   application={App}
   name={"quicksettings"}
   cssClasses={["quicksettings", "background"]}
-  anchor={bind(settings, "barPosition").as(p =>
+  anchor={bind(settings.bar, "position").as(p =>
     TOP | (p === LEFT ? LEFT : RIGHT) | BOTTOM
   )}
   monitor={bind(hyprland, "focusedMonitor")

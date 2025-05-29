@@ -29,8 +29,8 @@ export default (
       visible.set({
         applauncher: self.visible,
         quicksettings: self.visible &&
-          (settings.barPosition === LEFT ||
-            settings.barPosition === RIGHT) ?
+          (settings.bar.position === LEFT ||
+            settings.bar.position === RIGHT) ?
           false :
           visible.get().quicksettings
       })
@@ -43,7 +43,7 @@ export default (
     cssClasses={["applauncher", "background"]}
     keymode={Astal.Keymode.EXCLUSIVE}
     monitor={bind(hyprland, "focusedMonitor").as(m => m.id)}
-    anchor={bind(settings, "barPosition").as(p =>
+    anchor={bind(settings.bar, "position").as(p =>
       TOP | (p === RIGHT ? RIGHT : LEFT) | BOTTOM)}
   >
     <box
