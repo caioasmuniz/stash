@@ -92,6 +92,8 @@
       };
 
       devShells.${system}.default = pkgs.mkShell {
+
+        ENV = "dev";
         buildInputs =
           with pkgs;
           [

@@ -2,6 +2,9 @@ import { execAsync } from "ags/process";
 import { bind, Binding, Poll, State } from "ags/state";
 import { Gdk, Gtk } from "ags/gtk4";
 import GTop from "gi://GTop";
+import Settings from "../../lib/settings";
+
+const settings = Settings.get_default()
 
 
 const lastCpuTop = new State<GTop.glibtop_cpu>(new GTop.glibtop_cpu())
@@ -31,17 +34,20 @@ const disk = new Poll<number>(0, INTERVAL, () => {
 })
 
 const temp = new Poll<number>(0, INTERVAL,
-  `cat /sys/class/hwmon/hwmon3/temp1_input`,
+  settings.bar.tempPath ?
+    `cat ${settings.bar.tempPath}` :
+    'echo 0',
   out => parseInt(out) / 100000)
 
-
-const Indicator = ({ value, label, unit, vertical }:
+const Indicator = ({ value, label, unit, vertical, visible = true }:
   {
     value: Binding<number>,
     label: string,
     unit: string,
     vertical: boolean
+    visible?: Binding<boolean> | boolean
   }) => <levelbar
+    visible={visible}
     orientation={vertical ?
       Gtk.Orientation.VERTICAL :
       Gtk.Orientation.HORIZONTAL}
@@ -71,7 +77,9 @@ const Indicator = ({ value, label, unit, vertical }:
 export default ({ vertical }: { vertical: boolean }) =>
   <button
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
-    $clicked={() => execAsync(["resources"])}
+    $clicked={() =>
+      settings.bar.systemMonitor ?
+        execAsync([settings.bar.systemMonitor]) : null}
     cssClasses={["pill", "sys-usage"]}>
     <box
       hexpand={vertical}
@@ -91,6 +99,7 @@ export default ({ vertical }: { vertical: boolean }) =>
         label="RAM"
         unit="%" />
       <Indicator
+        visible={bind(temp).as(t => t > 0)}
         vertical={vertical}
         value={bind(temp)}
         label="TEMP"

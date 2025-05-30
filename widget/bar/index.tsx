@@ -8,8 +8,13 @@ import SystemUsage from "./systemUsage";
 import Workspaces from "./workspaces";
 import Clock from "./clock";
 import Launcher from "./launcher";
-import { State } from "ags/state";
+import { bind } from "ags/state";
+import Settings from "../../lib/settings";
+
 const hyprland = Hyprland.get_default()
+const settings = Settings.get_default()
+const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
+
 
 const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
   <window
@@ -20,14 +25,12 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
     monitor={monitor.id}
     name={`bar-${monitor.id}`}
     exclusivity={Astal.Exclusivity.EXCLUSIVE}
-    anchor={vertical ?
-      Astal.WindowAnchor.TOP |
-      Astal.WindowAnchor.LEFT |
-      Astal.WindowAnchor.BOTTOM
-      :
-      Astal.WindowAnchor.BOTTOM |
-      Astal.WindowAnchor.LEFT |
-      Astal.WindowAnchor.RIGHT}>
+    anchor={bind(settings.bar, "position").as(p =>
+      p === TOP ? (TOP | LEFT | RIGHT) :
+        p === LEFT ? (TOP | LEFT | BOTTOM) :
+          p === BOTTOM ? (RIGHT | LEFT | BOTTOM) :
+            (TOP | RIGHT | BOTTOM)
+    )}>
     <centerbox
       cssClasses={["bar-centerbox"]}
       orientation={vertical ?
@@ -58,29 +61,30 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
         <SystemIndicators vertical={vertical} />
       </box>
     </centerbox>
-  </window> as Astal.Window;
+  </window > as Astal.Window;
 
-export default (vertical: State<boolean>) => {
+export default () => {
   const bars = new Map<number, Astal.Window>()
+  const vertical = bind(settings.bar, "position")
+    .as(p => p === LEFT || p === RIGHT)
 
-  // initialize
-  for (const monitor of hyprland.get_monitors()) {
-    bars.set(monitor.id, bar(monitor, vertical.get()) as Astal.Window)
-  }
+  hyprland.get_monitors().forEach(monitor =>
+    bars.set(monitor.id, bar(monitor, vertical.get())))
 
-  hyprland.connect("monitor-added", (_, monitor) => {
-    bars.set(monitor.id, bar(monitor, vertical.get()) as Astal.Window)
-  })
+  hyprland.connect("monitor-added", (_, monitor) =>
+    bars.set(monitor.id, bar(monitor, vertical.get())))
 
   hyprland.connect("monitor-removed", (_, id) => {
     bars.get(id)!.close()
     bars.delete(id)
   })
 
-  vertical.subscribe(vert => {
-    const { id } = hyprland.focusedMonitor
-    bars.get(id)?.close()
-    bars.delete(id)
-    bars.set(id, bar(hyprland.get_monitor(id), vert))
+  vertical.subscribe(v => {
+    hyprland.get_monitors()
+      .forEach(monitor => {
+        bars.get(monitor.id)!.close()
+        bars.delete(monitor.id)
+        bars.set(monitor.id, bar(monitor, v))
+      })
   })
 }

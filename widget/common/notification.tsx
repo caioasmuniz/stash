@@ -32,6 +32,7 @@ export default ({ notif, closeAction }: {
       wrap
       maxWidthChars={25}
       cssClasses={["body"]}
+      useMarkup={notif.body.startsWith('<')}
       label={notif.body} />
     <label
       label={GLib.DateTime
