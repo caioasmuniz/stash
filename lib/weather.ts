@@ -20,134 +20,122 @@ export default class Weather extends GObject.Object {
     speed: GWeather.SpeedUnit.KPH
   }
 
-  #apparent = Number()
-  #attribution = String()
-  #conditions = String()
-  #dew = Number()
-  #forecast = [] as Weather[]
-  #humidity = String()
-  #iconName = String()
-  #isDaytime = Boolean()
-  #lastUpdated = new GLib.DateTime
-  #location = new GWeather.Location
-  #moonPhase = Number()
-  #moonLat = Number()
-  #pressure = Number()
-  #sunrise = new GLib.DateTime
-  #sunset = new GLib.DateTime
-  #temp = Number()
-  // #tempMax: number,
-  // #tempMin: number,
-  #tempSummary = String()
-  #visibility = Number()
-  #windDirection = Number()
-  #windSpeed = Number()
-  #windSummary = String()
-  
   @property(Number)
   get apparent() {
-    return this.#apparent
+    return this.#weather
+      .get_value_apparent(this.#unit.temp)[1]
   }
 
   @property(String)
   get attribution() {
-    return this.#attribution
+    return this.#weather.get_attribution()
   }
 
   @property(String)
   get conditions() {
-    return this.#conditions
+    return this.#weather.get_conditions()
   }
-  
+
   @property(Number)
   get dew() {
-    return this.#dew
+    return this.#weather
+      .get_value_dew(this.#unit.temp)[1]
   }
-  
-  @property(Weather)
+
+  @property(Object)
   get forecast() {
-    return this.#forecast
+    return this.#weather.get_forecast_list()
+      .map(w => {
+        return new Weather({ weatherInfo: w })
+      })
   }
-  
+
   @property(String)
   get humidity() {
-    return this.#humidity
+    return this.#weather.get_humidity()
   }
-  
+
   @property(String)
   get iconName() {
-    return this.#iconName
+    return this.#weather.get_icon_name()
   }
-  
+
   @property(Boolean)
   get isDaytime() {
-    return this.#isDaytime
+    return this.#weather.is_daytime()
   }
 
   @property(Object)
   get lastUpdated() {
-    return this.#lastUpdated
+    return this.toDate(
+      this.#weather.get_value_update()[1])
   }
 
   @property(GWeather.Location)
   get location() {
-    return this.#location
+    return this.#weather.get_location()
   }
 
   @property(Number)
   get moonPhase() {
-    return this.#moonPhase
+    return this.#weather.get_value_moonphase()[1]
   }
-  
+
   @property(Number)
   get moonLat() {
-    return this.#moonLat
+    return this.#weather.get_value_moonphase()[2]
   }
 
   @property(Number)
   get pressure() {
-    return this.#pressure
+    return this.#weather
+      .get_value_pressure(this.#unit.pressure)[1]
   }
 
   @property(Object)
   get sunrise() {
-    return this.#sunrise
+    return this.toDate(
+      this.#weather.get_value_sunrise()[1])
   }
 
   @property(Object)
   get sunset() {
-    return this.#sunset
+    return this.toDate(
+      this.#weather.get_value_sunset()[1])
+
   }
 
   @property(Number)
   get temp() {
-    return this.#temp
+    return this.#weather
+      .get_value_temp(this.#unit.temp)
   }
 
   @property(String)
   get tempSummary() {
-    return this.#tempSummary
+    return this.#weather.get_temp_summary()
   }
 
   @property(Number)
   get visibility() {
-    return this.#visibility
+    return this.#weather
+      .get_value_visibility(this.#unit.distance)
   }
 
   @property(Number)
   get windDirection() {
-    return this.#windDirection
+    return this.#weather.get_value_wind(this.#unit.speed)[1]
   }
 
   @property(Number)
   get windSpeed() {
-    return this.#windSpeed
+    return this.#weather.get_value_wind(this.#unit.speed)[2]
   }
-  
+
   @property(Number)
   get windSummary() {
-    return this.#windSummary
-  } 
+    return this.#weather.get_wind()
+  }
 
   private toDate(time: number) {
     return GLib.DateTime.new_from_unix_local(time)
@@ -159,7 +147,7 @@ export default class Weather extends GObject.Object {
 
   constructor({ weatherInfo = undefined }:
     { weatherInfo: GWeather.Info | undefined }
-  ) {
+  ) {   
     super()
     if (weatherInfo) {
       this.#weather = weatherInfo
@@ -177,54 +165,26 @@ export default class Weather extends GObject.Object {
       () => this.#weather.update()
     )
     this.#weather.connect("updated", weather => {
-      this.#apparent = weather.get_value_apparent(this.#unit.temp)[1]
       this.notify("apparent")
-      this.#attribution = this.#weather.get_attribution()
       this.notify("attribution")
-      this.#conditions = this.#weather.get_conditions()
       this.notify("conditions")
-      this.#dew = this.#weather.get_value_dew(this.#unit.temp)[1]
       this.notify("dew")
-      if (weatherInfo) {
-        this.#forecast = [] as Weather[]
-      } else {
-        this.#forecast = this.#weather.get_forecast_list()
-          .map(w => {
-            return new Weather({ weatherInfo: w })
-          })
-        this.notify("forecast")
-      }
-      this.#humidity = this.#weather.get_humidity()
+      this.notify("forecast")
       this.notify("humidity")
-      this.#iconName = this.#weather.get_symbolic_icon_name()
       this.notify("icon-name")
-      this.#isDaytime = this.#weather.is_daytime()
       this.notify("is-daytime")
-      this.#lastUpdated = this.toDate(this.#weather.get_value_update()[1])
       this.notify("last-updated")
-      this.#location = this.#weather.get_location()
       this.notify("location")
-      this.#moonPhase = this.#weather.get_value_moonphase()[1]
       this.notify("moon-phase")
-      this.#moonLat = this.#weather.get_value_moonphase()[1]
       this.notify("moon-lat")
-      this.#pressure = this.#weather.get_value_pressure(this.#unit.pressure)[1]
       this.notify("pressure")
-      this.#sunrise = this.toDate(this.#weather.get_value_sunrise()[1])
       this.notify("sunrise")
-      this.#sunset = this.toDate(this.#weather.get_value_sunset()[1])
       this.notify("sunset")
-      this.#temp = this.#weather.get_value_temp(this.#unit.temp)[1]
       this.notify("temp")
-      this.#tempSummary = this.#weather.get_temp_summary()
       this.notify("temp-summary")
-      this.#visibility = this.#weather.get_value_visibility(this.#unit.distance)[1]
       this.notify("visibility")
-      this.#windDirection = this.#weather.get_value_wind(this.#unit.speed)[2]
       this.notify("wind-direction")
-      this.#windSpeed = this.#weather.get_value_wind(this.#unit.speed)[1]
       this.notify("wind-speed")
-      this.#windSummary = this.#weather.get_wind()
       this.notify("wind-summary")
     })
   }
