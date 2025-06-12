@@ -1,5 +1,6 @@
 import { execAsync } from "ags/process";
-import { bind, Binding, Poll, State } from "ags/state";
+import { Accessor, createBinding, createState } from "ags";
+import { createPoll } from "ags/time";
 import { Gdk, Gtk } from "ags/gtk4";
 import GTop from "gi://GTop";
 import Settings from "../../lib/settings";
@@ -7,33 +8,33 @@ import Settings from "../../lib/settings";
 const settings = Settings.get_default()
 
 
-const lastCpuTop = new State<GTop.glibtop_cpu>(new GTop.glibtop_cpu())
+const [lastCpuTop, setLastCpuTop] = createState(new GTop.glibtop_cpu())
 const INTERVAL = 1000;
 
-const cpu = new Poll<number>(0, INTERVAL, () => {
+const cpu = createPoll(0, INTERVAL, () => {
   const cpuTop = new GTop.glibtop_cpu()
   GTop.glibtop_get_cpu(cpuTop);
   const total = cpuTop.total - lastCpuTop.get().total;
   const user = cpuTop.user - lastCpuTop.get().user;
   const sys = cpuTop.sys - lastCpuTop.get().sys;
   const nice = cpuTop.nice - lastCpuTop.get().nice;
-  lastCpuTop.set(cpuTop)
+  setLastCpuTop(cpuTop)
   return (user + sys + nice) / total;
 })
 
-const memory = new Poll<number>(0, INTERVAL, () => {
+const memory = createPoll(0, INTERVAL, () => {
   const memTop = new GTop.glibtop_mem()
   GTop.glibtop_get_mem(memTop);
   return memTop.user / memTop.total;
 })
 
-const disk = new Poll<number>(0, INTERVAL, () => {
+const disk = createPoll(0, INTERVAL, () => {
   const diskTop = new GTop.glibtop_fsusage()
   GTop.glibtop_get_fsusage(diskTop, "/");
   return diskTop.bavail / diskTop.bfree;
 })
 
-const temp = new Poll<number>(0, INTERVAL,
+const temp = createPoll(0, INTERVAL,
   settings.bar.tempPath ?
     `cat ${settings.bar.tempPath}` :
     'echo 0',
@@ -41,11 +42,11 @@ const temp = new Poll<number>(0, INTERVAL,
 
 const Indicator = ({ value, label, unit, vertical, visible = true }:
   {
-    value: Binding<number>,
+    value: Accessor<number>,
     label: string,
     unit: string,
     vertical: boolean
-    visible?: Binding<boolean> | boolean
+    visible?: Accessor<boolean> | boolean
   }) => <levelbar
     visible={visible}
     orientation={vertical ?
@@ -67,7 +68,7 @@ const Indicator = ({ value, label, unit, vertical, visible = true }:
         cssClasses={["title"]} />
       <label
         cssClasses={["body"]}
-        label={value.as(v =>
+        label={value(v =>
           (v * 100)
             .toFixed(0)
             .concat(unit))} />
@@ -90,18 +91,18 @@ export default ({ vertical }: { vertical: boolean }) =>
       spacing={4}>
       <Indicator
         vertical={vertical}
-        value={bind(cpu)}
+        value={cpu}
         label="CPU"
         unit="%" />
       <Indicator
         vertical={vertical}
-        value={bind(memory)}
+        value={memory}
         label="RAM"
         unit="%" />
       <Indicator
-        visible={bind(temp).as(t => t > 0)}
+        visible={temp(t => t > 0)}
         vertical={vertical}
-        value={bind(temp)}
+        value={temp}
         label="TEMP"
         unit="°C" />
       {/* <Indicator

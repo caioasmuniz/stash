@@ -1,5 +1,5 @@
-import { bind } from "ags/state"
-import { Gtk, For, Gdk } from "ags/gtk4"
+import { createBinding, For } from "ags"
+import { Gtk } from "ags/gtk4"
 import Hyprland from "gi://AstalHyprland"
 import Apps from "gi://AstalApps"
 import Adw from "gi://Adw?version=1"
@@ -32,10 +32,13 @@ export default ({ monitor, vertical }:
       Gtk.Orientation.VERTICAL :
       Gtk.Orientation.HORIZONTAL}
     spacing={4}>
-    <For each={bind(hyprland, "workspaces").as(ws => ws
-      .filter(ws => ws.monitor === monitor)
-      .sort((a, b) => a.id - b.id))}>
-      {ws => <Adw.ToggleGroup
+    <For each={createBinding(hyprland, "workspaces")
+      (ws => ws
+        .filter(ws => ws.monitor === monitor)
+        .sort((a, b) => a.id - b.id)
+      )
+    }>
+      {(ws: Hyprland.Workspace) => <Adw.ToggleGroup
         orientation={vertical ?
           Gtk.Orientation.VERTICAL :
           Gtk.Orientation.HORIZONTAL}
@@ -48,8 +51,8 @@ export default ({ monitor, vertical }:
             hyprland.get_client(self.get_active_name() ?? "")
               ?.focus()
         }}
-        $={self => bind(hyprland, "focusedClient")
-          .subscribe(self, f => {
+        $={self => createBinding(hyprland, "focusedClient")
+          (f => {
             if (f) {
               if (f.workspace === ws)
                 self.activeName = f.address
@@ -58,8 +61,8 @@ export default ({ monitor, vertical }:
             }
           })
         }>
-        <For each={bind(ws, "clients")}>
-          {client =>
+        <For each={createBinding(ws, "clients")}>
+          {(client: Hyprland.Client) =>
             <Adw.Toggle
               name={client.address}
               iconName={getIcon(client)}

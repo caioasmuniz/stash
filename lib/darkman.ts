@@ -1,10 +1,10 @@
-import GObject, { register, property } from "ags/gobject";
+import { register, property,Object } from "ags/gobject";
 import { exec, execAsync } from "ags/process";
 
 const get = () => exec(`darkman get`);
 
 @register({ GTypeName: "Darkman" })
-export default class Darkman extends GObject.Object {
+export default class Darkman extends Object {
   static instance: Darkman;
   static get_default() {
     if (!this.instance) this.instance = new Darkman();

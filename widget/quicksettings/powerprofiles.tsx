@@ -1,5 +1,5 @@
 import Powerprofiles from "gi://AstalPowerProfiles"
-import { bind } from "ags/state"
+import { createBinding } from "ags"
 import { Gtk } from "ags/gtk4"
 import Adw from "gi://Adw?version=1"
 
@@ -39,8 +39,8 @@ export default () => <Adw.SplitButton
       </box>
     </popover> as Gtk.Popover}>
   <Adw.ButtonContent
-    iconName={bind(profile, "iconName")}
-    label={bind(profile, "activeProfile").as(p =>
+    iconName={createBinding(profile, "iconName")}
+    label={createBinding(profile, "activeProfile")(p =>
       p === "power-saver" ?
         "Power Saver" :
         p === "balanced" ?

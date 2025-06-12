@@ -1,5 +1,5 @@
 import { readFile, writeFileAsync } from "ags/file";
-import GObject, { register, property } from "ags/gobject";
+import { register, property, Object } from "ags/gobject";
 import { Astal } from "ags/gtk4";
 import GLib from "gi://GLib?version=2.0";
 import BarSettings from "./bar";
@@ -12,7 +12,7 @@ const PATH = GLib.build_filenamev([
 ])
 
 @register({ GTypeName: "Settings" })
-export default class Settings extends GObject.Object {
+export default class Settings extends Object {
   static instance: Settings;
   static get_default() {
     if (!this.instance) this.instance = new Settings();

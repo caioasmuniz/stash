@@ -1,14 +1,15 @@
-import GObject, { register, property, signal } from "ags/gobject";
+import { register, property, Object as Obj, signal } from "ags/gobject";
+import GObject from "gi://GObject";
 import { Astal } from "ags/gtk4";
 
 @register({ GTypeName: "BarSettings" })
-export default class BarSettings extends GObject.Object {
+export default class BarSettings extends Obj {
   #position: Astal.WindowAnchor
   #tempPath: string | null
   #systemMonitor: string | null
 
-  @signal()
-  declare updateFile: () => void
+  @signal(String, GObject.TYPE_STRING)
+  updateFile(a:string) { }
 
   @property(String)
   get tempPath() {

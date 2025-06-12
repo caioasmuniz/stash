@@ -1,5 +1,5 @@
 import Wireplumber from "gi://AstalWp"
-import { bind, derive } from "ags/state"
+import { createBinding, createComputed } from "ags"
 import Brightness from "../../lib/brightness"
 import Slider from "./slider"
 import app from "ags/gtk4/app"
@@ -17,8 +17,8 @@ export default () => {
       connectable={audio.defaultSpeaker}
       signal={"notify::volume"}
       widget={Slider({
-        iconName: bind(audio.defaultSpeaker, "volumeIcon"),
-        binding: bind(audio.defaultSpeaker, "volume")
+        iconName: createBinding(audio.defaultSpeaker, "volumeIcon"),
+        binding: createBinding(audio.defaultSpeaker, "volume")
       })} /> as Gtk.Revealer,
 
     <Popup
@@ -26,7 +26,7 @@ export default () => {
       signal={"notify::screen"}
       widget={Slider({
         iconName: "display-brightness-symbolic",
-        binding: bind(brightness, "screen"),
+        binding: createBinding(brightness, "screen"),
       })} /> as Gtk.Revealer,
   ];
 
@@ -36,15 +36,15 @@ export default () => {
     application={app}
     margin={24}
     layer={Astal.Layer.OVERLAY}
-    monitor={bind(hyprland, "focusedMonitor").as(m => m.id)}
+    monitor={createBinding(hyprland, "focusedMonitor")(m => m.id)}
     cssClasses={["osd-popup"]}
     anchor={Astal.WindowAnchor.BOTTOM}
-    visible={bind(derive(
+    visible={createComputed(
       popupList.map(p =>
-        bind(p, "revealChild")),
-      (...r) => r.reduce(
+        createBinding(p, "revealChild")),
+      (...r: boolean[]) => r.reduce(
         (a, b) => a || b)
-    ))}
+    )}
   >
     <box
       cssClasses={["linked", "background", "osd-container"]}
