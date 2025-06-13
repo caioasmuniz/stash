@@ -87,7 +87,7 @@ export default ([visible, setVisible]: State<{
       orientation={Gtk.Orientation.VERTICAL}
       spacing={8}
     >
-      <Gtk.Grid rowSpacing={2} columnSpacing={2} $={(self) => {
+      <Gtk.Grid rowSpacing={4} columnSpacing={4} $={(self) => {
         self.attach(<PwrProf /> as Gtk.Widget, 0, 0, 1, 1)
         self.attach(<DarkMode /> as Gtk.Widget, 1, 0, 1, 1)
         self.attach(<Bluetooth /> as Gtk.Widget, 0, 1, 1, 1)

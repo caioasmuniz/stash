@@ -18,9 +18,9 @@ const getIcon = (client: Hyprland.Client) => {
     case "code-url-handler":
       return "vscode"
     default:
-      return apps.fuzzy_query(client.class).at(0)?.iconName ||
-        apps.fuzzy_query(client.title).at(0)?.iconName ||
-        apps.fuzzy_query(client.initialTitle).at(0)?.iconName ||
+      return apps.fuzzy_query(client.class)[0]?.iconName ||
+        apps.fuzzy_query(client.title)[0]?.iconName ||
+        apps.fuzzy_query(client.initialTitle)[0]?.iconName ||
         "image-missing-symbolic"
   }
 }
@@ -45,14 +45,15 @@ export default ({ monitor, vertical }:
         cssClasses={["round", "ws-toggle",
           ws.id < 0 ? "special" : ""]}
         $$active={self => {
-          if (hyprland.focusedClient && self.active !== 0 &&
+          if (hyprland.focusedClient && self.activeName !== null &&
             hyprland.focusedClient.address !== self.activeName
           )
             hyprland.get_client(self.get_active_name() ?? "")
               ?.focus()
         }}
         $={self => createBinding(hyprland, "focusedClient")
-          (f => {
+          .subscribe(() => {
+            const f = hyprland.focusedClient
             if (f) {
               if (f.workspace === ws)
                 self.activeName = f.address

@@ -1,4 +1,4 @@
-import { register, property,Object } from "ags/gobject";
+import { register, Object, getter, setter } from "ags/gobject";
 import { exec, execAsync } from "ags/process";
 
 const get = () => exec(`darkman get`);
@@ -16,11 +16,12 @@ export default class Darkman extends Object {
     ? "weather-clear-symbolic"
     : "weather-clear-night-symbolic";
 
-  @property(String)
+  @getter(String)
   get mode() {
     return this.#mode;
   }
 
+  @setter(String)
   set mode(mode) {
     execAsync(`darkman set ${mode}`).then(() => {
       this.#mode = mode;
@@ -28,7 +29,7 @@ export default class Darkman extends Object {
     });
   }
 
-  @property(String)
+  @getter(String)
   get icon_name() {
     return this.#icon;
   }

@@ -1,5 +1,5 @@
 import { readFile, writeFileAsync } from "ags/file";
-import { register, property, Object } from "ags/gobject";
+import { register, Object, getter } from "ags/gobject";
 import { Astal } from "ags/gtk4";
 import GLib from "gi://GLib?version=2.0";
 import BarSettings from "./bar";
@@ -21,7 +21,7 @@ export default class Settings extends Object {
 
   #bar: BarSettings
 
-  @property(Object)
+  @getter(Object)
   get bar() {
     return this.#bar;
   }
@@ -37,8 +37,8 @@ export default class Settings extends Object {
     let config = {
       bar: {
         position: Astal.WindowAnchor.LEFT,
-        tempPath: null,
-        systemMonitor: null
+        tempPath: "",
+        systemMonitor: ""
       }
     }
     try {

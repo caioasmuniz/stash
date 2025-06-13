@@ -1,10 +1,10 @@
-import { Binding } from "ags/state"
+import { Accessor } from "ags"
 
 type SliderProps = {
-  icon: Binding<string> | string,
+  icon: Accessor<string> | string,
   min: number,
   max: number,
-  value: Binding<number>,
+  value: Accessor<number>,
   setValue: (value: number) => void,
 }
 export const Slider = (props: SliderProps) =>
@@ -23,6 +23,9 @@ export const Slider = (props: SliderProps) =>
       value={props.value} />
     <label
       cssClasses={["heading"]}
-      label={props.value.as(v => v.toFixed(0).toString()
-        .concat("%"))} />
+      label={props.value(v => v
+        .toFixed(0)
+        .toString()
+        .concat("%"))
+      } />
   </box>

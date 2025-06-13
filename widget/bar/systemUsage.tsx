@@ -1,12 +1,11 @@
-import { execAsync } from "ags/process";
-import { Accessor, createBinding, createState } from "ags";
+import { exec, execAsync } from "ags/process";
+import { Accessor, createState } from "ags";
 import { createPoll } from "ags/time";
 import { Gdk, Gtk } from "ags/gtk4";
 import GTop from "gi://GTop";
 import Settings from "../../lib/settings";
 
 const settings = Settings.get_default()
-
 
 const [lastCpuTop, setLastCpuTop] = createState(new GTop.glibtop_cpu())
 const INTERVAL = 1000;
@@ -34,11 +33,15 @@ const disk = createPoll(0, INTERVAL, () => {
   return diskTop.bavail / diskTop.bfree;
 })
 
-const temp = createPoll(0, INTERVAL,
-  settings.bar.tempPath ?
-    `cat ${settings.bar.tempPath}` :
-    'echo 0',
-  out => parseInt(out) / 100000)
+const temp = createPoll(0, INTERVAL, () => {
+  if (settings.bar.tempPath)
+    return parseInt(
+      exec(`cat ${settings.bar.tempPath}`)
+    ) / 100000
+  else
+    return 0
+})
+// out => parseInt(out) / 100000)
 
 const Indicator = ({ value, label, unit, vertical, visible = true }:
   {

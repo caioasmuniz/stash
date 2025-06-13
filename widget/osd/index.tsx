@@ -18,7 +18,7 @@ export default () => {
       signal={"notify::volume"}
       widget={Slider({
         iconName: createBinding(audio.defaultSpeaker, "volumeIcon"),
-        binding: createBinding(audio.defaultSpeaker, "volume")
+        value: createBinding(audio.defaultSpeaker, "volume")
       })} /> as Gtk.Revealer,
 
     <Popup
@@ -26,7 +26,7 @@ export default () => {
       signal={"notify::screen"}
       widget={Slider({
         iconName: "display-brightness-symbolic",
-        binding: createBinding(brightness, "screen"),
+        value: createBinding(brightness, "screen"),
       })} /> as Gtk.Revealer,
   ];
 
