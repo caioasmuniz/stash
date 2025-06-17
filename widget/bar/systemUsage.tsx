@@ -80,7 +80,7 @@ export default ({ vertical }: { vertical: boolean }) => {
 
   return <button
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
-    $clicked={() =>
+    onClicked={() =>
       settings.bar.systemMonitor ?
         execAsync([settings.bar.systemMonitor]) : null}
     cssClasses={["pill", "sys-usage"]}>

@@ -23,7 +23,7 @@ export default () => <Adw.SplitButton
         orientation={Gtk.Orientation.VERTICAL}>
         <For each={createBinding(bluetooth, "devices")}>
           {(device: AstalBluetooth.Device) => (
-            <button $clicked={() => device.connected ? device.disconnect_device((_, res) => {
+            <button onClicked={() => device.connected ? device.disconnect_device((_, res) => {
               try {
                 device.disconnect_device_finish(res);
               } catch (e) {

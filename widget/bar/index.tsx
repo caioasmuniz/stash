@@ -37,7 +37,7 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
         Gtk.Orientation.VERTICAL :
         Gtk.Orientation.HORIZONTAL}>
       <box
-        _type="start"
+        $type="start"
         spacing={4}
         orientation={vertical ?
           Gtk.Orientation.VERTICAL :
@@ -45,11 +45,11 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
         <Launcher />
         <SystemUsage vertical={vertical} />
       </box>
-      <box _type="center">
+      <box $type="center">
         <Workspaces vertical={vertical} monitor={monitor} />
       </box>
       <box
-        _type="end"
+        $type="end"
         cssClasses={["linked"]}
         orientation={vertical ?
           Gtk.Orientation.VERTICAL :

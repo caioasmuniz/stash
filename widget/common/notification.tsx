@@ -25,7 +25,7 @@ export default ({ notif, closeAction }: {
         halign={Gtk.Align.END}
         valign={Gtk.Align.CENTER}
         cssClasses={["circular"]}
-        $clicked={self => closeAction(notif, self.parent.parent)}
+        onClicked={self => closeAction(notif, self.parent.parent)}
         iconName={"window-close-symbolic"} />
     </box>
     <label
@@ -41,7 +41,7 @@ export default ({ notif, closeAction }: {
     <box cssClasses={["actions"]} spacing={4}>
       <For each={createBinding(notif, "actions")}>
         {(action: Notifd.Action) => <button
-          $clicked={() =>
+          onClicked={() =>
             notif.invoke(action.id)}>
           <label label={action.label} />
         </button>

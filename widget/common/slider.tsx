@@ -17,7 +17,7 @@ export const Slider = (props: SliderProps) =>
       min={props.min}
       max={props.max}
       $={self => self.set_value(props.value.get())}
-      $changeValue={({ value }) =>
+      onChangeValue={({ value }) =>
         props.setValue(value)
       }
       value={props.value} />

@@ -21,7 +21,7 @@ const DNDButton = () => <box spacing={4}>
 const ClearAllButton = () => <button
   halign={Gtk.Align.END}
   cursor={Gdk.Cursor.new_from_name("pointer", null)}
-  $clicked={() => notifd.get_notifications().
+  onClicked={() => notifd.get_notifications().
     forEach(n => n.dismiss())}>
   <box spacing={4}>
     <image iconName={"edit-clear-all-symbolic"} />
@@ -74,7 +74,7 @@ export default () =>
             return <Gtk.Expander
               cssClasses={["notif-expander"]}>
               <Notification
-                _type="label"
+                $type="label"
                 notif={n[0]}
                 closeAction={n => n.dismiss()}
               />

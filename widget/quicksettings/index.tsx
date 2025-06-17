@@ -24,20 +24,20 @@ const hyprland = Hyprland.get_default()
 const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
 
 const Lock = () => (
-  <button
+  <Gtk.Button
     cssClasses={["circular"]}
-    $clicked={() => {
+    onClicked={() => {
       execAsync(["bash", "-c", "hyprlock --immediate"]);
     }}
   >
     <image iconName={"system-lock-screen-symbolic"} />
-  </button>
+  </Gtk.Button>
 );
 
 const Poweroff = () => (
   <button
     cssClasses={["circular", "destructive-action"]}
-    $clicked={() => {
+    onClicked={() => {
       execAsync(["bash", "-c", "systemctl poweroff"]);
     }}
   >
@@ -46,7 +46,7 @@ const Poweroff = () => (
 );
 
 const RotateButton = () => <button
-  $clicked={() => {
+  onClicked={() => {
     if (settings.bar.position > 8)
       settings.bar.position = 2
     else
@@ -61,7 +61,7 @@ export default ([visible, setVisible]: State<{
   quicksettings: boolean
 }>) => {
   return <window
-    $$visible={self => {
+    onNotifyVisible={self => {
       setVisible({
         quicksettings: self.visible,
         applauncher: self.visible &&
@@ -87,11 +87,12 @@ export default ([visible, setVisible]: State<{
       orientation={Gtk.Orientation.VERTICAL}
       spacing={8}
     >
-      <Gtk.Grid rowSpacing={4} columnSpacing={4} $={(self) => {
-        self.attach(<PwrProf /> as Gtk.Widget, 0, 0, 1, 1)
-        self.attach(<DarkMode /> as Gtk.Widget, 1, 0, 1, 1)
-        self.attach(<Bluetooth /> as Gtk.Widget, 0, 1, 1, 1)
-      }}>
+      <Gtk.Grid rowSpacing={4} columnSpacing={4}
+        $={(self) => {
+          self.attach(<PwrProf /> as Gtk.Widget, 0, 0, 1, 1)
+          self.attach(<DarkMode /> as Gtk.Widget, 1, 0, 1, 1)
+          self.attach(<Bluetooth /> as Gtk.Widget, 0, 1, 1, 1)
+        }}>
       </Gtk.Grid>
       <box halign={Gtk.Align.CENTER} spacing={8}>
         <Tray />

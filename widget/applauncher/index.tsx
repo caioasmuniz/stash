@@ -22,7 +22,7 @@ export default (
   let searchEntry = new Gtk.Entry()
 
   return <window
-    $$visible={self => {
+    onNotifyVisible={self => {
       self.visible ?
         searchEntry.grab_focus() :
         searchEntry.set_text("")
@@ -54,10 +54,10 @@ export default (
         $={self => self = searchEntry}
         hexpand
         placeholderText={"Search your apps"}
-        $$text={self => setList(
+        onNotifyText={self => setList(
           apps.fuzzy_query(self.text)
         )}
-        $activate={self => {
+        onActivate={self => {
           App.get_window("applauncher")!.hide()
           apps.fuzzy_query(self.text)[0].launch();
         }} />

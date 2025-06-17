@@ -15,7 +15,7 @@ export const AudioEndpointControl = ({ defaultDevice, devices }: AudioControlPro
     <box
       cssClasses={["audio-config"]}
       orientation={Gtk.Orientation.VERTICAL}>
-      <button $clicked={() => setVisible(!visible.get())}>
+      <button onClicked={() => setVisible(!visible.get())}>
         <Slider
           icon={createBinding(defaultDevice, "volumeIcon")}
           min={0}
@@ -33,9 +33,9 @@ export const AudioEndpointControl = ({ defaultDevice, devices }: AudioControlPro
               <button
                 cssClasses={createBinding(device, "isDefault")
                   (isDefault => isDefault ? ['active', 'linked'] : ['linked'])}
-                $clicked={() => device.set_is_default(true)}>
+                onClicked={() => device.set_is_default(true)}>
                 <label
-                  _type="label"
+                  $type="label"
                   label={device.description}
                   wrap
                   maxWidthChars={10}

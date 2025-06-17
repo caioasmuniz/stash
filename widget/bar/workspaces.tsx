@@ -44,7 +44,7 @@ export default ({ monitor, vertical }:
           Gtk.Orientation.HORIZONTAL}
         cssClasses={["round", "ws-toggle",
           ws.id < 0 ? "special" : ""]}
-        $$active={self => {
+        onNotifyActive={self => {
           if (hyprland.focusedClient && self.activeName !== null &&
             hyprland.focusedClient.address !== self.activeName
           )

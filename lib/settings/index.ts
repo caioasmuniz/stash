@@ -3,6 +3,7 @@ import { register, Object, getter } from "ags/gobject";
 import { Astal } from "ags/gtk4";
 import GLib from "gi://GLib?version=2.0";
 import BarSettings from "./bar";
+import Adw from "gi://Adw?version=1";
 
 const PATH = GLib.build_filenamev([
   GLib.get_home_dir(), ".config",

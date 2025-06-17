@@ -61,11 +61,11 @@ export default ({ vertical }: { vertical: boolean }) =>
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     cssClasses={["pill", "sys-indicators", vertical ? "vert" : ""]}
     active={createBinding(App.get_window("quicksettings")!, "visible")}
-    $clicked={() => App.toggle_window("quicksettings")}
+    onClicked={() => App.toggle_window("quicksettings")}
     $={self => self.add_controller(
       <Gtk.EventControllerScroll
         flags={Gtk.EventControllerScrollFlags.VERTICAL}
-        $scroll={(self, dx, dy) => dy > 0 ?
+        onScroll={(self, dx, dy) => dy > 0 ?
           audio.default_speaker.volume -= 0.025 :
           audio.default_speaker.volume += 0.025}
       /> as Gtk.EventController)}>

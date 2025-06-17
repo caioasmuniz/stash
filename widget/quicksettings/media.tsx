@@ -15,13 +15,13 @@ function lengthStr(length: number) {
 
 const PlaybackButtons = ({ player }: { player: Mpris.Player }) => <box>
   <button
-    $clicked={() => player.previous()}
+    onClicked={() => player.previous()}
     visible={player.canGoPrevious}>
     <image iconName={"media-skip-backwiconNameard-symbolic"} />
   </button>
 
   <button
-    $clicked={() =>
+    onClicked={() =>
       player.playbackStatus === Mpris.PlaybackStatus.PAUSED
         ? player.play() : player.pause()}>
     <image
@@ -31,7 +31,7 @@ const PlaybackButtons = ({ player }: { player: Mpris.Player }) => <box>
           : "media-playback-start-symbolic")} />
   </button>
   <button
-    $clicked={() => player.next()}
+    onClicked={() => player.next()}
     visible={player.canGoNext}>
     <image iconName={"media-skip-forward-symbolic"} />
   </button>

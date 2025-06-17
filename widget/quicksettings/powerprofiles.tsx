@@ -21,17 +21,17 @@ export default () => <Adw.SplitButton
       <box
         cssClasses={["linked"]}
         orientation={Gtk.Orientation.VERTICAL}>
-        <button $clicked={() => profile.set_active_profile("power-saver")}>
+        <button onClicked={() => profile.set_active_profile("power-saver")}>
           <Adw.ButtonContent
             iconName={"power-profile-power-saver-symbolic"}
             label="Power Saver" />
         </button>
-        <button $clicked={() => profile.set_active_profile("balanced")}>
+        <button onClicked={() => profile.set_active_profile("balanced")}>
           <Adw.ButtonContent
             iconName={"power-profile-balanced-symbolic"}
             label="Balanced" />
         </button>
-        <button $clicked={() => profile.set_active_profile("performance")}>
+        <button onClicked={() => profile.set_active_profile("performance")}>
           <Adw.ButtonContent
             iconName={"power-profile-performance-symbolic"}
             label="Performance" />
