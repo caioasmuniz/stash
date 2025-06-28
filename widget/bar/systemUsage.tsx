@@ -40,7 +40,7 @@ export default ({ vertical }: { vertical: boolean }) => {
         exec(`cat ${settings.bar.tempPath}`)
       ) / 100000
     else
-      return 0
+      return -1
   })
 
   const Indicator = ({ value, label, unit, vertical, visible = true }:
@@ -48,7 +48,7 @@ export default ({ vertical }: { vertical: boolean }) => {
       value: Accessor<number>,
       label: string,
       unit: string,
-      vertical: boolean
+      vertical: boolean,
       visible?: Accessor<boolean> | boolean
     }) => <Gtk.LevelBar
       visible={visible}
@@ -71,10 +71,9 @@ export default ({ vertical }: { vertical: boolean }) => {
           cssClasses={["title"]} />
         <label
           cssClasses={["body"]}
-          label={value(v =>
-            (v * 100)
-              .toFixed(0)
-              .concat(unit))} />
+          label={value(v => (v * 100)
+            .toFixed(0)
+            .concat(unit))} />
       </box>
     </Gtk.LevelBar >
 
@@ -102,7 +101,7 @@ export default ({ vertical }: { vertical: boolean }) => {
         label="RAM"
         unit="%" />
       <Indicator
-        visible={temp(t => t > 0)}
+        visible={temp.as(t => t >= 0)}
         vertical={vertical}
         value={temp}
         label="TEMP"
