@@ -4,31 +4,20 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     astal.url = "github:aylur/astal";
-    gnim = {
-      url = "github:aylur/gnim";
-      flake = false;
-    };
-    ags = {
-      url = "github:aylur/ags/v3";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.astal.follows = "astal";
-      inputs.gnim.follows = "gnim";
-    };
   };
 
   outputs =
     {
       self,
       nixpkgs,
-      ags,
-      ...
-    }@inputs:
+      astal,
+    }:
     let
-      name = "stash";
+      pname = "stash";
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
 
-      astalPackages = with ags.packages.${system}; [
+      astalPackages = with astal.packages.${system}; [
         apps
         battery
         bluetooth
@@ -39,13 +28,30 @@
         powerprofiles
         tray
         wireplumber
+        astal4
       ];
 
-      extraPackages =
+      nativeBuildInputs = with pkgs; [
+        wrapGAppsHook
+        pnpm.configHook
+        pnpm
+        gobject-introspection
+        meson
+        pkg-config
+        ninja
+        desktop-file-utils
+      ];
+
+      buildInputs =
         with pkgs;
         [
+          gsettings-desktop-schemas
+          glib
           libadwaita
           libgtop
+          gtk4
+          gjs
+          esbuild
         ]
         ++ astalPackages;
 
@@ -56,26 +62,17 @@
     in
     {
       packages.${system}.default = pkgs.stdenv.mkDerivation {
-        inherit name;
-        meta.mainProgram = "${name}";
+        inherit pname;
+        meta.mainProgram = "${pname}";
+        version = "0.1.0";
         src = ./.;
 
-        nativeBuildInputs = [
-          pkgs.wrapGAppsHook
-          pkgs.gobject-introspection
-          ags.packages.${system}.default
-        ];
+        inherit buildInputs nativeBuildInputs;
 
-        buildInputs = extraPackages ++ [
-          pkgs.gjs
-          pkgs.glib
-          ags.packages.${system}.astal4
-        ];
-
-        installPhase = ''
-          mkdir -p $out/bin
-          ags bundle app.ts $out/bin/${name}
-        '';
+        pnpmDeps = pkgs.pnpm.fetchDeps {
+          inherit (self.packages.${system}.default) pname version src;
+          hash = "";
+        };
 
         preFixup = ''
           gappsWrapperArgs+=(
@@ -92,18 +89,16 @@
       devShells.${system}.default = pkgs.mkShell {
 
         ENV = "dev";
+        inherit nativeBuildInputs;
         buildInputs =
           with pkgs;
           [
-            (inputs.ags.packages.${pkgs.system}.default.override {
-              inherit extraPackages;
-            })
             libnotify
             nixd
             nixfmt-rfc-style
             nix-output-monitor
           ]
-          ++ astalPackages
+          ++ buildInputs
           ++ wrapperPackages;
       };
     };

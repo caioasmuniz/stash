@@ -1,7 +1,7 @@
 # FIXME: rename
-project('todo-demo', version: '0.0.0')
-domain = 'me.example.todoDemo'
-resource = '/me/example/todoDemo'
+project('stash', version: '0.1.0')
+domain = 'dev.caioasmuniz.stash'
+resource = 'dev/caioasmuniz/stash'
 
 name = meson.project_name()
 version = meson.project_version()
