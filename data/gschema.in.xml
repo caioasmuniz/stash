@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schemalist>
+  <schema path="@resource@/" id="@domain@">
+    <key name="todos" type="aa{sv}">
+      <default>
+        <![CDATA[
+          [
+            {
+              'label': <'first todo'>,
+              'done': <false>
+            },
+            {
+              'label': <'second todo'>,
+              'done': <false>
+            }
+          ]
+        ]]>
+      </default>
+    </key>
+  </schema>
+</schemalist>

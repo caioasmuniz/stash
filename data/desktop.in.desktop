@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Todo Demo
+Comment=Gnim Demo Application
+Type=Application
+Exec=@exe@
+Terminal=false
+Categories=GTK;GNOME;
+Keywords=GNOME;
+Icon=application-x-executable
