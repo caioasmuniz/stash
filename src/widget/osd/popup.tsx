@@ -1,15 +1,15 @@
-import GObject, { signal } from "ags/gobject"
-import { Gtk } from "ags/gtk4"
-import { timeout } from "ags/time"
+import AstalIO from "gi://AstalIO?version=0.1"
+import Gtk from "gi://Gtk?version=4.0"
+import GObject from "gnim/gobject"
 
 const TIMEOUT_MS = 2000
 
 export default ({ widget, connectable, signal }: {
-  widget: Gtk.Widget,
+  widget: GObject.Object,
   connectable: GObject.Object,
   signal: string,
 }) =>
-  <revealer
+  <Gtk.Revealer
     transitionDuration={200}
     revealChild={false}
     visible={false}
@@ -19,9 +19,9 @@ export default ({ widget, connectable, signal }: {
         if (!self.revealChild) {
           self.visible = true
           self.revealChild = true
-          timeout(TIMEOUT_MS, () => {
+          AstalIO.Time.timeout(TIMEOUT_MS, () => {
             self.revealChild = false
-            timeout(200, () =>
+            AstalIO.Time.timeout(200, () =>
               self.visible = false
             )
           })
@@ -29,4 +29,4 @@ export default ({ widget, connectable, signal }: {
       })
     }>
     {widget}
-  </revealer>
+  </Gtk.Revealer>

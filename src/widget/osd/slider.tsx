@@ -1,20 +1,20 @@
-import { Accessor } from "ags"
-import { Gtk } from "ags/gtk4"
+import Gtk from "gi://Gtk?version=4.0"
+import { Accessor } from "gnim"
 
 export default ({ value, iconName }: {
   value: Accessor<number>,
-  iconName: string | Accessor<string>
+  iconName: string | Accessor<string>  
 }) =>
-  <box
+  <Gtk.Box
     cssClasses={["slider"]}
     spacing={8}>
-    <image iconName={iconName} />
-    <levelbar
+    <Gtk.Image iconName={iconName} />
+    <Gtk.LevelBar
       hexpand
       $={self => self.set_value(value.get())}
       value={value}
     />
-    <label
+    <Gtk.Label
       cssClasses={["heading"]}
       label={value(v =>
         Math.floor(v * 100)
@@ -22,5 +22,5 @@ export default ({ value, iconName }: {
           .concat("%"))
       }
     />
-  </box> as Gtk.Widget
+  </Gtk.Box>
 
