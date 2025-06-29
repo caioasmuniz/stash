@@ -52,6 +52,7 @@
           gtk4
           gjs
           esbuild
+          nodejs
         ]
         ++ astalPackages;
 

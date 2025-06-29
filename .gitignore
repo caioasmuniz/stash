@@ -1,4 +1,7 @@
-node_modules
-@girs
+node_modules/
+result/
+build/
+dist/
+@girs/
 .direnv
-result
+
