@@ -46,6 +46,8 @@
         [
           libadwaita
           libgtop
+          libgweather
+          glib-networking
         ]
         ++ astalPackages;
 
