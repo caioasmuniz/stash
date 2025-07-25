@@ -1,10 +1,9 @@
-import { register, Object, getter, setter } from "ags/gobject";
-import { monitorFile, readFileAsync } from "ags/file";
-import { exec, execAsync } from "ags/process";
+import AstalIO from "gi://AstalIO?version=0.1";
+import { register, Object, getter, setter } from "gnim/gobject";
 
-const get = (args: string) => Number(exec(`brightnessctl ${args}`));
-const screen = exec(`bash -c "ls -w1 /sys/class/backlight | head -1"`);
-const kbd = exec(`bash -c "ls -w1 /sys/class/leds | head -1"`);
+const get = (args: string) => Number(AstalIO.Process.exec(`brightnessctl ${args}`));
+const screen = AstalIO.Process.exec(`bash -c "ls -w1 /sys/class/backlight | head -1"`);
+const kbd = AstalIO.Process.exec(`bash -c "ls -w1 /sys/class/leds | head -1"`);
 
 @register({ GTypeName: "Brightness" })
 export default class Brightness extends Object {
@@ -29,10 +28,13 @@ export default class Brightness extends Object {
   set kbd(value) {
     if (value < 0 || value > this.#kbdMax) return;
 
-    execAsync(`brightnessctl -d ${kbd} s ${value} -q`).then(() => {
-      this.#kbd = value;
-      this.notify("kbd");
-    });
+    AstalIO.Process.exec_async(
+      `brightnessctl -d ${kbd} s ${value} -q`,
+      () => {
+        this.#kbd = value;
+        this.notify("kbd");
+      }
+    );
   }
 
   @getter(Number)
@@ -46,10 +48,13 @@ export default class Brightness extends Object {
 
     if (percent > 1) percent = 1;
 
-    execAsync(`brightnessctl set ${Math.floor(percent * 100)}% -q`).then(() => {
-      this.#screen = percent;
-      this.notify("screen");
-    });
+    AstalIO.Process.exec_async(
+      `brightnessctl set ${Math.floor(percent * 100)}% -q`,
+      () => {
+        this.#screen = percent;
+        this.notify("screen");
+      }
+    );
   }
 
   constructor() {
@@ -58,14 +63,14 @@ export default class Brightness extends Object {
     const screenPath = `/sys/class/backlight/${screen}/brightness`;
     const kbdPath = `/sys/class/leds/${kbd}/brightness`;
 
-    monitorFile(screenPath, async (f) => {
-      const v = await readFileAsync(f);
+    AstalIO.monitor_file(screenPath, async (f) => {
+      const v = await AstalIO.read_file_async(f);
       this.#screen = Number(v) / this.#screenMax;
       this.notify("screen");
     });
 
-    monitorFile(kbdPath, async (f) => {
-      const v = await readFileAsync(f);
+    AstalIO.monitor_file(kbdPath, async (f) => {
+      const v = await AstalIO.read_file_async(f);
       this.#kbd = Number(v) / this.#kbdMax;
       this.notify("kbd");
     });

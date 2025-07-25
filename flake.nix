@@ -72,7 +72,7 @@
 
         pnpmDeps = pkgs.pnpm.fetchDeps {
           inherit (self.packages.${system}.default) pname version src;
-          hash = "";
+          hash = "sha256-rfUXu8cU8/un7OhtLT3YhiPfEZMynBIEiRDZWW0TOAA=";
         };
 
         preFixup = ''
