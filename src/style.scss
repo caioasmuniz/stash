@@ -1,13 +1,13 @@
-window {
+Astal.Window {
   border-radius: var(--window-radius);
   background: oklab(from var(--window-bg-color) l a b / 0.75);
 }
 
-window.osd-popup {
+Astal.Window.osd-popup {
   background: transparent;
 }
 
-window.quicksettings {
+Astal.Window.quicksettings {
   .quicksettings-body {
     padding: 8px;
   }
@@ -69,7 +69,7 @@ window.quicksettings {
   }
 }
 
-window.applauncher {
+Astal.Window.applauncher {
   .applauncher-body {
     padding: 8px;
 
@@ -79,11 +79,11 @@ window.applauncher {
   }
 }
 
-window.notif-popup {
+Astal.Window.notif-popup {
   background-color: transparent;
 }
 
-window#osd {
+Astal.Window#osd {
   .osd-container {
     color: var(--window-fg-color);
     background: oklab(from var(--window-bg-color) l a b / 0.4);
@@ -105,7 +105,7 @@ window#osd {
 }
 
 
-window.bar {
+Astal.Window.bar {
   border-radius: var(--window-radius) var(--window-radius) 0 0;
 
   .bar-centerbox {
@@ -163,7 +163,7 @@ window.bar {
   .sys-usage {
     padding: 4px;
 
-    label {
+    Gtk.Label {
       margin: 0;
       font-size: 0.6em;
     }

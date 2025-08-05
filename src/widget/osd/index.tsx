@@ -30,7 +30,7 @@ export default () => {
       })} /> as Gtk.Revealer,
   ];
 
-  return <window
+  return <Astal.Window
     name={"osd"}
     widthRequest={250}
     application={app}
@@ -46,13 +46,13 @@ export default () => {
         (a, b) => a || b)
     )}
   >
-    <box
+    <Gtk.Box
       cssClasses={["linked", "background", "osd-container"]}
       orientation={Gtk.Orientation.VERTICAL}
       valign={Gtk.Align.END}
       spacing={12}
     >
       {popupList}
-    </box>
-  </window>
+    </Gtk.Box>
+  </Astal.Window>
 }

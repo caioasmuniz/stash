@@ -1,6 +1,7 @@
 import GLib from "gi://GLib"
+import Gtk from "gi://Gtk?version=4.0"
+import Gdk from "gi://Gdk?version=4.0"
 import { createPoll } from "ags/time"
-import { Gtk, Gdk } from "ags/gtk4"
 
 export default ({ vertical }: { vertical: boolean }) => {
   const day = createPoll("", 1000, () =>
@@ -25,7 +26,7 @@ export default ({ vertical }: { vertical: boolean }) => {
       hasArrow={false}>
       <Gtk.Calendar />
     </Gtk.Popover> as Gtk.Popover}>
-    <box
+    <Gtk.Box
       cssClasses={["clock", vertical ? "vert" : ""]}
       halign={Gtk.Align.CENTER}
       valign={Gtk.Align.CENTER}
@@ -33,32 +34,32 @@ export default ({ vertical }: { vertical: boolean }) => {
         Gtk.Orientation.VERTICAL :
         Gtk.Orientation.HORIZONTAL}
       spacing={vertical ? 0 : 4}>
-      <box
+      <Gtk.Box
         orientation={vertical ?
           Gtk.Orientation.VERTICAL :
           Gtk.Orientation.HORIZONTAL}
         spacing={vertical ? 0 : 4}>
-        <label
+        <Gtk.Label
           label={hour}
           cssClasses={["time"]} />
-        <label
+        <Gtk.Label
           label={minute}
           cssClasses={["time"]} />
-      </box>
-      <box
+      </Gtk.Box>
+      <Gtk.Box
         orientation={Gtk.Orientation.VERTICAL}
         spacing={vertical ? 2 : 0}
         halign={Gtk.Align.CENTER}
         valign={Gtk.Align.CENTER}>
-        <label
+        <Gtk.Label
           cssClasses={["date"]}
           label={day}
         />
-        <label
+        <Gtk.Label
           cssClasses={["date"]}
           label={month}
         />
-      </box>
-    </box>
+      </Gtk.Box>
+    </Gtk.Box>
   </Gtk.MenuButton >
 }

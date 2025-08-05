@@ -8,11 +8,11 @@ type SliderProps = {
   setValue: (value: number) => void,
 }
 export const Slider = (props: SliderProps) =>
-  <box
+  <Gtk.Box
     cssClasses={["slider"]}
     spacing={4}>
-    <image iconName={props.icon} />
-    <slider
+    <Gtk.Image iconName={props.icon} />
+    <Astal.Slider
       hexpand
       min={props.min}
       max={props.max}
@@ -21,11 +21,11 @@ export const Slider = (props: SliderProps) =>
         props.setValue(value)
       }
       value={props.value} />
-    <label
+    <Gtk.Label
       cssClasses={["heading"]}
       label={props.value(v => v
         .toFixed(0)
         .toString()
         .concat("%"))
       } />
-  </box>
+  </Gtk.Box>

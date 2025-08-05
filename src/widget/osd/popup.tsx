@@ -9,7 +9,7 @@ export default ({ widget, connectable, signal }: {
   connectable: GObject.Object,
   signal: string,
 }) =>
-  <revealer
+  <Gtk.Revealer
     transitionDuration={200}
     revealChild={false}
     visible={false}
@@ -29,4 +29,4 @@ export default ({ widget, connectable, signal }: {
       })
     }>
     {widget}
-  </revealer>
+  </Gtk.Revealer>

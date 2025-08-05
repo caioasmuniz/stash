@@ -6,51 +6,51 @@ import Notification from "../common/notification";
 
 const notifd = Notifd.get_default();
 
-const DNDButton = () => <box spacing={4}>
-  <image iconName={"notifications-disabled-symbolic"} />
-  <label label={"Do Not Disturb"} />
-  <switch
+const DNDButton = () => <Gtk.Box spacing={4}>
+  <Gtk.Image iconName={"notifications-disabled-symbolic"} />
+  <Gtk.Label label={"Do Not Disturb"} />
+  <Gtk.Switch
     valign={Gtk.Align.CENTER}
     active={createBinding(notifd, "dontDisturb")}
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     $={self =>
       self.connect("notify::active", self =>
         notifd.dontDisturb = self.state)} />
-</box>
+</Gtk.Box>
 
-const ClearAllButton = () => <button
+const ClearAllButton = () => <Gtk.Button
   halign={Gtk.Align.END}
   cursor={Gdk.Cursor.new_from_name("pointer", null)}
   onClicked={() => notifd.get_notifications().
     forEach(n => n.dismiss())}>
-  <box spacing={4}>
-    <image iconName={"edit-clear-all-symbolic"} />
-    <label label={"Clear All"} />
-  </box>
-</button >
+  <Gtk.Box spacing={4}>
+    <Gtk.Image iconName={"edit-clear-all-symbolic"} />
+    <Gtk.Label label={"Clear All"} />
+  </Gtk.Box>
+</Gtk.Button >
 
 export default () =>
-  <box
+  <Gtk.Box
     orientation={Gtk.Orientation.VERTICAL}
     cssClasses={["notif-list"]}
     spacing={4}>
-    <box
+    <Gtk.Box
       orientation={Gtk.Orientation.VERTICAL}
       spacing={4}>
-      <label
+      <Gtk.Label
         label={"Notifications"}
         cssClasses={["title-2"]} />
-      <box
+      <Gtk.Box
         halign={Gtk.Align.CENTER}
         spacing={4}>
         <DNDButton />
         <ClearAllButton />
-      </box>
-    </box>
+      </Gtk.Box>
+    </Gtk.Box>
     <Gtk.ScrolledWindow
       hscrollbarPolicy={Gtk.PolicyType.NEVER}
       vexpand>
-      <box
+      <Gtk.Box
         orientation={Gtk.Orientation.VERTICAL}
         spacing={6}>
         <For each={createBinding(notifd, "notifications")
@@ -78,7 +78,7 @@ export default () =>
                 notif={n[0]}
                 closeAction={n => n.dismiss()}
               />
-              <box
+              <Gtk.Box
                 marginTop={4}
                 spacing={4}
                 orientation={Gtk.Orientation.VERTICAL}
@@ -89,7 +89,7 @@ export default () =>
                     closeAction={n => n.dismiss()}
                   />
                 )}
-              </box>
+              </Gtk.Box>
             </Gtk.Expander>
           }
 
@@ -103,6 +103,6 @@ export default () =>
           title={"No new Notifications"}
           description={"You're up-to-date"}
           iconName={"user-offline-symbolic"} />
-      </box>
+      </Gtk.Box>
     </Gtk.ScrolledWindow >
-  </box >
+  </Gtk.Box >

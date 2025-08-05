@@ -17,7 +17,7 @@ const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
 
 
 const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
-  <window
+  <Astal.Window
     visible
     cssClasses={["bar", "background",
       vertical ? "vert" : ""]}
@@ -31,12 +31,12 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
           p === BOTTOM ? (RIGHT | LEFT | BOTTOM) :
             (TOP | RIGHT | BOTTOM)
     )}>
-    <centerbox
-      cssClasses={["bar-centerbox"]}
+    <Gtk.CenterBox
+      cssClasses={["bar-Gtk.CenterBox"]}
       orientation={vertical ?
         Gtk.Orientation.VERTICAL :
         Gtk.Orientation.HORIZONTAL}>
-      <box
+      <Gtk.Box
         $type="start"
         spacing={4}
         orientation={vertical ?
@@ -44,11 +44,11 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
           Gtk.Orientation.HORIZONTAL}>
         <Launcher />
         <SystemUsage vertical={vertical} />
-      </box>
-      <box $type="center">
+      </Gtk.Box>
+      <Gtk.Box $type="center">
         <Workspaces vertical={vertical} monitor={monitor} />
-      </box>
-      <box
+      </Gtk.Box>
+      <Gtk.Box
         $type="end"
         cssClasses={["linked"]}
         orientation={vertical ?
@@ -59,9 +59,9 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
         <Clock vertical={vertical} />
         <Gtk.Separator />
         <SystemIndicators vertical={vertical} />
-      </box>
-    </centerbox>
-  </window > as Astal.Window;
+      </Gtk.Box>
+    </Gtk.CenterBox>
+  </Astal.Window> as Astal.Window;
 
 export default () => {
   const bars = new Map<number, Astal.Window>()

@@ -30,22 +30,22 @@ const Lock = () => (
       execAsync(["bash", "-c", "hyprlock --immediate"]);
     }}
   >
-    <image iconName={"system-lock-screen-symbolic"} />
+    <Gtk.Image iconName={"system-lock-screen-symbolic"} />
   </Gtk.Button>
 );
 
 const Poweroff = () => (
-  <button
+  <Gtk.Button
     cssClasses={["circular", "destructive-action"]}
     onClicked={() => {
       execAsync(["bash", "-c", "systemctl poweroff"]);
     }}
   >
-    <image iconName={"system-shutdown-symbolic"} />
-  </button>
+    <Gtk.Image iconName={"system-shutdown-symbolic"} />
+  </Gtk.Button>
 );
 
-const RotateButton = () => <button
+const RotateButton = () => <Gtk.Button
   onClicked={() => {
     if (settings.bar.position > 8)
       settings.bar.position = 2
@@ -54,13 +54,13 @@ const RotateButton = () => <button
   }}
   cssClasses={["circular"]}
 >
-  <image iconName={"object-rotate-right-symbolic"} />
-</button>
+  <Gtk.Image iconName={"object-rotate-right-symbolic"} />
+</Gtk.Button>
 export default ([visible, setVisible]: State<{
   applauncher: boolean,
   quicksettings: boolean
 }>) => {
-  return <window
+  return <Astal.Window
     onNotifyVisible={self => {
       setVisible({
         quicksettings: self.visible,
@@ -82,7 +82,7 @@ export default ([visible, setVisible]: State<{
     )}
     monitor={createBinding(hyprland, "focusedMonitor")
       (m => m.id)}>
-    <box
+    <Gtk.Box
       cssClasses={["quicksettings-body"]}
       orientation={Gtk.Orientation.VERTICAL}
       spacing={8}
@@ -94,12 +94,12 @@ export default ([visible, setVisible]: State<{
           self.attach(<Bluetooth /> as Gtk.Widget, 0, 1, 1, 1)
         }}>
       </Gtk.Grid>
-      <box halign={Gtk.Align.CENTER} spacing={8}>
+      <Gtk.Box halign={Gtk.Align.CENTER} spacing={8}>
         <Tray />
         <Lock />
         <RotateButton />
         <Poweroff />
-      </box>
+      </Gtk.Box>
       <Slider
         icon={"display-brightness-symbolic"}
         min={0}
@@ -114,6 +114,6 @@ export default ([visible, setVisible]: State<{
       <Battery />
       <Media />
       <NotificationList />
-    </box>
-  </window>
+    </Gtk.Box>
+  </Astal.Window>
 }

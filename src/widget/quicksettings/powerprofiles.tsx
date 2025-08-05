@@ -18,25 +18,25 @@ export default () => <Adw.SplitButton
     })}
   popover={
     <popover>
-      <box
+      <Gtk.Box
         cssClasses={["linked"]}
         orientation={Gtk.Orientation.VERTICAL}>
-        <button onClicked={() => profile.set_active_profile("power-saver")}>
+        <Gtk.Button onClicked={() => profile.set_active_profile("power-saver")}>
           <Adw.ButtonContent
             iconName={"power-profile-power-saver-symbolic"}
             label="Power Saver" />
-        </button>
-        <button onClicked={() => profile.set_active_profile("balanced")}>
+        </Gtk.Button>
+        <Gtk.Button onClicked={() => profile.set_active_profile("balanced")}>
           <Adw.ButtonContent
             iconName={"power-profile-balanced-symbolic"}
             label="Balanced" />
-        </button>
-        <button onClicked={() => profile.set_active_profile("performance")}>
+        </Gtk.Button>
+        <Gtk.Button onClicked={() => profile.set_active_profile("performance")}>
           <Adw.ButtonContent
             iconName={"power-profile-performance-symbolic"}
             label="Performance" />
-        </button>
-      </box>
+        </Gtk.Button>
+      </Gtk.Box>
     </popover> as Gtk.Popover}>
   <Adw.ButtonContent
     iconName={createBinding(profile, "iconName")}

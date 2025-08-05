@@ -27,7 +27,7 @@ const getIcon = (client: Hyprland.Client) => {
 
 export default ({ monitor, vertical }:
   { monitor: Hyprland.Monitor, vertical: boolean }) =>
-  <box
+  <Gtk.Box
     orientation={vertical ?
       Gtk.Orientation.VERTICAL :
       Gtk.Orientation.HORIZONTAL}
@@ -72,5 +72,5 @@ export default ({ monitor, vertical }:
         </For>
       </Adw.ToggleGroup>}
     </For>
-  </box >
+  </Gtk.Box >
 
