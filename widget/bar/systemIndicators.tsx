@@ -28,7 +28,9 @@ const DNDIndicator = () => <image
 
 const BluetoothIndicator = () => <image
   iconName="bluetooth-active-symbolic"
-  visible={createBinding(bluetooth.adapter, "powered")} />
+  visible={createBinding(bluetooth, "adapter")
+    .as(adapter => adapter && adapter.powered)
+  } />
 
 const NetworkIndicator = () => <image
   iconName={createBinding(network, "primary")(primary =>
