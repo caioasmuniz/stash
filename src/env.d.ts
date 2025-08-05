@@ -1,21 +1,11 @@
-declare const SRC: string
+import "@girs/adw-1"
+import "@girs/gjs"
+import "@girs/gjs/dom"
 
-declare module "inline:*" {
-    const content: string
-    export default content
-}
-
-declare module "*.scss" {
-    const content: string
-    export default content
-}
-
-declare module "*.blp" {
-    const content: string
-    export default content
-}
-
-declare module "*.css" {
-    const content: string
-    export default content
+export declare global {
+  export interface ImportMeta {
+    domain: string
+    resource: string
+    name: string
+  }
 }
