@@ -1,13 +1,13 @@
-Astal.Window {
+window {
   border-radius: var(--window-radius);
   background: oklab(from var(--window-bg-color) l a b / 0.75);
 }
 
-Astal.Window.osd-popup {
+window.osd-popup {
   background: transparent;
 }
 
-Astal.Window.quicksettings {
+window.quicksettings {
   .quicksettings-body {
     padding: 8px;
   }
@@ -25,7 +25,7 @@ Astal.Window.quicksettings {
   }
 
   .audio-config {
-    button {
+    Gtk.Button {
       padding: 0px;
       border-radius: var(--window-radius);
     }
@@ -49,7 +49,7 @@ Astal.Window.quicksettings {
         background: var(--view-bg-color);
       }
 
-      expander {
+      Gtk.Expander {
         -gtk-icon-source: none;
         -gtk-icon-size: 0px;
         min-width: 0px;
@@ -63,13 +63,13 @@ Astal.Window.quicksettings {
     color: var(--window-fg-color);
     background: oklab(from var(--window-bg-color) l a b / 0.4);
 
-    image {
+    Gtk.Image {
       -gtk-icon-size: 1.5em;
     }
   }
 }
 
-Astal.Window.applauncher {
+window.applauncher {
   .applauncher-body {
     padding: 8px;
 
@@ -79,11 +79,11 @@ Astal.Window.applauncher {
   }
 }
 
-Astal.Window.notif-popup {
+window.notif-popup {
   background-color: transparent;
 }
 
-Astal.Window#osd {
+window#osd {
   .osd-container {
     color: var(--window-fg-color);
     background: oklab(from var(--window-bg-color) l a b / 0.4);
@@ -91,7 +91,7 @@ Astal.Window#osd {
     padding: 12px;
   }
 
-  image {
+  Gtk.Image {
     -gtk-icon-size: 1.5em;
   }
 }
@@ -105,7 +105,7 @@ Astal.Window#osd {
 }
 
 
-Astal.Window.bar {
+window.bar {
   border-radius: var(--window-radius) var(--window-radius) 0 0;
 
   .bar-centerbox {
@@ -126,7 +126,7 @@ Astal.Window.bar {
     min-width: 30px;
     min-height: 30px;
 
-    image {
+    Gtk.Image {
       -gtk-icon-size: 24px;
     }
   }
@@ -155,7 +155,7 @@ Astal.Window.bar {
       padding: 4px 0px;
     }
 
-    image {
+    Gtk.Image {
       -gtk-icon-size: 18px;
     }
   }

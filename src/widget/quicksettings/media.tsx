@@ -1,7 +1,7 @@
 import Mpris from "gi://AstalMpris";
 import Apps from "gi://AstalApps"
 import { For, createBinding } from "ags";
-import { Gtk } from "ags/gtk4";
+import { Astal, Gtk } from "ags/gtk4";
 
 const mpris = Mpris.get_default();
 const apps = new Apps.Apps()
