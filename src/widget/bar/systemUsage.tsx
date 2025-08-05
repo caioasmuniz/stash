@@ -59,31 +59,31 @@ export default ({ vertical }: { vertical: boolean }) => {
       value={value}
       widthRequest={vertical ? -1 : 50}
       heightRequest={vertical ? 50 : -1}>
-      <box
+      <Gtk.Box
         valign={Gtk.Align.CENTER}
         halign={Gtk.Align.CENTER}
         spacing={2}
         orientation={vertical ?
           Gtk.Orientation.VERTICAL :
           Gtk.Orientation.HORIZONTAL}>
-        <label
+        <Gtk.Label
           label={label}
           cssClasses={["title"]} />
-        <label
+        <Gtk.Label
           cssClasses={["body"]}
           label={value(v => (v * 100)
             .toFixed(0)
             .concat(unit))} />
-      </box>
+      </Gtk.Box>
     </Gtk.LevelBar >
 
-  return <button
+  return <Gtk.Button
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     onClicked={() =>
       settings.bar.systemMonitor ?
         execAsync([settings.bar.systemMonitor]) : null}
     cssClasses={["pill", "sys-usage"]}>
-    <box
+    <Gtk.Box
       hexpand={vertical}
       vexpand={!vertical}
       orientation={vertical ?
@@ -112,6 +112,6 @@ export default ({ vertical }: { vertical: boolean }) => {
         value={disk}
         label="DISK"
         unit="%" />
-    </box>
-  </button >
+    </Gtk.Box>
+  </Gtk.Button >
 }

@@ -1,32 +1,32 @@
 import Apps from "gi://AstalApps"
-import { Gdk, Gtk } from "ags/gtk4";
 import App from "ags/gtk4/app";
-
+import Gtk from "gi://Gtk?version=4.0";
+import Gdk from "gi://Gdk?version=4.0";
 
 export default ({ app }: { app: Apps.Application }) =>
-  <button
+  <Gtk.Button
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     cssClasses={["app-button"]}
     onClicked={() => {
       App.get_window("applauncher")!.hide()
       app.launch();
     }}>
-    <box spacing={8}>
-      <image
+    <Gtk.Box spacing={8}>
+      <Gtk.Image
         iconName={app.iconName || ""}
         pixelSize={48} />
-      <box orientation={Gtk.Orientation.VERTICAL}>
-        <label
+      <Gtk.Box orientation={Gtk.Orientation.VERTICAL}>
+        <Gtk.Label
           wrap
           cssClasses={["title-2"]}
           label={app.name}
           xalign={0} />
-        <label
+        <Gtk.Label
           cssClasses={["body"]}
           label={app.description}
           xalign={0}
           maxWidthChars={25}
           wrap />
-      </box>
-    </box>
-  </button>
+      </Gtk.Box>
+    </Gtk.Box>
+  </Gtk.Button>

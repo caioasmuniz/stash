@@ -12,7 +12,7 @@ const hyprland = Hyprland.get_default();
 
 const [notifs, setNotifs] = createState<Notifd.Notification[]>([])
 
-export default () => <window
+export default () => <Astal.Window
   name={"notifications"}
   margin={12}
   cssClasses={["notif-popup"]}
@@ -25,7 +25,7 @@ export default () => <window
     Astal.WindowAnchor.BOTTOM}
   monitor={createBinding(hyprland, "focusedMonitor")(m => m.id)}
   application={App}>
-  <box
+  <Gtk.Box
     orientation={Gtk.Orientation.VERTICAL}
     spacing={4}
     $={() => notifd.connect("notified",
@@ -42,5 +42,5 @@ export default () => <window
           notif={n} />
       }
     </For>
-  </box>
-</window >
+  </Gtk.Box>
+</Astal.Window >

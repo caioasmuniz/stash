@@ -1,7 +1,8 @@
-import Apps from "gi://AstalApps"
-import { Astal, Gtk } from "ags/gtk4";
-import App from "ags/gtk4/app";
+import Astal from "gi://Astal?version=4.0";
 import Hyprland from "gi://AstalHyprland"
+import Gtk from "gi://Gtk?version=4.0";
+import Apps from "gi://AstalApps"
+import App from "ags/gtk4/app";
 import { createBinding, createState, For, State } from "ags";
 import AppButton from "./appButton";
 import Settings from "../../lib/settings";
@@ -22,7 +23,7 @@ export default (
   let searchEntry = new Gtk.Entry()
 
   return <window
-    onNotifyVisible={self => {
+    onNotifyVisible={(self: Astal.Window) => {
       self.visible ?
         searchEntry.grab_focus() :
         searchEntry.set_text("")
@@ -46,11 +47,11 @@ export default (
     anchor={createBinding(settings.bar, "position")
       (p => TOP | (p === RIGHT ? RIGHT : LEFT) | BOTTOM)}
   >
-    <box
+    <Gtk.Box
       orientation={Gtk.Orientation.VERTICAL}
       cssClasses={["applauncher-body"]}
       spacing={8}>
-      <entry
+      <Gtk.Entry
         $={self => self = searchEntry}
         hexpand
         placeholderText={"Search your apps"}
@@ -64,14 +65,14 @@ export default (
       <Gtk.ScrolledWindow
         hscrollbarPolicy={Gtk.PolicyType.NEVER}
         propagateNaturalHeight>
-        <box
+        <Gtk.Box
           orientation={Gtk.Orientation.VERTICAL}
           spacing={8}>
           <For each={list}>
             {app => <AppButton app={app} />}
           </For>
-        </box>
+        </Gtk.Box>
       </Gtk.ScrolledWindow>
-    </box >
+    </Gtk.Box >
   </window >
 }

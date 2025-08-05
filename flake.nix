@@ -70,10 +70,23 @@
 
         inherit buildInputs nativeBuildInputs;
 
+<<<<<<< HEAD
         pnpmDeps = pkgs.pnpm.fetchDeps {
           inherit (self.packages.${system}.default) pname version src;
           hash = "sha256-rfUXu8cU8/un7OhtLT3YhiPfEZMynBIEiRDZWW0TOAA=";
         };
+=======
+        buildInputs = extraPackages ++ [
+          pkgs.gjs
+          pkgs.glib
+          ags.packages.${system}.astal4
+        ];
+
+        installPhase = ''
+          mkdir -p $out/bin
+          ags bundle src/app.ts $out/bin/${name}
+        '';
+>>>>>>> no-intirisinc-tags
 
         preFixup = ''
           gappsWrapperArgs+=(

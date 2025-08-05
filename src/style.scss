@@ -25,7 +25,7 @@ window.quicksettings {
   }
 
   .audio-config {
-    button {
+    Gtk.Button {
       padding: 0px;
       border-radius: var(--window-radius);
     }
@@ -49,7 +49,7 @@ window.quicksettings {
         background: var(--view-bg-color);
       }
 
-      expander {
+      Gtk.Expander {
         -gtk-icon-source: none;
         -gtk-icon-size: 0px;
         min-width: 0px;
@@ -63,7 +63,7 @@ window.quicksettings {
     color: var(--window-fg-color);
     background: oklab(from var(--window-bg-color) l a b / 0.4);
 
-    image {
+    Gtk.Image {
       -gtk-icon-size: 1.5em;
     }
   }
@@ -91,7 +91,7 @@ window#osd {
     padding: 12px;
   }
 
-  image {
+  Gtk.Image {
     -gtk-icon-size: 1.5em;
   }
 }
@@ -126,7 +126,7 @@ window.bar {
     min-width: 30px;
     min-height: 30px;
 
-    image {
+    Gtk.Image {
       -gtk-icon-size: 24px;
     }
   }
@@ -155,7 +155,7 @@ window.bar {
       padding: 4px 0px;
     }
 
-    image {
+    Gtk.Image {
       -gtk-icon-size: 18px;
     }
   }
@@ -163,7 +163,7 @@ window.bar {
   .sys-usage {
     padding: 4px;
 
-    label {
+    Gtk.Label {
       margin: 0;
       font-size: 0.6em;
     }
