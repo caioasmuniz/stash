@@ -35,10 +35,7 @@ export default ({ app, ref }: {
   ];
 
   return <Astal.Window
-<<<<<<< HEAD
     $={ref}
-=======
->>>>>>> no-intirisinc-tags
     name={"osd"}
     widthRequest={250}
     application={app}
@@ -53,12 +50,7 @@ export default ({ app, ref }: {
           createBinding(p, "revealChild")),
       (...r: boolean[]) => r.reduce(
         (a, b) => a || b)
-<<<<<<< HEAD
     )}>
-=======
-    )}
-  >
->>>>>>> no-intirisinc-tags
     <Gtk.Box
       cssClasses={["linked", "background", "osd-container"]}
       orientation={Gtk.Orientation.VERTICAL}

@@ -22,9 +22,5 @@ export default ({ value, iconName }: {
           .concat("%"))
       }
     />
-<<<<<<< HEAD
   </Gtk.Box>
-=======
-  </Gtk.Box> as Gtk.Widget
->>>>>>> no-intirisinc-tags
 
