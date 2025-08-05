@@ -28,7 +28,9 @@ const DNDIndicator = () => <Gtk.Image
 
 const BluetoothIndicator = () => <Gtk.Image
   iconName="bluetooth-active-symbolic"
-  visible={createBinding(bluetooth.adapter, "powered")} />
+  visible={createBinding(bluetooth, "adapter")
+    .as(adapter => adapter && adapter.powered)
+  } />
 
 const NetworkIndicator = () => <Gtk.Image
   iconName={createBinding(network, "primary")(primary =>
