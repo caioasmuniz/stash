@@ -74,7 +74,7 @@
 
         installPhase = ''
           mkdir -p $out/bin
-          ags bundle app.ts $out/bin/${name}
+          ags bundle src/app.ts $out/bin/${name}
         '';
 
         preFixup = ''
