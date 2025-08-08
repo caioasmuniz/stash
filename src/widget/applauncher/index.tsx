@@ -2,8 +2,8 @@ import Astal from "gi://Astal?version=4.0";
 import Hyprland from "gi://AstalHyprland"
 import Gtk from "gi://Gtk?version=4.0";
 import Apps from "gi://AstalApps"
-import App from "ags/gtk4/app";
-import { createBinding, createState, For, State } from "ags";
+import { App } from "../../App"
+import { createBinding, createState, For } from "gnim";
 import AppButton from "./appButton";
 import Settings from "../../lib/settings";
 
@@ -20,12 +20,13 @@ export default (
 
   const [list, setList] = createState(apps.list)
 
-  let searchEntry = new Gtk.Entry()
+  const searchEntry = new Gtk.Entry()
 
-  return <window
+  return <Astal.Window
     onNotifyVisible={(self: Astal.Window) => {
-      self.visible ?
-        searchEntry.grab_focus() :
+      if (self.visible)
+        searchEntry.grab_focus()
+      else
         searchEntry.set_text("")
       SetVisible({
         applauncher: self.visible,
@@ -74,5 +75,5 @@ export default (
         </Gtk.Box>
       </Gtk.ScrolledWindow>
     </Gtk.Box >
-  </window >
+  </Astal.Window >
 }
