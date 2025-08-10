@@ -1,15 +1,15 @@
 import Apps from "gi://AstalApps"
-import { Astal, Gtk, For } from "ags/gtk4";
+import { Astal, Gtk } from "ags/gtk4";
 import App from "ags/gtk4/app";
 import Hyprland from "gi://AstalHyprland"
-import { bind, State } from "ags/state";
+import { createBinding, createState, For, State } from "ags";
 import AppButton from "./appButton";
 import Settings from "../../lib/settings";
 
 const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
 
 export default (
-  visible: State<{
+  [visible, SetVisible]: State<{
     applauncher: boolean,
     quicksettings: boolean
   }>) => {
@@ -17,16 +17,15 @@ export default (
   const hyprland = Hyprland.get_default()
   const apps = new Apps.Apps()
 
-  const list = new State(apps.list)
+  const [list, setList] = createState(apps.list)
 
   let searchEntry = new Gtk.Entry()
 
   return <window
-    $$visible={self => {
-      self.visible ?
-        searchEntry.grab_focus() :
-        searchEntry.set_text("")
-      visible.set({
+    onNotifyVisible={self => {
+      if (self.visible) searchEntry.grab_focus()
+      else searchEntry.set_text("")
+      SetVisible({
         applauncher: self.visible,
         quicksettings: self.visible &&
           (settings.bar.position === LEFT ||
@@ -39,12 +38,12 @@ export default (
     name={"applauncher"}
     margin={12}
     application={App}
-    visible={bind(visible).as(v => v.applauncher)}
+    visible={visible(v => v.applauncher)}
     cssClasses={["applauncher", "background"]}
-    keymode={Astal.Keymode.EXCLUSIVE}
-    monitor={bind(hyprland, "focusedMonitor").as(m => m.id)}
-    anchor={bind(settings.bar, "position").as(p =>
-      TOP | (p === RIGHT ? RIGHT : LEFT) | BOTTOM)}
+    keymode={Astal.Keymode.ON_DEMAND}
+    monitor={createBinding(hyprland, "focusedMonitor")(m => m.id)}
+    anchor={createBinding(settings.bar, "position")
+      (p => TOP | (p === RIGHT ? RIGHT : LEFT) | BOTTOM)}
   >
     <box
       orientation={Gtk.Orientation.VERTICAL}
@@ -54,10 +53,10 @@ export default (
         $={self => self = searchEntry}
         hexpand
         placeholderText={"Search your apps"}
-        $$text={self => list.set(
+        onNotifyText={self => setList(
           apps.fuzzy_query(self.text)
         )}
-        $activate={self => {
+        onActivate={self => {
           App.get_window("applauncher")!.hide()
           apps.fuzzy_query(self.text)[0].launch();
         }} />
@@ -67,7 +66,7 @@ export default (
         <box
           orientation={Gtk.Orientation.VERTICAL}
           spacing={8}>
-          <For each={bind(list)}>
+          <For each={list}>
             {app => <AppButton app={app} />}
           </For>
         </box>

@@ -8,7 +8,7 @@ import SystemUsage from "./systemUsage";
 import Workspaces from "./workspaces";
 import Clock from "./clock";
 import Launcher from "./launcher";
-import { bind } from "ags/state";
+import { createBinding } from "ags";
 import Settings from "../../lib/settings";
 
 const hyprland = Hyprland.get_default()
@@ -25,7 +25,7 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
     monitor={monitor.id}
     name={`bar-${monitor.id}`}
     exclusivity={Astal.Exclusivity.EXCLUSIVE}
-    anchor={bind(settings.bar, "position").as(p =>
+    anchor={createBinding(settings.bar, "position")(p =>
       p === TOP ? (TOP | LEFT | RIGHT) :
         p === LEFT ? (TOP | LEFT | BOTTOM) :
           p === BOTTOM ? (RIGHT | LEFT | BOTTOM) :
@@ -37,7 +37,7 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
         Gtk.Orientation.VERTICAL :
         Gtk.Orientation.HORIZONTAL}>
       <box
-        _type="start"
+        $type="start"
         spacing={4}
         orientation={vertical ?
           Gtk.Orientation.VERTICAL :
@@ -45,11 +45,11 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
         <Launcher />
         <SystemUsage vertical={vertical} />
       </box>
-      <box _type="center">
+      <box $type="center">
         <Workspaces vertical={vertical} monitor={monitor} />
       </box>
       <box
-        _type="end"
+        $type="end"
         cssClasses={["linked"]}
         orientation={vertical ?
           Gtk.Orientation.VERTICAL :
@@ -65,8 +65,8 @@ const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
 
 export default () => {
   const bars = new Map<number, Astal.Window>()
-  const vertical = bind(settings.bar, "position")
-    .as(p => p === LEFT || p === RIGHT)
+  const vertical = createBinding(settings.bar, "position")
+    (p => p === LEFT || p === RIGHT)
 
   hyprland.get_monitors().forEach(monitor =>
     bars.set(monitor.id, bar(monitor, vertical.get())))
@@ -79,12 +79,12 @@ export default () => {
     bars.delete(id)
   })
 
-  vertical.subscribe(v => {
+  vertical.subscribe(() => {
     hyprland.get_monitors()
       .forEach(monitor => {
         bars.get(monitor.id)!.close()
         bars.delete(monitor.id)
-        bars.set(monitor.id, bar(monitor, v))
+        bars.set(monitor.id, bar(monitor, vertical.get()))
       })
   })
 }

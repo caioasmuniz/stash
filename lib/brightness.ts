@@ -1,4 +1,4 @@
-import GObject, { register, property } from "ags/gobject";
+import { register, Object, getter, setter } from "ags/gobject";
 import { monitorFile, readFileAsync } from "ags/file";
 import { exec, execAsync } from "ags/process";
 
@@ -7,7 +7,7 @@ const screen = exec(`bash -c "ls -w1 /sys/class/backlight | head -1"`);
 const kbd = exec(`bash -c "ls -w1 /sys/class/leds | head -1"`);
 
 @register({ GTypeName: "Brightness" })
-export default class Brightness extends GObject.Object {
+export default class Brightness extends Object {
   static instance: Brightness;
   static get_default() {
     if (!this.instance) this.instance = new Brightness();
@@ -20,11 +20,12 @@ export default class Brightness extends GObject.Object {
   #screenMax = get("max");
   #screen = get("get") / (get("max") || 1);
 
-  @property(Number)
+  @getter(Number)
   get kbd() {
     return this.#kbd;
   }
 
+  @setter(Number)
   set kbd(value) {
     if (value < 0 || value > this.#kbdMax) return;
 
@@ -34,11 +35,12 @@ export default class Brightness extends GObject.Object {
     });
   }
 
-  @property(Number)
+  @getter(Number)
   get screen() {
     return this.#screen;
   }
 
+  @setter(Number)
   set screen(percent) {
     if (percent < 0) percent = 0;
 

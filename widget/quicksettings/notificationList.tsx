@@ -1,7 +1,7 @@
 import Adw from "gi://Adw?version=1";
 import Notifd from "gi://AstalNotifd";
-import { For, Gdk, Gtk } from "ags/gtk4";
-import { bind } from "ags/state";
+import { Gdk, Gtk } from "ags/gtk4";
+import { createBinding, For } from "ags";
 import Notification from "../common/notification";
 
 const notifd = Notifd.get_default();
@@ -11,7 +11,7 @@ const DNDButton = () => <box spacing={4}>
   <label label={"Do Not Disturb"} />
   <switch
     valign={Gtk.Align.CENTER}
-    active={bind(notifd, "dontDisturb")}
+    active={createBinding(notifd, "dontDisturb")}
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     $={self =>
       self.connect("notify::active", self =>
@@ -21,7 +21,7 @@ const DNDButton = () => <box spacing={4}>
 const ClearAllButton = () => <button
   halign={Gtk.Align.END}
   cursor={Gdk.Cursor.new_from_name("pointer", null)}
-  $clicked={() => notifd.get_notifications().
+  onClicked={() => notifd.get_notifications().
     forEach(n => n.dismiss())}>
   <box spacing={4}>
     <image iconName={"edit-clear-all-symbolic"} />
@@ -53,9 +53,8 @@ export default () =>
       <box
         orientation={Gtk.Orientation.VERTICAL}
         spacing={6}>
-        <For each={bind(notifd, "notifications")
-          .as(n => n
-            .sort((a, b) => b.time - a.time)
+        <For each={createBinding(notifd, "notifications")
+          (n => n.sort((a, b) => b.time - a.time)
             .reduce((res, notif) => {
               const i = res.findIndex(n =>
                 n[0].appName === notif.appName)
@@ -66,7 +65,7 @@ export default () =>
               return res;
             }, [] as Notifd.Notification[][]))
         }>
-          {n => {
+          {(n: Notifd.Notification[]) => {
             if (n.length === 1)
               return <Notification
                 notif={n[0]}
@@ -75,7 +74,7 @@ export default () =>
             return <Gtk.Expander
               cssClasses={["notif-expander"]}>
               <Notification
-                _type="label"
+                $type="label"
                 notif={n[0]}
                 closeAction={n => n.dismiss()}
               />
@@ -97,8 +96,8 @@ export default () =>
           }
         </For>
         <Adw.StatusPage
-          visible={bind(notifd, "notifications")
-            .as(n => n.length < 1)}
+          visible={createBinding(notifd, "notifications")
+            (n => n.length < 1)}
           vexpand
           cssClasses={["compact"]}
           title={"No new Notifications"}

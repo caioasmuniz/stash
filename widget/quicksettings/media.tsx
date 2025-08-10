@@ -1,7 +1,7 @@
 import Mpris from "gi://AstalMpris";
 import Apps from "gi://AstalApps"
-import { bind } from "ags/state";
-import { For, Gtk } from "ags/gtk4";
+import { For, createBinding } from "ags";
+import { Gtk } from "ags/gtk4";
 
 const mpris = Mpris.get_default();
 const apps = new Apps.Apps()
@@ -15,23 +15,23 @@ function lengthStr(length: number) {
 
 const PlaybackButtons = ({ player }: { player: Mpris.Player }) => <box>
   <button
-    $clicked={() => player.previous()}
+    onClicked={() => player.previous()}
     visible={player.canGoPrevious}>
     <image iconName={"media-skip-backwiconNameard-symbolic"} />
   </button>
 
   <button
-    $clicked={() =>
+    onClicked={() =>
       player.playbackStatus === Mpris.PlaybackStatus.PAUSED
         ? player.play() : player.pause()}>
     <image
-      iconName={bind(player, "playbackStatus").as(s =>
-        s === Mpris.PlaybackStatus.PLAYING
+      iconName={createBinding(player, "playbackStatus")
+        (s => s === Mpris.PlaybackStatus.PLAYING
           ? "media-playback-pause-symbolic"
           : "media-playback-start-symbolic")} />
   </button>
   <button
-    $clicked={() => player.next()}
+    onClicked={() => player.next()}
     visible={player.canGoNext}>
     <image iconName={"media-skip-forward-symbolic"} />
   </button>
@@ -40,9 +40,9 @@ const PlaybackButtons = ({ player }: { player: Mpris.Player }) => <box>
 export default () => <box
   orientation={Gtk.Orientation.VERTICAL}
   spacing={4}
-  visible={bind(mpris, "players").as(p => p.length > 0)}>
-  <For each={bind(mpris, "players")}>
-    {player =>
+  visible={createBinding(mpris, "players")(p => p.length > 0)}>
+  <For each={createBinding(mpris, "players")}>
+    {(player: Mpris.Player) =>
       <box
         cssClasses={["media"]}
         orientation={Gtk.Orientation.VERTICAL}
@@ -57,30 +57,31 @@ export default () => <box
             wrap
             maxWidthChars={10}
             cssClasses={["heading"]}
-            label={bind(player, "title")} />
+            label={createBinding(player, "title")} />
           <image
             cssClasses={["icon"]}
             hexpand
-            tooltipText={bind(player, "identity").as(id => id || "")}
-            iconName={bind(player, "entry").as(entry =>
-              apps.exact_query(entry)[0]!.iconName)} />
+            tooltipText={createBinding(player, "identity")
+              (id => id || "")}
+            iconName={createBinding(player, "entry")
+              (entry => apps.exact_query(entry)[0]!.iconName)} />
         </box>
         <label
           cssClasses={["artist"]}
-          label={bind(player, "artist")} />
+          label={createBinding(player, "artist")} />
         <slider
           cssClasses={["position"]}
           drawValue={false}
           // onDragged={({ value }) => player.position = value}
           min={0}
-          max={bind(player, "length")}
-          visible={bind(player, "canSeek")}
-          value={bind(player, "position")} />
+          max={createBinding(player, "length")}
+          visible={createBinding(player, "canSeek")}
+          value={createBinding(player, "position")} />
         <centerbox>
           <label
-            label={bind(player, "position").as(lengthStr)} />
+            label={createBinding(player, "position")(lengthStr)} />
           <PlaybackButtons player={player} />
-          <label label={bind(player, "length").as(lengthStr)} />
+          <label label={createBinding(player, "length")(lengthStr)} />
         </centerbox>
       </box>
     }

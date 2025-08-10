@@ -1,26 +1,26 @@
-import GObject, { register, property, signal } from "ags/gobject";
+import { register, Object as Obj, signal, getter } from "ags/gobject";
 import { Astal } from "ags/gtk4";
 
 @register({ GTypeName: "BarSettings" })
-export default class BarSettings extends GObject.Object {
+export default class BarSettings extends Obj {
   #position: Astal.WindowAnchor
-  #tempPath: string | null
-  #systemMonitor: string | null
+  #tempPath: string
+  #systemMonitor: string
 
   @signal()
-  declare updateFile: () => void
+  updateFile() { }
 
-  @property(String)
+  @getter(String)
   get tempPath() {
     return this.#tempPath;
   }
 
-  @property(String)
+  @getter(String)
   get systemMonitor() {
     return this.#systemMonitor
   }
 
-  @property(Number)
+  @getter(Number)
   get position() {
     return this.#position;
   }
@@ -44,8 +44,8 @@ export default class BarSettings extends GObject.Object {
 
   constructor({ position, tempPath, systemMonitor }: {
     position: Astal.WindowAnchor,
-    tempPath: null,
-    systemMonitor: null
+    tempPath: string,
+    systemMonitor: string
   }) {
     super();
     this.#position = position;
