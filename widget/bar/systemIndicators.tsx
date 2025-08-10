@@ -4,9 +4,10 @@ import Network from "gi://AstalNetwork"
 import Batery from "gi://AstalBattery"
 import Wireplumber from "gi://AstalWp"
 import PowerProf from "gi://AstalPowerProfiles"
-import { createBinding } from "ags"
+import { createBinding, createConnection } from "ags"
 import { Gtk, Gdk } from "ags/gtk4"
 import App from "ags/gtk4/app"
+import { createPoll } from "ags/time"
 import Weather from "../../lib/weather"
 
 const audio = Wireplumber.get_default()!.audio
@@ -68,12 +69,20 @@ const WeatherIndicator = ({ vertical }:
     cssClasses={["weather", vertical ? "vert" : ""]}>
     <image
       pixelSize={22}
-      iconName={bind(weather, "iconName")}
+      iconName={createConnection("content-loading-symbolic",
+        [weather, "updated", () => {
+          return weather.get_icon_name()
+        }]
+      )}
     />
     <label
       cssClasses={["body"]}
       css={"font-size:0.75rem"}
-      label={bind(weather, "tempSummary")}
+      label={createConnection("--",
+        [weather, "updated", () => {
+          return weather.get_temp_summary()
+        }]
+      )}
     />
   </box>
 
@@ -102,7 +111,7 @@ export default ({ vertical }: { vertical: boolean }) =>
       <MicrophoneIndicator />
       <AudioIndicator />
       <DNDIndicator />
-      
+
       <Gtk.Separator />
       <WeatherIndicator vertical={vertical} />
     </box>
