@@ -16,6 +16,7 @@ import Bluetooth from "./bluetooth";
 
 import Settings from "../../lib/settings";
 import Brightness from "../../lib/brightness";
+import Network from "./network";
 
 const brightness = Brightness.get_default();
 
@@ -92,6 +93,7 @@ export default ([visible, setVisible]: State<{
           self.attach(<PwrProf /> as Gtk.Widget, 0, 0, 1, 1)
           self.attach(<DarkMode /> as Gtk.Widget, 1, 0, 1, 1)
           self.attach(<Bluetooth /> as Gtk.Widget, 0, 1, 1, 1)
+          self.attach(<Network /> as Gtk.Widget, 1, 1, 1, 1)
         }}>
       </Gtk.Grid>
       <box halign={Gtk.Align.CENTER} spacing={8}>
