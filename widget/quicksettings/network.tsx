@@ -48,7 +48,8 @@ export default () => <Adw.SplitButton
                 title={ap.ssid}>
                 <Adw.ButtonRow
                   title={"Connect"}
-                  // onActivated={() => ap.activate()}
+                  onActivated={() => 
+                    ap.activate()}
                 />
               </Adw.ExpanderRow>
             }
