@@ -45,7 +45,7 @@ export default (
     application={App}
     visible={visible(v => v.applauncher)}
     cssClasses={["applauncher", "background"]}
-    keymode={Astal.Keymode.EXCLUSIVE}
+    keymode={Astal.Keymode.ON_DEMAND}
     monitor={createBinding(hyprland, "focusedMonitor")(m => m.id)}
     anchor={createBinding(settings.bar, "position")
       (p => TOP | (p === RIGHT ? RIGHT : LEFT) | BOTTOM)}
