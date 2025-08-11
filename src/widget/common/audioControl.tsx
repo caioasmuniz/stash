@@ -1,7 +1,7 @@
-import { Accessor, createBinding, createState, For } from "ags"
-import { Gtk } from "ags/gtk4"
-import { Slider } from "./slider"
 import Wireplumber from "gi://AstalWp"
+import Gtk from "gi://Gtk?version=4.0"
+import { Accessor, createBinding, createState, For } from "gnim"
+import { Slider } from "./slider"
 
 interface AudioControlProps {
   defaultDevice: Wireplumber.Endpoint

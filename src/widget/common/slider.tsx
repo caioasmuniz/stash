@@ -1,5 +1,6 @@
-import { Accessor } from "ags"
-import { Gtk, Astal } from "ags/gtk4"
+import Astal from "gi://Astal?version=4.0"
+import Gtk from "gi://Gtk?version=4.0"
+import { Accessor } from "gnim"
 
 type SliderProps = {
   icon: Accessor<string> | string,
