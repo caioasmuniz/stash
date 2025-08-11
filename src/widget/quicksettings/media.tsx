@@ -1,7 +1,7 @@
 import Mpris from "gi://AstalMpris";
 import Apps from "gi://AstalApps"
-import { For, createBinding } from "ags";
-import { Astal, Gtk } from "ags/gtk4";
+import Gtk from "gi://Gtk?version=4.0";
+import { For, createBinding } from "gnim";
 
 const mpris = Mpris.get_default();
 const apps = new Apps.Apps()
@@ -97,7 +97,7 @@ const PlaybackStatus = ({ player }: { player: Mpris.Player }) =>
     </centerbox>
   </box>
 
-export default () => <box
+export default () => <Gtk.Box
   orientation={Gtk.Orientation.VERTICAL}
   spacing={4}
   visible={createBinding(mpris, "players")(p => p.length > 0)}>
@@ -108,12 +108,12 @@ export default () => <box
         orientation={Gtk.Orientation.VERTICAL}
         hexpand>
         <PlayerApp player={player} />
-        <box>
+        <Gtk.Box>
           <CoverArt player={player} />
           <TitleArtist player={player} />
-        </box>
+        </Gtk.Box>
         <PlaybackStatus player={player} />
-      </box>
+      </Gtk.Box>
     }
   </For>
 </Gtk.Box >

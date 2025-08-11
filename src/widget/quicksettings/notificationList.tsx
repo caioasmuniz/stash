@@ -1,7 +1,8 @@
 import Adw from "gi://Adw?version=1";
 import Notifd from "gi://AstalNotifd";
-import { Gdk, Gtk } from "ags/gtk4";
-import { createBinding, For } from "ags";
+import Gtk from "gi://Gtk?version=4.0";
+import Gdk from "gi://Gdk?version=4.0";
+import { createBinding, For } from "gnim";
 import Notification from "../common/notification";
 
 const notifd = Notifd.get_default();

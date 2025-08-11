@@ -1,6 +1,6 @@
 import Tray from "gi://AstalTray";
-import { Gtk } from "ags/gtk4";
-import { createBinding, For } from "ags";
+import Gtk from "gi://Gtk?version=4.0";
+import { createBinding, For } from "gnim";
 
 const tray = Tray.get_default();
 

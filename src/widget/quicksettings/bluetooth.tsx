@@ -1,7 +1,7 @@
 import AstalBluetooth from "gi://AstalBluetooth"
-import { createBinding, For } from "ags"
-import { Gtk } from "ags/gtk4"
 import Adw from "gi://Adw?version=1"
+import Gtk from "gi://Gtk?version=4.0"
+import { createBinding, For } from "gnim"
 
 const bluetooth = AstalBluetooth.get_default()
 

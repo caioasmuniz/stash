@@ -1,9 +1,8 @@
 import Hyprland from "gi://AstalHyprland";
-import App from "ags/gtk4/app";
-import { execAsync } from "ags/process";
-import { Astal, Gtk } from "ags/gtk4";
-import { createBinding, State } from "ags";
-
+import Astal from "gi://Astal?version=4.0";
+import Gtk from "gi://Gtk?version=4.0";
+import AstalIO from "gi://AstalIO?version=0.1";
+import { createBinding, State } from "gnim";
 import { Slider } from "../common/slider";
 import NotificationList from "./notificationList";
 import PwrProf from "./powerprofiles";
@@ -13,9 +12,10 @@ import { AudioConfig, MicConfig } from "./audioConfig";
 import Media from "./media";
 import Battery from "./battery";
 import Bluetooth from "./bluetooth";
-
 import Settings from "../../lib/settings";
 import Brightness from "../../lib/brightness";
+
+import App from "ags/gtk4/app";
 
 const brightness = Brightness.get_default();
 
@@ -27,7 +27,7 @@ const Lock = () => (
   <Gtk.Button
     cssClasses={["circular"]}
     onClicked={() => {
-      execAsync(["bash", "-c", "hyprlock --immediate"]);
+      AstalIO.Process.exec_asyncv(["bash", "-c", "hyprlock --immediate"]);
     }}
   >
     <Gtk.Image iconName={"system-lock-screen-symbolic"} />
@@ -38,7 +38,7 @@ const Poweroff = () => (
   <Gtk.Button
     cssClasses={["circular", "destructive-action"]}
     onClicked={() => {
-      execAsync(["bash", "-c", "systemctl poweroff"]);
+      AstalIO.Process.exec_asyncv(["bash", "-c", "systemctl poweroff"]);
     }}
   >
     <Gtk.Image iconName={"system-shutdown-symbolic"} />

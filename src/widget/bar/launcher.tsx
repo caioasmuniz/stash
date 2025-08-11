@@ -1,5 +1,7 @@
-import { createBinding } from "ags";
-import { Gdk, Gtk } from "ags/gtk4";
+import Gdk from "gi://Gdk?version=4.0";
+import Gtk from "gi://Gtk?version=4.0";
+import { createBinding } from "gnim";
+
 import App from "ags/gtk4/app";
 
 export default () => <Gtk.ToggleButton

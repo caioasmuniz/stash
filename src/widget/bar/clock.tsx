@@ -1,6 +1,7 @@
 import GLib from "gi://GLib"
 import Gtk from "gi://Gtk?version=4.0"
 import Gdk from "gi://Gdk?version=4.0"
+
 import { createPoll } from "ags/time"
 
 export default ({ vertical }: { vertical: boolean }) => {

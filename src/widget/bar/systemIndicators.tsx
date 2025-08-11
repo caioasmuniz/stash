@@ -4,8 +4,10 @@ import Network from "gi://AstalNetwork"
 import Batery from "gi://AstalBattery"
 import Wireplumber from "gi://AstalWp"
 import PowerProf from "gi://AstalPowerProfiles"
-import { createBinding } from "ags"
-import { Gtk, Gdk } from "ags/gtk4"
+import Gdk from "gi://Gdk?version=4.0"
+import Gtk from "gi://Gtk?version=4.0"
+import { createBinding } from "gnim"
+
 import App from "ags/gtk4/app"
 
 const audio = Wireplumber.get_default()!.audio

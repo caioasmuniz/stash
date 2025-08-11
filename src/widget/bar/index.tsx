@@ -1,20 +1,19 @@
-import { Astal, Gtk } from "ags/gtk4"
-import App from "ags/gtk4/app"
-
 import Hyprland from "gi://AstalHyprland";
-
+import Astal from "gi://Astal?version=4.0";
+import Gtk from "gi://Gtk?version=4.0";
+import { createBinding } from "gnim";
 import SystemIndicators from "./systemIndicators";
 import SystemUsage from "./systemUsage";
 import Workspaces from "./workspaces";
 import Clock from "./clock";
 import Launcher from "./launcher";
-import { createBinding } from "ags";
 import Settings from "../../lib/settings";
+
+import App from "ags/gtk4/app"
 
 const hyprland = Hyprland.get_default()
 const settings = Settings.get_default()
 const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
-
 
 const bar = (monitor: Hyprland.Monitor, vertical: boolean) =>
   <Astal.Window

@@ -1,6 +1,6 @@
-import { createBinding } from "ags"
-import { Gtk } from "ags/gtk4"
 import Adw from "gi://Adw?version=1";
+import Gtk from "gi://Gtk?version=4.0";
+import { createBinding } from "gnim"
 import Darkman from "../../lib/darkman";
 
 const darkman = Darkman.get_default()
