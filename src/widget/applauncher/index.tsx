@@ -1,6 +1,3 @@
-import Astal from "gi://Astal?version=4.0";
-import Hyprland from "gi://AstalHyprland"
-import Gtk from "gi://Gtk?version=4.0";
 import Apps from "gi://AstalApps"
 import Hyprland from "gi://AstalHyprland"
 import Astal from "gi://Astal?version=4.0";
