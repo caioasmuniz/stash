@@ -1,5 +1,5 @@
-import { Accessor } from "ags"
-import { Gtk } from "ags/gtk4"
+import Gtk from "gi://Gtk?version=4.0"
+import { Accessor } from "gnim"
 
 export default ({ value, iconName }: {
   value: Accessor<number>,

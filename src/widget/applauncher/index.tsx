@@ -2,10 +2,14 @@ import Astal from "gi://Astal?version=4.0";
 import Hyprland from "gi://AstalHyprland"
 import Gtk from "gi://Gtk?version=4.0";
 import Apps from "gi://AstalApps"
-import App from "ags/gtk4/app";
-import { createBinding, createState, For, State } from "ags";
+import Hyprland from "gi://AstalHyprland"
+import Astal from "gi://Astal?version=4.0";
+import Gtk from "gi://Gtk?version=4.0";
+import { createBinding, createState, For, State } from "gnim";
 import AppButton from "./appButton";
 import Settings from "../../lib/settings";
+
+import App from "ags/gtk4/app";
 
 const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
 
@@ -22,11 +26,10 @@ export default (
 
   let searchEntry = new Gtk.Entry()
 
-  return <window
-    onNotifyVisible={(self: Astal.Window) => {
-      self.visible ?
-        searchEntry.grab_focus() :
-        searchEntry.set_text("")
+  return <Astal.Window
+    onNotifyVisible={self => {
+      if (self.visible) searchEntry.grab_focus()
+      else searchEntry.set_text("")
       SetVisible({
         applauncher: self.visible,
         quicksettings: self.visible &&
@@ -74,5 +77,5 @@ export default (
         </Gtk.Box>
       </Gtk.ScrolledWindow>
     </Gtk.Box >
-  </window >
+  </Astal.Window >
 }
