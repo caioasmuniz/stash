@@ -4,9 +4,11 @@ import Network from "gi://AstalNetwork"
 import Batery from "gi://AstalBattery"
 import Wireplumber from "gi://AstalWp"
 import PowerProf from "gi://AstalPowerProfiles"
-import { createBinding } from "ags"
+import { createBinding, createConnection } from "ags"
 import { Gtk, Gdk } from "ags/gtk4"
 import App from "ags/gtk4/app"
+import { createPoll } from "ags/time"
+import Weather from "../../lib/weather"
 
 const audio = Wireplumber.get_default()!.audio
 const battery = Batery.get_default()
@@ -14,6 +16,7 @@ const network = Network.get_default()
 const powerprof = PowerProf.get_default()
 const notifd = Notifd.get_default()
 const bluetooth = Bluetooth.get_default()
+const weather = Weather.get_default()
 
 const ProfileIndicator = () => <image
   visible={createBinding(powerprof, "activeProfile")
@@ -57,6 +60,31 @@ const BatteryIndicator = () => <image
   tooltipMarkup={createBinding(battery, "percentage")
     ((p) => (p * 100).toFixed(0).toString() + "%")} />
 
+const WeatherIndicator = ({ vertical }:
+  { vertical: boolean }) =>
+  <box orientation={vertical ?
+    Gtk.Orientation.VERTICAL :
+    Gtk.Orientation.HORIZONTAL}
+    spacing={4}
+    cssClasses={["weather", vertical ? "vert" : ""]}>
+    <image
+      pixelSize={22}
+      iconName={createConnection("content-loading-symbolic",
+        [weather, "updated", () => {
+          return weather.get_icon_name()
+        }]
+      )}
+    />
+    <label
+      cssClasses={["body"]}
+      css={"font-size:0.75rem"}
+      label={createConnection("--",
+        [weather, "updated", () => {
+          return weather.get_temp_summary()
+        }]
+      )}
+    />
+  </box>
 
 export default ({ vertical }: { vertical: boolean }) =>
   <Gtk.ToggleButton
@@ -83,5 +111,8 @@ export default ({ vertical }: { vertical: boolean }) =>
       <MicrophoneIndicator />
       <AudioIndicator />
       <DNDIndicator />
+
+      <Gtk.Separator />
+      <WeatherIndicator vertical={vertical} />
     </box>
   </Gtk.ToggleButton>

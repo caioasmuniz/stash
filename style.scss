@@ -146,6 +146,15 @@ window.bar {
       font-size: 1.75em;
     }
 
+}
+
+  .weather {
+    padding: 0px 4px;
+
+    &.vert {
+      padding: 4px 0px;
+    }
+
   }
 
   .sys-indicators {
