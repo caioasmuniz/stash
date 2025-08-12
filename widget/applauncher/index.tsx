@@ -4,7 +4,7 @@ import App from "ags/gtk4/app";
 import Hyprland from "gi://AstalHyprland"
 import { createBinding, createState, For, State } from "ags";
 import AppButton from "./appButton";
-import Settings from "../../lib/settings";
+import { useSettings } from "../../lib/settings";
 
 const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
 
@@ -13,7 +13,7 @@ export default (
     applauncher: boolean,
     quicksettings: boolean
   }>) => {
-  const barCfg = Settings().bar
+  const barCfg = useSettings().bar
   const hyprland = Hyprland.get_default()
   const apps = new Apps.Apps()
 

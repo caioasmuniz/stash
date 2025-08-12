@@ -1,24 +1,23 @@
-import { createContext, createSettings } from "gnim";
 import Gio from "gi://Gio?version=2.0";
+import { createContext, createSettings } from "gnim";
 
-export default () => {
-  const s = createSettings(new Gio.Settings({
-    schema_id: "stash.bar"
-  }), schema)
-  return {
-    bar: s
-  }
-}
-
-export const schema = Object.freeze({
+const barSchema = {
   "position": "i",
   "temp-path": "s",
   "system-monitor": "s"
-})
+}
 
-type Settings = ReturnType<typeof createSettings<typeof schema>>
+type Settings = { bar: ReturnType<typeof createSettings<typeof barSchema>> }
 
 export const SettingsContext = createContext<Settings | null>(null)
+
+export function initSettings(): Settings {
+  return {
+    bar: createSettings(
+      new Gio.Settings({ schemaId: "stash.bar" }),
+      barSchema)
+  }
+}
 
 export function useSettings() {
   const settings = SettingsContext.use()

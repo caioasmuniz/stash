@@ -4,7 +4,7 @@ import Network from "gi://AstalNetwork"
 import Batery from "gi://AstalBattery"
 import Wireplumber from "gi://AstalWp"
 import PowerProf from "gi://AstalPowerProfiles"
-import { createBinding } from "ags"
+import { Accessor, createBinding } from "ags"
 import { Gtk, Gdk } from "ags/gtk4"
 import App from "ags/gtk4/app"
 
@@ -58,24 +58,27 @@ const BatteryIndicator = () => <image
     ((p) => (p * 100).toFixed(0).toString() + "%")} />
 
 
-export default ({ vertical }: { vertical: boolean }) =>
+export default ({ vertical }: { vertical: Accessor<boolean> }) =>
   <Gtk.ToggleButton
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
-    cssClasses={["pill", "sys-indicators", vertical ? "vert" : ""]}
+    cssClasses={vertical.as(v =>
+      ["pill", "sys-indicators", v ? "vert" : ""])}
     active={createBinding(App.get_window("quicksettings")!, "visible")}
     onClicked={() => App.toggle_window("quicksettings")}
     $={self => self.add_controller(
       <Gtk.EventControllerScroll
         flags={Gtk.EventControllerScrollFlags.VERTICAL}
-        onScroll={(self, dx, dy) => dy > 0 ?
+        onScroll={(self, dx, dy) => {
+          dy > 0 ?
           audio.default_speaker.volume -= 0.025 :
-          audio.default_speaker.volume += 0.025}
+          audio.default_speaker.volume += 0.025
+        }}
       /> as Gtk.EventController)}>
     <box
       spacing={4}
-      orientation={vertical ?
+      orientation={vertical.as(v => v ?
         Gtk.Orientation.VERTICAL :
-        Gtk.Orientation.HORIZONTAL}>
+        Gtk.Orientation.HORIZONTAL)}>
       <ProfileIndicator />
       <BluetoothIndicator />
       <NetworkIndicator />

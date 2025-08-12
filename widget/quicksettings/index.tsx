@@ -14,53 +14,54 @@ import Media from "./media";
 import Battery from "./battery";
 import Bluetooth from "./bluetooth";
 
-import Settings from "../../lib/settings";
 import Brightness from "../../lib/brightness";
+import { useSettings } from "../../lib/settings";
 
-const brightness = Brightness.get_default();
-
-const barCfg = Settings().bar
-const hyprland = Hyprland.get_default()
-const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
-
-const Lock = () => (
-  <Gtk.Button
-    cssClasses={["circular"]}
-    onClicked={() => {
-      execAsync(["bash", "-c", "hyprlock --immediate"]);
-    }}
-  >
-    <image iconName={"system-lock-screen-symbolic"} />
-  </Gtk.Button>
-);
-
-const Poweroff = () => (
-  <button
-    cssClasses={["circular", "destructive-action"]}
-    onClicked={() => {
-      execAsync(["bash", "-c", "systemctl poweroff"]);
-    }}
-  >
-    <image iconName={"system-shutdown-symbolic"} />
-  </button>
-);
-
-const RotateButton = () => <button
-  onClicked={() => {
-    if (barCfg.position.get() > 8)
-      barCfg.setPosition(2)
-    else
-      barCfg.setPosition(
-        barCfg.position.get() * 2)
-  }}
-  cssClasses={["circular"]}
->
-  <image iconName={"object-rotate-right-symbolic"} />
-</button>
 export default ([visible, setVisible]: State<{
   applauncher: boolean,
   quicksettings: boolean
 }>) => {
+  const brightness = Brightness.get_default();
+
+  const barCfg = useSettings().bar
+  const hyprland = Hyprland.get_default()
+  const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
+
+  const Lock = () => (
+    <Gtk.Button
+      cssClasses={["circular"]}
+      onClicked={() => {
+        execAsync(["bash", "-c", "hyprlock --immediate"]);
+      }}
+    >
+      <image iconName={"system-lock-screen-symbolic"} />
+    </Gtk.Button>
+  );
+
+  const Poweroff = () => (
+    <button
+      cssClasses={["circular", "destructive-action"]}
+      onClicked={() => {
+        execAsync(["bash", "-c", "systemctl poweroff"]);
+      }}
+    >
+      <image iconName={"system-shutdown-symbolic"} />
+    </button>
+  );
+
+  const RotateButton = () => <button
+    onClicked={() => {
+      if (barCfg.position.get() > 8)
+        barCfg.setPosition(2)
+      else
+        barCfg.setPosition(
+          barCfg.position.get() * 2)
+    }}
+    cssClasses={["circular"]}
+  >
+    <image iconName={"object-rotate-right-symbolic"} />
+  </button>
+
   return <window
     onNotifyVisible={self => {
       setVisible({

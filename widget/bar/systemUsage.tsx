@@ -3,10 +3,10 @@ import { Accessor, createState } from "ags";
 import { createPoll } from "ags/time";
 import { Gdk, Gtk } from "ags/gtk4";
 import GTop from "gi://GTop";
-import Settings from "../../lib/settings";
+import { useSettings } from "../../lib/settings";
 
-export default ({ vertical }: { vertical: boolean }) => {
-  const settings = Settings()
+export default ({ vertical }: { vertical: Accessor<boolean> }) => {
+  const settings = useSettings()
 
   const [lastCpuTop, setLastCpuTop] = createState(new GTop.glibtop_cpu())
   const INTERVAL = 1000;
@@ -48,24 +48,24 @@ export default ({ vertical }: { vertical: boolean }) => {
       value: Accessor<number>,
       label: string,
       unit: string,
-      vertical: boolean,
+      vertical: Accessor<boolean>,
       visible?: Accessor<boolean> | boolean
     }) => <Gtk.LevelBar
       visible={visible}
-      orientation={vertical ?
+      orientation={vertical.as(v => v ?
         Gtk.Orientation.VERTICAL :
-        Gtk.Orientation.HORIZONTAL}
+        Gtk.Orientation.HORIZONTAL)}
       inverted={vertical}
       value={value}
-      widthRequest={vertical ? -1 : 50}
-      heightRequest={vertical ? 50 : -1}>
+      widthRequest={vertical.as(v => v ? -1 : 50)}
+      heightRequest={vertical.as(v => v ? 50 : -1)}>
       <box
         valign={Gtk.Align.CENTER}
         halign={Gtk.Align.CENTER}
         spacing={2}
-        orientation={vertical ?
+        orientation={vertical.as(v => v ?
           Gtk.Orientation.VERTICAL :
-          Gtk.Orientation.HORIZONTAL}>
+          Gtk.Orientation.HORIZONTAL)}>
         <label
           label={label}
           cssClasses={["title"]} />
@@ -86,9 +86,9 @@ export default ({ vertical }: { vertical: boolean }) => {
     <box
       hexpand={vertical}
       vexpand={!vertical}
-      orientation={vertical ?
+      orientation={vertical.as(v => v ?
         Gtk.Orientation.VERTICAL :
-        Gtk.Orientation.HORIZONTAL}
+        Gtk.Orientation.HORIZONTAL)}
       spacing={4}>
       <Indicator
         vertical={vertical}
