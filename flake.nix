@@ -87,6 +87,10 @@
       devShells.${system}.default = pkgs.mkShell {
         GSETTINGS_SCHEMA_DIR = "./data";
         ENV = "dev";
+        shellHook = ''
+          mkdir data
+          glib-compile-schemas data
+        '';
         buildInputs =
           with pkgs;
           [
