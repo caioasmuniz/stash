@@ -1,8 +1,9 @@
-import { Gtk } from "ags/gtk4";
-import app from "ags/gtk4/app";
 import Adw from "gi://Adw?version=1";
+import Gtk from "gi://Gtk?version=4.0";
 import General from "./general";
 import Bar from "./bar";
+
+import app from "ags/gtk4/app";
 
 export default () => {
   return <Adw.Window
@@ -12,11 +13,11 @@ export default () => {
     application={app}
     cssClasses={["background"]}
     title={"Stash Settings"}>
-    <box orientation={Gtk.Orientation.VERTICAL}>
+    <Gtk.Box orientation={Gtk.Orientation.VERTICAL}>
       <Adw.PreferencesPage>
         <General />
         <Bar />
       </Adw.PreferencesPage>
-    </box>
+    </Gtk.Box>
   </Adw.Window >
 }

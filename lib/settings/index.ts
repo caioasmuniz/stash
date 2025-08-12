@@ -1,9 +1,9 @@
-import { readFile, writeFileAsync } from "ags/file";
-import { register, Object, getter } from "ags/gobject";
-import { Astal } from "ags/gtk4";
 import GLib from "gi://GLib?version=2.0";
+import GObject from "gi://GObject?version=2.0";
+import AstalIO from "gi://AstalIO?version=0.1";
+import Astal from "gi://Astal?version=4.0";
 import BarSettings from "./bar";
-import Adw from "gi://Adw?version=1";
+import { getter, register } from "gnim/gobject";
 
 const PATH = GLib.build_filenamev([
   GLib.get_home_dir(), ".config",
@@ -13,7 +13,7 @@ const PATH = GLib.build_filenamev([
 ])
 
 @register({ GTypeName: "Settings" })
-export default class Settings extends Object {
+export default class Settings extends GObject.Object {
   static instance: Settings;
   static get_default() {
     if (!this.instance) this.instance = new Settings();
@@ -22,13 +22,13 @@ export default class Settings extends Object {
 
   #bar: BarSettings
 
-  @getter(Object)
+  @getter(BarSettings)
   get bar() {
     return this.#bar;
   }
 
   #updateFile() {
-    writeFileAsync(PATH, JSON.stringify({
+    AstalIO.write_file_async(PATH, JSON.stringify({
       bar: this.#bar.objectify()
     }))
   }
@@ -43,13 +43,13 @@ export default class Settings extends Object {
       }
     }
     try {
-      let file = readFile(PATH)
+      let file = AstalIO.read_file(PATH)
       if (file !== "")
         config = JSON.parse(file)
       else
-        writeFileAsync(PATH, JSON.stringify(config))
+        AstalIO.write_file_async(PATH, JSON.stringify(config))
     } catch (error) {
-      writeFileAsync(PATH, JSON.stringify(config))
+      AstalIO.write_file_async(PATH, JSON.stringify(config))
     }
     this.#bar = new BarSettings(config.bar)
     this.#bar.connect("update-file",

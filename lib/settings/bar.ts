@@ -1,8 +1,10 @@
-import { register, Object as Obj, signal, getter } from "ags/gobject";
-import { Astal } from "ags/gtk4";
+import Astal from "gi://Astal?version=4.0";
+import GObject from "gi://GObject";
+import { getter, register, setter, signal } from "gnim/gobject";
 
 @register({ GTypeName: "BarSettings" })
-export default class BarSettings extends Obj {
+export default class BarSettings extends GObject.Object {
+  declare static $gtype: GObject.GType<BarSettings>
   #position: Astal.WindowAnchor
   #tempPath: string
   #systemMonitor: string
@@ -14,29 +16,31 @@ export default class BarSettings extends Obj {
   get tempPath() {
     return this.#tempPath;
   }
-
+  @setter(String)
   set tempPath(path) {
     this.#tempPath = path
     this.notify("temp-path")
     this.emit("update-file")
   }
 
-  @property(String)
+  @getter(String)
   get systemMonitor() {
     return this.#systemMonitor
   }
 
+  @setter(String)
   set systemMonitor(path) {
     this.#systemMonitor = path
     this.notify("system-monitor")
     this.emit("update-file")
   }
 
-  @property(Number)
+  @getter(Astal.WindowAnchor)
   get position() {
     return this.#position;
   }
 
+  @setter(Astal.WindowAnchor)
   set position(position) {
     if (Object.values(Astal.WindowAnchor)
       .find(w => position === w)) {
