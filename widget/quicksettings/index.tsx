@@ -19,7 +19,7 @@ import Brightness from "../../lib/brightness";
 
 const brightness = Brightness.get_default();
 
-const settings = Settings.get_default()
+const barCfg = Settings().bar
 const hyprland = Hyprland.get_default()
 const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
 
@@ -47,10 +47,11 @@ const Poweroff = () => (
 
 const RotateButton = () => <button
   onClicked={() => {
-    if (settings.bar.position > 8)
-      settings.bar.position = 2
+    if (barCfg.position.get() > 8)
+      barCfg.setPosition(2)
     else
-      settings.bar.position *= 2
+      barCfg.setPosition(
+        barCfg.position.get() * 2)
   }}
   cssClasses={["circular"]}
 >
@@ -65,8 +66,8 @@ export default ([visible, setVisible]: State<{
       setVisible({
         quicksettings: self.visible,
         applauncher: self.visible &&
-          (settings.bar.position === LEFT ||
-            settings.bar.position === RIGHT) ?
+          (barCfg.position.get() === LEFT ||
+            barCfg.position.get() === RIGHT) ?
           false :
           visible.get().applauncher
       })
@@ -77,7 +78,7 @@ export default ([visible, setVisible]: State<{
     application={App}
     name={"quicksettings"}
     cssClasses={["quicksettings", "background"]}
-    anchor={createBinding(settings.bar, "position")(p =>
+    anchor={barCfg.position.as(p =>
       TOP | (p === LEFT ? LEFT : RIGHT) | BOTTOM
     )}
     monitor={createBinding(hyprland, "focusedMonitor")

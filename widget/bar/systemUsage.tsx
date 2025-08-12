@@ -6,7 +6,7 @@ import GTop from "gi://GTop";
 import Settings from "../../lib/settings";
 
 export default ({ vertical }: { vertical: boolean }) => {
-  const settings = Settings.get_default()
+  const settings = Settings()
 
   const [lastCpuTop, setLastCpuTop] = createState(new GTop.glibtop_cpu())
   const INTERVAL = 1000;
@@ -35,7 +35,7 @@ export default ({ vertical }: { vertical: boolean }) => {
   })
 
   const temp = createPoll(0, INTERVAL, () => {
-    if (settings.bar.tempPath)
+    if (settings.bar.tempPath.get())
       return parseInt(
         exec(`cat ${settings.bar.tempPath}`)
       ) / 100000
@@ -81,7 +81,7 @@ export default ({ vertical }: { vertical: boolean }) => {
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     onClicked={() =>
       settings.bar.systemMonitor ?
-        execAsync([settings.bar.systemMonitor]) : null}
+        execAsync([settings.bar.systemMonitor.get()]) : null}
     cssClasses={["pill", "sys-usage"]}>
     <box
       hexpand={vertical}

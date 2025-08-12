@@ -13,7 +13,7 @@ export default (
     applauncher: boolean,
     quicksettings: boolean
   }>) => {
-  const settings = Settings.get_default()
+  const barCfg = Settings().bar
   const hyprland = Hyprland.get_default()
   const apps = new Apps.Apps()
 
@@ -28,8 +28,8 @@ export default (
       SetVisible({
         applauncher: self.visible,
         quicksettings: self.visible &&
-          (settings.bar.position === LEFT ||
-            settings.bar.position === RIGHT) ?
+          (barCfg.position.get() === LEFT ||
+            barCfg.position.get() === RIGHT) ?
           false :
           visible.get().quicksettings
       })
@@ -42,8 +42,8 @@ export default (
     cssClasses={["applauncher", "background"]}
     keymode={Astal.Keymode.ON_DEMAND}
     monitor={createBinding(hyprland, "focusedMonitor")(m => m.id)}
-    anchor={createBinding(settings.bar, "position")
-      (p => TOP | (p === RIGHT ? RIGHT : LEFT) | BOTTOM)}
+    anchor={barCfg.position.as(p =>
+      TOP | (p === RIGHT ? RIGHT : LEFT) | BOTTOM)}
   >
     <box
       orientation={Gtk.Orientation.VERTICAL}

@@ -85,7 +85,7 @@
       };
 
       devShells.${system}.default = pkgs.mkShell {
-
+        GSETTINGS_SCHEMA_DIR = "./dist";
         ENV = "dev";
         buildInputs =
           with pkgs;
