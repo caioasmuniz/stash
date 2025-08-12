@@ -2,7 +2,7 @@ import Hyprland from "gi://AstalHyprland"
 import App from "ags/gtk4/app";
 import { execAsync } from "ags/process";
 import { Astal, Gtk } from "ags/gtk4";
-import { bind, State } from "ags/state";
+import { createBinding, State } from "ags";
 
 import { Slider } from "../common/slider";
 import NotificationList from "./notificationList";
@@ -24,20 +24,20 @@ const hyprland = Hyprland.get_default()
 const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
 
 const Lock = () => (
-  <button
+  <Gtk.Button
     cssClasses={["circular"]}
-    $clicked={() => {
+    onClicked={() => {
       execAsync(["bash", "-c", "hyprlock --immediate"]);
     }}
   >
     <image iconName={"system-lock-screen-symbolic"} />
-  </button>
+  </Gtk.Button>
 );
 
 const Poweroff = () => (
   <button
     cssClasses={["circular", "destructive-action"]}
-    $clicked={() => {
+    onClicked={() => {
       execAsync(["bash", "-c", "systemctl poweroff"]);
     }}
   >
@@ -46,7 +46,7 @@ const Poweroff = () => (
 );
 
 const RotateButton = () => <button
-  $clicked={() => {
+  onClicked={() => {
     if (settings.bar.position > 8)
       settings.bar.position = 2
     else
@@ -66,41 +66,43 @@ const SettingsButton = () => <button
   <image iconName={"preferences-system-symbolic"} />
 </button>
 
-export default (visible: State<{
+export default ([visible, setVisible]: State<{
   applauncher: boolean,
   quicksettings: boolean
-}>) => <window
-  $$visible={self => {
-    visible.set({
-      quicksettings: self.visible,
-      applauncher: self.visible &&
-        (settings.bar.position === LEFT ||
-          settings.bar.position === RIGHT) ?
-        false :
-        visible.get().applauncher
-    })
-  }}
-  valign={Gtk.Align.FILL}
-  margin={12}
-  visible={bind(visible).as(v => v.quicksettings)}
-  application={App}
-  name={"quicksettings"}
-  cssClasses={["quicksettings", "background"]}
-  anchor={bind(settings.bar, "position").as(p =>
-    TOP | (p === LEFT ? LEFT : RIGHT) | BOTTOM
-  )}
-  monitor={bind(hyprland, "focusedMonitor")
-    .as(m => m.id)}>
+}>) => {
+  return <window
+    onNotifyVisible={self => {
+      setVisible({
+        quicksettings: self.visible,
+        applauncher: self.visible &&
+          (settings.bar.position === LEFT ||
+            settings.bar.position === RIGHT) ?
+          false :
+          visible.get().applauncher
+      })
+    }}
+    valign={Gtk.Align.FILL}
+    margin={12}
+    visible={visible(v => v.quicksettings)}
+    application={App}
+    name={"quicksettings"}
+    cssClasses={["quicksettings", "background"]}
+    anchor={createBinding(settings.bar, "position")(p =>
+      TOP | (p === LEFT ? LEFT : RIGHT) | BOTTOM
+    )}
+    monitor={createBinding(hyprland, "focusedMonitor")
+      (m => m.id)}>
     <box
       cssClasses={["quicksettings-body"]}
       orientation={Gtk.Orientation.VERTICAL}
       spacing={8}
     >
-      <Gtk.Grid rowSpacing={2} columnSpacing={2} $={(self) => {
-        self.attach(<PwrProf /> as Gtk.Widget, 0, 0, 1, 1)
-        self.attach(<DarkMode /> as Gtk.Widget, 1, 0, 1, 1)
-        self.attach(<Bluetooth /> as Gtk.Widget, 0, 1, 1, 1)
-      }}>
+      <Gtk.Grid rowSpacing={4} columnSpacing={4}
+        $={(self) => {
+          self.attach(<PwrProf /> as Gtk.Widget, 0, 0, 1, 1)
+          self.attach(<DarkMode /> as Gtk.Widget, 1, 0, 1, 1)
+          self.attach(<Bluetooth /> as Gtk.Widget, 0, 1, 1, 1)
+        }}>
       </Gtk.Grid>
       <box halign={Gtk.Align.CENTER} spacing={8}>
         <Tray />
@@ -113,8 +115,10 @@ export default (visible: State<{
         icon={"display-brightness-symbolic"}
         min={0}
         max={100}
-        value={bind(brightness, "screen").as((v) => v * 100)}
-        setValue={(value) => (brightness.set({ screen: value / 100 }))}
+        value={createBinding(brightness, "screen")
+          ((v) => v * 100)}
+        setValue={(value) => (
+          brightness.set({ screen: value / 100 }))}
       />
       <AudioConfig />
       <MicConfig />
@@ -123,3 +127,4 @@ export default (visible: State<{
       <NotificationList />
     </box>
   </window>
+}

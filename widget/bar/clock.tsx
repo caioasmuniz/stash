@@ -1,15 +1,15 @@
 import GLib from "gi://GLib"
-import { Poll } from "ags/state"
+import { createPoll } from "ags/time"
 import { Gtk, Gdk } from "ags/gtk4"
 
 export default ({ vertical }: { vertical: boolean }) => {
-  const day = new Poll<string>("", 1000, () =>
+  const day = createPoll("", 1000, () =>
     GLib.DateTime.new_now_local().get_day_of_month().toString())
-  const month = new Poll<string>("", 1000, () =>
+  const month = createPoll("", 1000, () =>
     GLib.DateTime.new_now_local().format("%b")!)
-  const hour = new Poll<string>("", 1000, () =>
+  const hour = createPoll("", 1000, () =>
     GLib.DateTime.new_now_local().format("%H")!)
-  const minute = new Poll<string>("", 1000, () =>
+  const minute = createPoll("", 1000, () =>
     GLib.DateTime.new_now_local().format("%M")!)
 
   return <Gtk.MenuButton
@@ -39,10 +39,10 @@ export default ({ vertical }: { vertical: boolean }) => {
           Gtk.Orientation.HORIZONTAL}
         spacing={vertical ? 0 : 4}>
         <label
-          label={hour()}
+          label={hour}
           cssClasses={["time"]} />
         <label
-          label={minute()}
+          label={minute}
           cssClasses={["time"]} />
       </box>
       <box
@@ -52,11 +52,11 @@ export default ({ vertical }: { vertical: boolean }) => {
         valign={Gtk.Align.CENTER}>
         <label
           cssClasses={["date"]}
-          label={day()}
+          label={day}
         />
         <label
           cssClasses={["date"]}
-          label={month()}
+          label={month}
         />
       </box>
     </box>

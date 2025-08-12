@@ -1,4 +1,4 @@
-import { bind } from "ags/state"
+import { createBinding } from "ags"
 import { Gtk } from "ags/gtk4"
 import Adw from "gi://Adw?version=1";
 import Darkman from "../../lib/darkman";
@@ -11,12 +11,12 @@ export default () => <Adw.SplitButton
       <box
         orientation={Gtk.Orientation.VERTICAL}
         cssClasses={["linked"]}>
-        <button $clicked={() => darkman.mode = "light"}>
+        <button onClicked={() => darkman.mode = "light"}>
           <Adw.ButtonContent
             iconName={"weather-clear-symbolic"}
             label="Light Mode" />
         </button>
-        <button $clicked={() => darkman.mode = "dark"}>
+        <button onClicked={() => darkman.mode = "dark"}>
           <Adw.ButtonContent
             iconName={"weather-clear-night-symbolic"}
             label="Dark Mode" />
@@ -31,8 +31,8 @@ export default () => <Adw.SplitButton
         darkman.mode = "light"
     })}>
   <Adw.ButtonContent
-    iconName={bind(darkman, "icon_name")}
-    label={bind(darkman, "mode").as(mode =>
+    iconName={createBinding(darkman, "icon_name")}
+    label={createBinding(darkman, "mode")(mode =>
       mode === "dark" ?
         "Dark Mode" :
         "Light Mode")} />

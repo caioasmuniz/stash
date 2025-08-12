@@ -1,5 +1,5 @@
-import { bind } from "ags/state"
-import { Gtk, For, Gdk } from "ags/gtk4"
+import { createBinding, For } from "ags"
+import { Gtk } from "ags/gtk4"
 import Hyprland from "gi://AstalHyprland"
 import Apps from "gi://AstalApps"
 import Adw from "gi://Adw?version=1"
@@ -18,9 +18,9 @@ const getIcon = (client: Hyprland.Client) => {
     case "code-url-handler":
       return "vscode"
     default:
-      return apps.fuzzy_query(client.class).at(0)?.iconName ||
-        apps.fuzzy_query(client.title).at(0)?.iconName ||
-        apps.fuzzy_query(client.initialTitle).at(0)?.iconName ||
+      return apps.fuzzy_query(client.class)[0]?.iconName ||
+        apps.fuzzy_query(client.title)[0]?.iconName ||
+        apps.fuzzy_query(client.initialTitle)[0]?.iconName ||
         "image-missing-symbolic"
   }
 }
@@ -32,24 +32,28 @@ export default ({ monitor, vertical }:
       Gtk.Orientation.VERTICAL :
       Gtk.Orientation.HORIZONTAL}
     spacing={4}>
-    <For each={bind(hyprland, "workspaces").as(ws => ws
-      .filter(ws => ws.monitor === monitor)
-      .sort((a, b) => a.id - b.id))}>
-      {ws => <Adw.ToggleGroup
+    <For each={createBinding(hyprland, "workspaces")
+      (ws => ws
+        .filter(ws => ws.monitor === monitor)
+        .sort((a, b) => a.id - b.id)
+      )
+    }>
+      {(ws: Hyprland.Workspace) => <Adw.ToggleGroup
         orientation={vertical ?
           Gtk.Orientation.VERTICAL :
           Gtk.Orientation.HORIZONTAL}
         cssClasses={["round", "ws-toggle",
           ws.id < 0 ? "special" : ""]}
-        $$active={self => {
-          if (hyprland.focusedClient && self.active !== 0 &&
+        onNotifyActive={self => {
+          if (hyprland.focusedClient && self.activeName !== null &&
             hyprland.focusedClient.address !== self.activeName
           )
             hyprland.get_client(self.get_active_name() ?? "")
               ?.focus()
         }}
-        $={self => bind(hyprland, "focusedClient")
-          .subscribe(self, f => {
+        $={self => createBinding(hyprland, "focusedClient")
+          .subscribe(() => {
+            const f = hyprland.focusedClient
             if (f) {
               if (f.workspace === ws)
                 self.activeName = f.address
@@ -58,8 +62,8 @@ export default ({ monitor, vertical }:
             }
           })
         }>
-        <For each={bind(ws, "clients")}>
-          {client =>
+        <For each={createBinding(ws, "clients")}>
+          {(client: Hyprland.Client) =>
             <Adw.Toggle
               name={client.address}
               iconName={getIcon(client)}

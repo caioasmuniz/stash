@@ -1,9 +1,9 @@
-import { Binding, } from "ags/state"
+import { Accessor } from "ags"
 import { Gtk } from "ags/gtk4"
 
-export default ({ binding, iconName }: {
-  binding: Binding<number>,
-  iconName: string | Binding<string>
+export default ({ value, iconName }: {
+  value: Accessor<number>,
+  iconName: string | Accessor<string>
 }) =>
   <box
     cssClasses={["slider"]}
@@ -11,12 +11,12 @@ export default ({ binding, iconName }: {
     <image iconName={iconName} />
     <levelbar
       hexpand
-      $={self => self.set_value(binding.get())}
-      value={binding}
+      $={self => self.set_value(value.get())}
+      value={value}
     />
     <label
       cssClasses={["heading"]}
-      label={binding.as(v =>
+      label={value(v =>
         Math.floor(v * 100)
           .toString()
           .concat("%"))

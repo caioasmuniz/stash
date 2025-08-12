@@ -4,15 +4,10 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     astal.url = "github:aylur/astal";
-    gjsx = {
-      url = "github:aylur/gjsx";
-      flake = false;
-    };
     ags = {
-      url = "github:aylur/ags/v3";
+      url = "github:aylur/ags";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.astal.follows = "astal";
-      inputs.gjsx.follows = "gjsx";
     };
   };
 

@@ -6,11 +6,13 @@ import osd from "./widget/osd";
 import applauncher from "./widget/applauncher";
 import quicksettings from "./widget/quicksettings";
 import notificationPopup from "./widget/notifications";
-import { State } from "ags/state";
+import { createState } from "ags";
 import settings from "./widget/settings";
 
-const visible = new State<{ applauncher: boolean, quicksettings: boolean }>(
-  { applauncher: false, quicksettings: false })
+const visible = createState({
+  applauncher: false,
+  quicksettings: false
+})
 
 App.start({
   css: style,

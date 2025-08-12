@@ -7,7 +7,7 @@ export default ({ app }: { app: Apps.Application }) =>
   <button
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     cssClasses={["app-button"]}
-    $clicked={() => {
+    onClicked={() => {
       App.get_window("applauncher")!.hide()
       app.launch();
     }}>

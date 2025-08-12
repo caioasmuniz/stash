@@ -1,28 +1,28 @@
 import AstalBattery from "gi://AstalBattery";
 import { Gtk } from "ags/gtk4";
-import { bind, derive } from "ags/state";
+import { createBinding, createComputed } from "ags";
 import GLib from "gi://GLib";
 
 const battery = AstalBattery.get_default()
 
-const timeTo = derive([
-  bind(battery, "charging"),
-  bind(battery, "timeToEmpty"),
-  bind(battery, "timeToFull")],
+const timeTo = createComputed([
+  createBinding(battery, "charging"),
+  createBinding(battery, "timeToEmpty"),
+  createBinding(battery, "timeToFull")],
   (charging, timeToEmpty, timeToFull) =>
     charging ? timeToFull : -timeToEmpty)
 
 export default () => <box
   cssClasses={["battery"]}
   spacing={4}
-  visible={bind(timeTo).as(timeTo => timeTo > 0)}
+  visible={timeTo(timeTo => timeTo > 0)}
 >
   <levelbar
-    value={bind(battery, "percentage")}
+    value={createBinding(battery, "percentage")}
     widthRequest={100}
     heightRequest={50}>
-    <label label={bind(battery, "percentage")
-      .as(p => `${(p * 100).toFixed(0)}%`)} />
+    <label label={createBinding(battery, "percentage")
+      (p => `${(p * 100).toFixed(0)}%`)} />
   </levelbar>
   <box
     orientation={Gtk.Orientation.VERTICAL}
@@ -35,7 +35,7 @@ export default () => <box
 
     <label
       halign={Gtk.Align.START}
-      label={bind(timeTo).as(timeTo =>
+      label={timeTo(timeTo =>
         `${timeTo < 0 ?
           "Discharged" : "Charged"
         } in: ${GLib.DateTime
@@ -44,13 +44,13 @@ export default () => <box
     />
     <label
       halign={Gtk.Align.START}
-      label={bind(battery, "energyRate").as(rate =>
+      label={createBinding(battery, "energyRate")(rate =>
         `Rate of ${battery.get_charging() ?
           "Charge" : "discharge"}: ${rate.toFixed(2)}W`)}
     />
     <label
       halign={Gtk.Align.START}
-      label={bind(battery, "energy").as(energy =>
+      label={createBinding(battery, "energy")(energy =>
         `Energy: ${energy.toFixed(2)}/${battery.energyFull.toFixed(0)}Wh`)}
     />
   </box>

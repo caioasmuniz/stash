@@ -4,7 +4,7 @@ import Network from "gi://AstalNetwork"
 import Batery from "gi://AstalBattery"
 import Wireplumber from "gi://AstalWp"
 import PowerProf from "gi://AstalPowerProfiles"
-import { bind } from "ags/state"
+import { createBinding } from "ags"
 import { Gtk, Gdk } from "ags/gtk4"
 import App from "ags/gtk4/app"
 
@@ -16,54 +16,58 @@ const notifd = Notifd.get_default()
 const bluetooth = Bluetooth.get_default()
 
 const ProfileIndicator = () => <image
-  visible={bind(powerprof, "activeProfile")
-    .as(p => p !== "balanced")}
-  iconName={bind(powerprof, "iconName")}
-  tooltipMarkup={bind(powerprof, "active_profile").as(String)} />
+  visible={createBinding(powerprof, "activeProfile")
+    (p => p !== "balanced")}
+  iconName={createBinding(powerprof, "iconName")}
+  tooltipMarkup={createBinding(powerprof, "active_profile")
+    (String)} />
 
 const DNDIndicator = () => <image
-  visible={bind(notifd, "dontDisturb")}
+  visible={createBinding(notifd, "dontDisturb")}
   iconName="notifications-disabled-symbolic" />
 
 const BluetoothIndicator = () => <image
   iconName="bluetooth-active-symbolic"
-  visible={bind(bluetooth.adapter, "powered")} />
+  visible={createBinding(bluetooth, "adapter")
+    .as(adapter => adapter && adapter.powered)
+  } />
 
 const NetworkIndicator = () => <image
-  iconName={bind(network, "primary").as(primary =>
+  iconName={createBinding(network, "primary")(primary =>
     network[(primary === Network.Primary.WIRED ?
       "wired" : "wifi")].iconName)}
-  visible={bind(network, "primary")
-    .as(p => p !== Network.Primary.UNKNOWN)} />
+  visible={createBinding(network, "primary")
+    (p => p !== Network.Primary.UNKNOWN)} />
 
 const AudioIndicator = () => <image
-  iconName={bind(audio.default_speaker, "volume_icon")}
-  tooltipMarkup={bind(audio.default_speaker, "volume")
-    .as(v => "Volume: " + (v * 100).toFixed(0).toString() + "%")} />
+  iconName={createBinding(audio.default_speaker, "volume_icon")}
+  tooltipMarkup={createBinding(audio.default_speaker, "volume")
+    (v => "Volume: " + (v * 100).toFixed(0).toString() + "%")} />
 
 const MicrophoneIndicator = () => <image
-  visible={bind(audio, "recorders").as(rec => rec.length > 0)}
-  iconName={bind(audio.default_microphone, "volume_icon")}
-  tooltipMarkup={bind(audio.default_microphone, "volume")
-    .as(v => (v * 100).toFixed(0).toString() + "%")} />
+  visible={createBinding(audio, "recorders")
+    (rec => rec.length > 0)}
+  iconName={createBinding(audio.default_microphone, "volume_icon")}
+  tooltipMarkup={createBinding(audio.default_microphone, "volume")
+    (v => (v * 100).toFixed(0).toString() + "%")} />
 
 const BatteryIndicator = () => <image
-  visible={bind(battery, "is_present")}
-  iconName={bind(battery, "batteryIconName")}
-  tooltipMarkup={bind(battery, "percentage")
-    .as((p) => (p * 100).toFixed(0).toString() + "%")} />
+  visible={createBinding(battery, "is_present")}
+  iconName={createBinding(battery, "batteryIconName")}
+  tooltipMarkup={createBinding(battery, "percentage")
+    ((p) => (p * 100).toFixed(0).toString() + "%")} />
 
 
 export default ({ vertical }: { vertical: boolean }) =>
   <Gtk.ToggleButton
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     cssClasses={["pill", "sys-indicators", vertical ? "vert" : ""]}
-    active={bind(App.get_window("quicksettings")!, "visible")}
-    $clicked={() => App.toggle_window("quicksettings")}
+    active={createBinding(App.get_window("quicksettings")!, "visible")}
+    onClicked={() => App.toggle_window("quicksettings")}
     $={self => self.add_controller(
       <Gtk.EventControllerScroll
         flags={Gtk.EventControllerScrollFlags.VERTICAL}
-        $scroll={(self, dx, dy) => dy > 0 ?
+        onScroll={(self, dx, dy) => dy > 0 ?
           audio.default_speaker.volume -= 0.025 :
           audio.default_speaker.volume += 0.025}
       /> as Gtk.EventController)}>
