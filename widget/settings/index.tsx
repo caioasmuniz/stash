@@ -8,14 +8,13 @@ import app from "ags/gtk4/app";
 export default () => {
   return <Adw.Window
     hideOnClose
-    visible
     name={"settings"}
     application={app}
     cssClasses={["background"]}
     title={"Stash Settings"}>
     <Gtk.Box orientation={Gtk.Orientation.VERTICAL}>
       <Adw.PreferencesPage>
-        <General />
+        {/* <General /> */}
         <Bar />
       </Adw.PreferencesPage>
     </Gtk.Box>
