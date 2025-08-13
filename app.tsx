@@ -8,6 +8,7 @@ import quicksettings from "./widget/quicksettings";
 import notificationPopup from "./widget/notifications";
 import { createState } from "ags";
 import { initSettings, SettingsContext } from "./lib/settings";
+import settings from "./widget/settings";
 
 const visible = createState({
   applauncher: false,
@@ -25,6 +26,7 @@ App.start({
         {applauncher(visible)}
         {osd()}
         {bar()}
+        {settings()}
       </>}
     </SettingsContext>
   },
