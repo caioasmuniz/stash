@@ -69,7 +69,13 @@
 
         installPhase = ''
           mkdir -p $out/bin
-          ags bundle app.ts $out/bin/${name}
+          ags bundle app.tsx $out/bin/${name}
+          runHook postInstall
+        '';
+
+        postBuild = ''
+          install -Dm644 data/${name}.gschema.xml -t $out/share/gsettings-schemas/$name/glib-2.0/schemas
+          glib-compile-schemas $out/share/gsettings-schemas/$name/glib-2.0/schemas
         '';
 
         preFixup = ''
