@@ -5,8 +5,6 @@ import Adw from "gi://Adw?version=1"
 
 const bluetooth = AstalBluetooth.get_default()
 
-print(bluetooth.devices)
-
 export default () => <Adw.SplitButton
   widthRequest={150}
   $={self => {

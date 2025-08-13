@@ -4,15 +4,10 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     astal.url = "github:aylur/astal";
-    gnim = {
-      url = "github:aylur/gnim";
-      flake = false;
-    };
     ags = {
       url = "github:aylur/ags";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.astal.follows = "astal";
-      inputs.gnim.follows = "gnim";
     };
   };
 
@@ -74,7 +69,13 @@
 
         installPhase = ''
           mkdir -p $out/bin
-          ags bundle app.ts $out/bin/${name}
+          ags bundle app.tsx $out/bin/${name}
+          runHook postInstall
+        '';
+
+        postBuild = ''
+          install -Dm644 data/${name}.gschema.xml -t $out/share/gsettings-schemas/$name/glib-2.0/schemas
+          glib-compile-schemas $out/share/gsettings-schemas/$name/glib-2.0/schemas
         '';
 
         preFixup = ''
@@ -90,8 +91,12 @@
       };
 
       devShells.${system}.default = pkgs.mkShell {
-
+        GSETTINGS_SCHEMA_DIR = "./data";
         ENV = "dev";
+        shellHook = ''
+          mkdir data
+          glib-compile-schemas data
+        '';
         buildInputs =
           with pkgs;
           [

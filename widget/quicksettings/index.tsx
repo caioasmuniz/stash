@@ -1,8 +1,8 @@
-import Hyprland from "gi://AstalHyprland";
+import Hyprland from "gi://AstalHyprland"
 import App from "ags/gtk4/app";
 import { execAsync } from "ags/process";
 import { Astal, Gtk } from "ags/gtk4";
-import { createBinding, State } from "ags";
+import { Accessor, createBinding, State } from "ags";
 
 import { Slider } from "../common/slider";
 import NotificationList from "./notificationList";
@@ -14,60 +14,71 @@ import Media from "./media";
 import Battery from "./battery";
 import Bluetooth from "./bluetooth";
 
-import Settings from "../../lib/settings";
 import Brightness from "../../lib/brightness";
+import { useSettings } from "../../lib/settings";
 import Network from "./network";
 
-const brightness = Brightness.get_default();
-
-const settings = Settings.get_default()
-const hyprland = Hyprland.get_default()
-const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
-
-const Lock = () => (
-  <Gtk.Button
-    cssClasses={["circular"]}
-    onClicked={() => {
-      execAsync(["bash", "-c", "hyprlock --immediate"]);
-    }}
-  >
-    <image iconName={"system-lock-screen-symbolic"} />
-  </Gtk.Button>
-);
-
-const Poweroff = () => (
-  <button
-    cssClasses={["circular", "destructive-action"]}
-    onClicked={() => {
-      execAsync(["bash", "-c", "systemctl poweroff"]);
-    }}
-  >
-    <image iconName={"system-shutdown-symbolic"} />
-  </button>
-);
-
-const RotateButton = () => <button
-  onClicked={() => {
-    if (settings.bar.position > 8)
-      settings.bar.position = 2
-    else
-      settings.bar.position *= 2
-  }}
-  cssClasses={["circular"]}
->
-  <image iconName={"object-rotate-right-symbolic"} />
-</button>
 export default ([visible, setVisible]: State<{
   applauncher: boolean,
   quicksettings: boolean
 }>) => {
+  const brightness = Brightness.get_default();
+
+  const barCfg = useSettings().bar
+  const hyprland = Hyprland.get_default()
+  const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
+
+  const Lock = () => (
+    <Gtk.Button
+      cssClasses={["circular"]}
+      onClicked={() => {
+        execAsync(["bash", "-c", "hyprlock --immediate"]);
+      }}
+    >
+      <image iconName={"system-lock-screen-symbolic"} />
+    </Gtk.Button>
+  );
+
+  const Poweroff = () => (
+    <button
+      cssClasses={["circular", "destructive-action"]}
+      onClicked={() => {
+        execAsync(["bash", "-c", "systemctl poweroff"]);
+      }}
+    >
+      <image iconName={"system-shutdown-symbolic"} />
+    </button>
+  );
+
+  const RotateButton = () => <button
+    onClicked={() => {
+      if ((barCfg.position as Accessor<any>).get() > 8)
+        barCfg.setPosition(2)
+      else
+        barCfg.setPosition(
+          (barCfg.position as Accessor<any>).get() * 2)
+    }}
+    cssClasses={["circular"]}
+  >
+    <image iconName={"object-rotate-right-symbolic"} />
+  </button>
+
+  const SettingsButton = () => <button
+    cssClasses={["circular"]}
+    onClicked={() => {
+      App.get_window("settings")!.visible = true;
+      App.get_window("quicksettings")!.visible = false;
+    }}>
+    <image iconName={"preferences-system-symbolic"} />
+  </button>
+
   return <window
     onNotifyVisible={self => {
       setVisible({
         quicksettings: self.visible,
         applauncher: self.visible &&
-          (settings.bar.position === LEFT ||
-            settings.bar.position === RIGHT) ?
+          (barCfg.position.get() === LEFT ||
+            barCfg.position.get() === RIGHT) ?
           false :
           visible.get().applauncher
       })
@@ -78,7 +89,7 @@ export default ([visible, setVisible]: State<{
     application={App}
     name={"quicksettings"}
     cssClasses={["quicksettings", "background"]}
-    anchor={createBinding(settings.bar, "position")(p =>
+    anchor={barCfg.position.as(p =>
       TOP | (p === LEFT ? LEFT : RIGHT) | BOTTOM
     )}
     monitor={createBinding(hyprland, "focusedMonitor")
@@ -99,6 +110,7 @@ export default ([visible, setVisible]: State<{
       <box halign={Gtk.Align.CENTER} spacing={8}>
         <Tray />
         <Lock />
+        <SettingsButton />
         <RotateButton />
         <Poweroff />
       </box>
