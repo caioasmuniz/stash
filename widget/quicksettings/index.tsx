@@ -2,7 +2,7 @@ import Hyprland from "gi://AstalHyprland"
 import App from "ags/gtk4/app";
 import { execAsync } from "ags/process";
 import { Astal, Gtk } from "ags/gtk4";
-import { createBinding, State } from "ags";
+import { Accessor, createBinding, State } from "ags";
 
 import { Slider } from "../common/slider";
 import NotificationList from "./notificationList";
@@ -51,30 +51,26 @@ export default ([visible, setVisible]: State<{
 
   const RotateButton = () => <button
     onClicked={() => {
-      if (barCfg.position.get() > 8)
+      if ((barCfg.position as Accessor<any>).get() > 8)
         barCfg.setPosition(2)
       else
         barCfg.setPosition(
-          barCfg.position.get() * 2)
+          (barCfg.position as Accessor<any>).get() * 2)
     }}
     cssClasses={["circular"]}
   >
     <image iconName={"object-rotate-right-symbolic"} />
   </button>
 
-const SettingsButton = () => <button
-  cssClasses={["circular"]}
-  onClicked={() => {
-    App.get_window("settings")!.visible = true;
-    App.get_window("quicksettings")!.visible = false;
-  }}>
-  <image iconName={"preferences-system-symbolic"} />
-</button>
+  const SettingsButton = () => <button
+    cssClasses={["circular"]}
+    onClicked={() => {
+      App.get_window("settings")!.visible = true;
+      App.get_window("quicksettings")!.visible = false;
+    }}>
+    <image iconName={"preferences-system-symbolic"} />
+  </button>
 
-export default ([visible, setVisible]: State<{
-  applauncher: boolean,
-  quicksettings: boolean
-}>) => {
   return <window
     onNotifyVisible={self => {
       setVisible({

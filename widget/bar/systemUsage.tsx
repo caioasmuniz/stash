@@ -81,7 +81,10 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) => {
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     onClicked={() =>
       settings.bar.systemMonitor ?
-        execAsync([settings.bar.systemMonitor.get()]) : null}
+        execAsync([(
+          settings.bar.systemMonitor as Accessor<any>)
+          .get()
+        ]) : null}
     cssClasses={["pill", "sys-usage"]}>
     <box
       hexpand={vertical}
