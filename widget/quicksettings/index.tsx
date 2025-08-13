@@ -14,52 +14,57 @@ import Media from "./media";
 import Battery from "./battery";
 import Bluetooth from "./bluetooth";
 
-import Settings from "../../lib/settings";
 import Brightness from "../../lib/brightness";
+import { useSettings } from "../../lib/settings";
 
-const brightness = Brightness.get_default();
+export default ([visible, setVisible]: State<{
+  applauncher: boolean,
+  quicksettings: boolean
+}>) => {
+  const brightness = Brightness.get_default();
 
-const settings = Settings.get_default()
-const hyprland = Hyprland.get_default()
-const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
+  const barCfg = useSettings().bar
+  const hyprland = Hyprland.get_default()
+  const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
 
-const Lock = () => (
-  <Gtk.Button
+  const Lock = () => (
+    <Gtk.Button
+      cssClasses={["circular"]}
+      onClicked={() => {
+        execAsync(["bash", "-c", "hyprlock --immediate"]);
+      }}
+    >
+      <image iconName={"system-lock-screen-symbolic"} />
+    </Gtk.Button>
+  );
+
+  const Poweroff = () => (
+    <button
+      cssClasses={["circular", "destructive-action"]}
+      onClicked={() => {
+        execAsync(["bash", "-c", "systemctl poweroff"]);
+      }}
+    >
+      <image iconName={"system-shutdown-symbolic"} />
+    </button>
+  );
+
+  const RotateButton = () => <button
+    onClicked={() => {
+      if (barCfg.position.get() > 8)
+        barCfg.setPosition(2)
+      else
+        barCfg.setPosition(
+          barCfg.position.get() * 2)
+    }}
     cssClasses={["circular"]}
-    onClicked={() => {
-      execAsync(["bash", "-c", "hyprlock --immediate"]);
-    }}
   >
-    <image iconName={"system-lock-screen-symbolic"} />
-  </Gtk.Button>
-);
-
-const Poweroff = () => (
-  <button
-    cssClasses={["circular", "destructive-action"]}
-    onClicked={() => {
-      execAsync(["bash", "-c", "systemctl poweroff"]);
-    }}
-  >
-    <image iconName={"system-shutdown-symbolic"} />
+    <image iconName={"object-rotate-right-symbolic"} />
   </button>
-);
-
-const RotateButton = () => <button
-  onClicked={() => {
-    if (settings.bar.position > 8)
-      settings.bar.position = 2
-    else
-      settings.bar.position *= 2
-  }}
-  cssClasses={["circular"]}
->
-  <image iconName={"object-rotate-right-symbolic"} />
-</button>
 
 const SettingsButton = () => <button
   cssClasses={["circular"]}
-  $clicked={() => {
+  onClicked={() => {
     App.get_window("settings")!.visible = true;
     App.get_window("quicksettings")!.visible = false;
   }}>
@@ -75,8 +80,8 @@ export default ([visible, setVisible]: State<{
       setVisible({
         quicksettings: self.visible,
         applauncher: self.visible &&
-          (settings.bar.position === LEFT ||
-            settings.bar.position === RIGHT) ?
+          (barCfg.position.get() === LEFT ||
+            barCfg.position.get() === RIGHT) ?
           false :
           visible.get().applauncher
       })
@@ -87,7 +92,7 @@ export default ([visible, setVisible]: State<{
     application={App}
     name={"quicksettings"}
     cssClasses={["quicksettings", "background"]}
-    anchor={createBinding(settings.bar, "position")(p =>
+    anchor={barCfg.position.as(p =>
       TOP | (p === LEFT ? LEFT : RIGHT) | BOTTOM
     )}
     monitor={createBinding(hyprland, "focusedMonitor")

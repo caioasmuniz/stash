@@ -1,4 +1,4 @@
-import { createBinding, For } from "ags"
+import { Accessor, createBinding, For } from "ags"
 import { Gtk } from "ags/gtk4"
 import Hyprland from "gi://AstalHyprland"
 import Apps from "gi://AstalApps"
@@ -26,11 +26,11 @@ const getIcon = (client: Hyprland.Client) => {
 }
 
 export default ({ monitor, vertical }:
-  { monitor: Hyprland.Monitor, vertical: boolean }) =>
+  { monitor: Hyprland.Monitor, vertical: Accessor<boolean> }) =>
   <box
-    orientation={vertical ?
+    orientation={vertical.as(v => v ?
       Gtk.Orientation.VERTICAL :
-      Gtk.Orientation.HORIZONTAL}
+      Gtk.Orientation.HORIZONTAL)}
     spacing={4}>
     <For each={createBinding(hyprland, "workspaces")
       (ws => ws
@@ -39,9 +39,9 @@ export default ({ monitor, vertical }:
       )
     }>
       {(ws: Hyprland.Workspace) => <Adw.ToggleGroup
-        orientation={vertical ?
+        orientation={vertical.as(v => v ?
           Gtk.Orientation.VERTICAL :
-          Gtk.Orientation.HORIZONTAL}
+          Gtk.Orientation.HORIZONTAL)}
         cssClasses={["round", "ws-toggle",
           ws.id < 0 ? "special" : ""]}
         onNotifyActive={self => {
