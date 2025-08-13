@@ -13,6 +13,12 @@ export default () => {
     cssClasses={["background"]}
     title={"Stash Settings"}>
     <Gtk.Box orientation={Gtk.Orientation.VERTICAL}>
+      <Adw.HeaderBar
+        titleWidget={
+          <Adw.WindowTitle
+            title={"Stash Settings"}
+            cssClasses={["title-2"]}
+          /> as Gtk.Widget} />
       <Adw.PreferencesPage>
         {/* <General /> */}
         <Bar />
