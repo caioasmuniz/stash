@@ -2,11 +2,13 @@
   "type": "module",
   "scripts": {
     "lint": "eslint . --fix",
+    "types": "npx @ts-for-gir/cli generate -o @girs --ignoreVersionConflicts -g /run/current-system/sw/share",
     "build": "meson setup --prefix \"$(pwd)/dist\" build --wipe ; meson install -C build",
     "dev": "pnpm run build && GSETTINGS_SCHEMA_DIR=\"$(pwd)/dist/share/glib-2.0/schemas\" ./dist/bin/*"
   },
   "devDependencies": {
     "@eslint/js": "latest",
+    "@ts-for-gir/cli": "latest",
     "@girs/adw-1": "latest",
     "esbuild": "latest",
     "eslint": "latest",

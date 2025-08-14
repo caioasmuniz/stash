@@ -8,9 +8,9 @@ import GObject from "gnim/gobject"
 import Astal from "gi://Astal?version=4.0"
 import Gtk from "gi://Gtk?version=4.0"
 
-export default ({ app, ref }: {
+export default ({ app, $ }: {
   app: Gtk.Application
-  ref: (self: Astal.Window) => void
+  $: (self: Astal.Window) => void
 }) => {
   const brightness = Brightness.get_default()
   const audio = Wireplumber.get_default()!.audio
@@ -35,7 +35,7 @@ export default ({ app, ref }: {
   ];
 
   return <Astal.Window
-    $={ref}
+    $={$}
     name={"osd"}
     widthRequest={250}
     application={app}
@@ -59,5 +59,5 @@ export default ({ app, ref }: {
     >
       {popupList}
     </Gtk.Box>
-  </Astal.Window>
+  </Astal.Window> as Astal.Window
 }

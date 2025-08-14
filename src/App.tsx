@@ -1,13 +1,14 @@
 import Adw from "gi://Adw"
 import Gio from "gi://Gio"
-import GObject, { register } from "gnim/gobject"
+import Astal from "gi://Astal?version=4.0";
+import { register } from "gnim/gobject"
 import { createContext, createRoot, createSettings } from "gnim"
 import { schema, SettingsContext } from "./settings"
 import Osd from "./widget/osd"
 
 @register()
 export class App extends Adw.Application {
-  declare private osd: GObject.Object
+  declare private osd: Astal.Window
 
   constructor() {
     super({
@@ -16,9 +17,7 @@ export class App extends Adw.Application {
     })
   }
 
-  vfunc_startup(): void {
-    super.vfunc_startup()
-
+  vfunc_activate(): void {
     createRoot((dispose) => {
       this.connect("shutdown", dispose)
 
@@ -35,13 +34,9 @@ export class App extends Adw.Application {
       const Ctx = createContext(null)
       return <Ctx value={null}>
         {() =>
-          <Osd app={this} ref={(self) => (this.osd = self)} />
+          <Osd app={this} $={(self) => (this.osd = self).present()} />
         }
       </Ctx>
     })
-  }
-
-  vfunc_activate(): void {
-    this.osd
   }
 }
