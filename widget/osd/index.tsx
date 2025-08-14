@@ -1,11 +1,13 @@
 import Wireplumber from "gi://AstalWp"
-import { createBinding, createComputed } from "ags"
+import AstalHyprland from "gi://AstalHyprland"
+import Gtk from "gi://Gtk?version=4.0"
+import Astal from "gi://Astal?version=4.0"
+import { createBinding, createComputed } from "gnim"
 import Brightness from "../../lib/brightness"
 import Slider from "./slider"
-import app from "ags/gtk4/app"
-import { Astal, Gtk } from "ags/gtk4"
-import AstalHyprland from "gi://AstalHyprland"
 import Popup from "./popup"
+
+import app from "ags/gtk4/app"
 
 export default () => {
   const brightness = Brightness.get_default()
@@ -30,7 +32,7 @@ export default () => {
       })} /> as Gtk.Revealer,
   ];
 
-  return <window
+  return <Astal.Window
     name={"osd"}
     widthRequest={250}
     application={app}
@@ -46,13 +48,13 @@ export default () => {
         (a, b) => a || b)
     )}
   >
-    <box
+    <Gtk.Box
       cssClasses={["linked", "background", "osd-container"]}
       orientation={Gtk.Orientation.VERTICAL}
       valign={Gtk.Align.END}
       spacing={12}
     >
       {popupList}
-    </box>
-  </window>
+    </Gtk.Box>
+  </Astal.Window>
 }

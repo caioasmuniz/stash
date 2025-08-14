@@ -1,13 +1,12 @@
-import { Astal, Gtk } from "ags/gtk4"
-import App from "ags/gtk4/app"
-
 import Hyprland from "gi://AstalHyprland";
-
+import Astal from "gi://Astal?version=4.0";
+import Gtk from "gi://Gtk?version=4.0";
 import SystemIndicators from "./systemIndicators";
 import SystemUsage from "./systemUsage";
 import Workspaces from "./workspaces";
 import Clock from "./clock";
 import Launcher from "./launcher";
+import App from "ags/gtk4/app"
 import { useSettings } from "../../lib/settings";
 import { createBinding, For } from "gnim";
 
@@ -18,7 +17,7 @@ export default () => {
   const vertical = settings.bar.position.as((p) =>
     p === LEFT || p === RIGHT)
   return <For each={createBinding(hyprland, "monitors")}>
-    {(monitor: Hyprland.Monitor) => <window
+    {(monitor: Hyprland.Monitor) => <Astal.Window
       visible
       cssClasses={vertical.as(v =>
         ["bar", "background",
@@ -33,12 +32,12 @@ export default () => {
             p === BOTTOM ? (RIGHT | LEFT | BOTTOM) :
               (TOP | RIGHT | BOTTOM)
       )}>
-      <centerbox
+      <Gtk.CenterBox
         cssClasses={["bar-centerbox"]}
         orientation={vertical.as(v => v ?
           Gtk.Orientation.VERTICAL :
           Gtk.Orientation.HORIZONTAL)}>
-        <box
+        <Gtk.Box
           $type="start"
           spacing={4}
           orientation={vertical.as(v => v ?
@@ -46,11 +45,11 @@ export default () => {
             Gtk.Orientation.HORIZONTAL)}>
           <Launcher />
           <SystemUsage vertical={vertical} />
-        </box>
-        <box $type="center">
+        </Gtk.Box>
+        <Gtk.Box $type="center">
           <Workspaces vertical={vertical} monitor={monitor} />
-        </box>
-        <box
+        </Gtk.Box>
+        <Gtk.Box
           $type="end"
           cssClasses={["linked"]}
           orientation={vertical.as(v => v ?
@@ -63,8 +62,8 @@ export default () => {
           <Clock vertical={vertical} />
           <Gtk.Separator />
           <SystemIndicators vertical={vertical} />
-        </box>
-      </centerbox>
-    </window>}
+        </Gtk.Box>
+      </Gtk.CenterBox>
+    </Astal.Window>}
   </For>
 }

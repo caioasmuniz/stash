@@ -1,14 +1,14 @@
-import App from "ags/gtk4/app"
-import style from "./style.scss";
-
+import { createState } from "gnim";
 import bar from "./widget/bar";
 import osd from "./widget/osd";
 import applauncher from "./widget/applauncher";
 import quicksettings from "./widget/quicksettings";
 import notificationPopup from "./widget/notifications";
-import { createState } from "ags";
 import { initSettings, SettingsContext } from "./lib/settings";
 import settings from "./widget/settings";
+import style from "./style.scss";
+
+import App from "ags/gtk4/app"
 
 const visible = createState({
   applauncher: false,

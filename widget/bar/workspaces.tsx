@@ -1,8 +1,9 @@
-import { Accessor, createBinding, For, With } from "ags"
-import { Gtk } from "ags/gtk4"
 import Hyprland from "gi://AstalHyprland"
 import Apps from "gi://AstalApps"
 import Adw from "gi://Adw?version=1"
+import Gtk from "gi://Gtk?version=4.0"
+
+import { createBinding, For, Accessor, With } from "gnim"
 
 const hyprland = Hyprland.get_default()
 
@@ -27,7 +28,7 @@ const getIcon = (client: Hyprland.Client) => {
 
 export default ({ monitor, vertical }:
   { monitor: Hyprland.Monitor, vertical: Accessor<boolean> }) =>
-  <box
+  <Gtk.Box
     orientation={vertical.as(v => v ?
       Gtk.Orientation.VERTICAL :
       Gtk.Orientation.HORIZONTAL)}
@@ -75,5 +76,5 @@ export default ({ monitor, vertical }:
         </With>
       </Adw.ToggleGroup>}
     </For>
-  </box >
+  </Gtk.Box >
 

@@ -4,8 +4,10 @@ import Network from "gi://AstalNetwork"
 import Batery from "gi://AstalBattery"
 import Wireplumber from "gi://AstalWp"
 import PowerProf from "gi://AstalPowerProfiles"
-import { Accessor, createBinding, createComputed } from "ags"
-import { Gtk, Gdk } from "ags/gtk4"
+import Gdk from "gi://Gdk?version=4.0"
+import Gtk from "gi://Gtk?version=4.0"
+import { createBinding, createComputed } from "gnim"
+
 import App from "ags/gtk4/app"
 
 const audio = Wireplumber.get_default()!.audio
@@ -15,18 +17,18 @@ const powerprof = PowerProf.get_default()
 const notifd = Notifd.get_default()
 const bluetooth = Bluetooth.get_default()
 
-const ProfileIndicator = () => <image
+const ProfileIndicator = () => <Gtk.Image
   visible={createBinding(powerprof, "activeProfile")
     (p => p !== "balanced")}
   iconName={createBinding(powerprof, "iconName")}
   tooltipMarkup={createBinding(powerprof, "active_profile")
     (String)} />
 
-const DNDIndicator = () => <image
+const DNDIndicator = () => <Gtk.Image
   visible={createBinding(notifd, "dontDisturb")}
   iconName="notifications-disabled-symbolic" />
 
-const BluetoothIndicator = () => <image
+const BluetoothIndicator = () => <Gtk.Image
   iconName="bluetooth-active-symbolic"
   visible={createBinding(bluetooth, "adapter")
     .as(adapter => adapter && adapter.powered)
@@ -46,19 +48,19 @@ const NetworkIndicator = () => {
       (p => p !== Network.Primary.UNKNOWN)} />
 }
 
-const AudioIndicator = () => <image
+const AudioIndicator = () => <Gtk.Image
   iconName={createBinding(audio.default_speaker, "volume_icon")}
   tooltipMarkup={createBinding(audio.default_speaker, "volume")
     (v => "Volume: " + (v * 100).toFixed(0).toString() + "%")} />
 
-const MicrophoneIndicator = () => <image
+const MicrophoneIndicator = () => <Gtk.Image
   visible={createBinding(audio, "recorders")
     (rec => rec.length > 0)}
   iconName={createBinding(audio.default_microphone, "volume_icon")}
   tooltipMarkup={createBinding(audio.default_microphone, "volume")
     (v => (v * 100).toFixed(0).toString() + "%")} />
 
-const BatteryIndicator = () => <image
+const BatteryIndicator = () => <Gtk.Image
   visible={createBinding(battery, "is_present")}
   iconName={createBinding(battery, "batteryIconName")}
   tooltipMarkup={createBinding(battery, "percentage")
@@ -81,7 +83,7 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) =>
             audio.default_speaker.volume += 0.025
         }}
       /> as Gtk.EventController)}>
-    <box
+    <Gtk.Box
       spacing={4}
       orientation={vertical.as(v => v ?
         Gtk.Orientation.VERTICAL :
@@ -93,5 +95,5 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) =>
       <MicrophoneIndicator />
       <AudioIndicator />
       <DNDIndicator />
-    </box>
+    </Gtk.Box>
   </Gtk.ToggleButton>

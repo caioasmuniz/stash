@@ -1,9 +1,8 @@
 import Hyprland from "gi://AstalHyprland"
-import App from "ags/gtk4/app";
-import { execAsync } from "ags/process";
-import { Astal, Gtk } from "ags/gtk4";
-import { Accessor, createBinding, State } from "ags";
-
+import Astal from "gi://Astal?version=4.0";
+import Gtk from "gi://Gtk?version=4.0";
+import AstalIO from "gi://AstalIO?version=0.1";
+import { Accessor, createBinding, State } from "gnim";
 import { Slider } from "../common/slider";
 import NotificationList from "./notificationList";
 import PwrProf from "./powerprofiles";
@@ -13,9 +12,10 @@ import { AudioConfig, MicConfig } from "./audioConfig";
 import Media from "./media";
 import Battery from "./battery";
 import Bluetooth from "./bluetooth";
-
 import Brightness from "../../lib/brightness";
 import { useSettings } from "../../lib/settings";
+
+import App from "ags/gtk4/app";
 
 export default ([visible, setVisible]: State<{
   applauncher: boolean,
@@ -31,25 +31,25 @@ export default ([visible, setVisible]: State<{
     <Gtk.Button
       cssClasses={["circular"]}
       onClicked={() => {
-        execAsync(["bash", "-c", "hyprlock --immediate"]);
+        AstalIO.Process.exec_asyncv(["bash", "-c", "hyprlock --immediate"]);
       }}
     >
-      <image iconName={"system-lock-screen-symbolic"} />
+      <Gtk.Image iconName={"system-lock-screen-symbolic"} />
     </Gtk.Button>
   );
 
   const Poweroff = () => (
-    <button
+    <Gtk.Button
       cssClasses={["circular", "destructive-action"]}
       onClicked={() => {
-        execAsync(["bash", "-c", "systemctl poweroff"]);
+        AstalIO.Process.exec_asyncv(["bash", "-c", "systemctl poweroff"]);
       }}
     >
-      <image iconName={"system-shutdown-symbolic"} />
-    </button>
+      <Gtk.Image iconName={"system-shutdown-symbolic"} />
+    </Gtk.Button>
   );
 
-  const RotateButton = () => <button
+  const RotateButton = () => <Gtk.Button
     onClicked={() => {
       if ((barCfg.position as Accessor<any>).get() > 8)
         barCfg.setPosition(2)
@@ -59,8 +59,8 @@ export default ([visible, setVisible]: State<{
     }}
     cssClasses={["circular"]}
   >
-    <image iconName={"object-rotate-right-symbolic"} />
-  </button>
+    <Gtk.Image iconName={"object-rotate-right-symbolic"} />
+  </Gtk.Button>
 
   const SettingsButton = () => <button
     cssClasses={["circular"]}
@@ -71,7 +71,7 @@ export default ([visible, setVisible]: State<{
     <image iconName={"preferences-system-symbolic"} />
   </button>
 
-  return <window
+  return <Astal.Window
     onNotifyVisible={self => {
       setVisible({
         quicksettings: self.visible,
@@ -93,7 +93,7 @@ export default ([visible, setVisible]: State<{
     )}
     monitor={createBinding(hyprland, "focusedMonitor")
       (m => m.id)}>
-    <box
+    <Gtk.Box
       cssClasses={["quicksettings-body"]}
       orientation={Gtk.Orientation.VERTICAL}
       spacing={8}
@@ -105,13 +105,13 @@ export default ([visible, setVisible]: State<{
           self.attach(<Bluetooth /> as Gtk.Widget, 0, 1, 1, 1)
         }}>
       </Gtk.Grid>
-      <box halign={Gtk.Align.CENTER} spacing={8}>
+      <Gtk.Box halign={Gtk.Align.CENTER} spacing={8}>
         <Tray />
         <Lock />
         <SettingsButton />
         <RotateButton />
         <Poweroff />
-      </box>
+      </Gtk.Box>
       <Slider
         icon={"display-brightness-symbolic"}
         min={0}
@@ -126,6 +126,6 @@ export default ([visible, setVisible]: State<{
       <Battery />
       <Media />
       <NotificationList />
-    </box>
-  </window>
+    </Gtk.Box>
+  </Astal.Window>
 }

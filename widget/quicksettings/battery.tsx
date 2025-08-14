@@ -1,7 +1,7 @@
 import AstalBattery from "gi://AstalBattery";
-import { Gtk } from "ags/gtk4";
-import { createBinding, createComputed } from "ags";
 import GLib from "gi://GLib";
+import Gtk from "gi://Gtk?version=4.0";
+import { createBinding, createComputed } from "gnim";
 
 const battery = AstalBattery.get_default()
 
@@ -12,28 +12,28 @@ const timeTo = createComputed([
   (charging, timeToEmpty, timeToFull) =>
     charging ? timeToFull : -timeToEmpty)
 
-export default () => <box
+export default () => <Gtk.Box
   cssClasses={["battery"]}
   spacing={4}
   visible={timeTo(timeTo => timeTo > 0)}
 >
-  <levelbar
+  <Gtk.LevelBar
     value={createBinding(battery, "percentage")}
     widthRequest={100}
     heightRequest={50}>
-    <label label={createBinding(battery, "percentage")
+    <Gtk.Label label={createBinding(battery, "percentage")
       (p => `${(p * 100).toFixed(0)}%`)} />
-  </levelbar>
-  <box
+  </Gtk.LevelBar>
+  <Gtk.Box
     orientation={Gtk.Orientation.VERTICAL}
     hexpand
     valign={Gtk.Align.CENTER}>
-    <label
+    <Gtk.Label
       cssClasses={["title-4"]}
       label={"Battery Info"}
       halign={Gtk.Align.CENTER} />
 
-    <label
+    <Gtk.Label
       halign={Gtk.Align.START}
       label={timeTo(timeTo =>
         `${timeTo < 0 ?
@@ -42,17 +42,17 @@ export default () => <box
           .new_from_unix_utc(timeTo)
           .format("%kh %Mm %Ss")}`)}
     />
-    <label
+    <Gtk.Label
       halign={Gtk.Align.START}
       label={createBinding(battery, "energyRate")(rate =>
         `Rate of ${battery.get_charging() ?
           "Charge" : "discharge"}: ${rate.toFixed(2)}W`)}
     />
-    <label
+    <Gtk.Label
       halign={Gtk.Align.START}
       label={createBinding(battery, "energy")(energy =>
         `Energy: ${energy.toFixed(2)}/${battery.energyFull.toFixed(0)}Wh`)}
     />
-  </box>
-</box>
+  </Gtk.Box>
+</Gtk.Box>
 

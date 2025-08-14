@@ -1,9 +1,11 @@
-import { exec, execAsync } from "ags/process";
-import { Accessor, createState } from "ags";
-import { createPoll } from "ags/time";
-import { Gdk, Gtk } from "ags/gtk4";
 import GTop from "gi://GTop";
 import { useSettings } from "../../lib/settings";
+import Gtk from "gi://Gtk?version=4.0";
+import Gdk from "gi://Gdk?version=4.0";
+import AstalIO from "gi://AstalIO?version=0.1";
+import { Accessor, createState } from "gnim";
+
+import { createPoll } from "ags/time";
 
 export default ({ vertical }: { vertical: Accessor<boolean> }) => {
   const settings = useSettings()
@@ -37,7 +39,7 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) => {
   const temp = createPoll(0, INTERVAL, () => {
     if (settings.bar.tempPath.get())
       return parseInt(
-        exec(`cat ${settings.bar.tempPath}`)
+       AstalIO.Process.exec(`cat ${settings.bar.tempPath}`)
       ) / 100000
     else
       return -1
@@ -59,34 +61,34 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) => {
       value={value}
       widthRequest={vertical.as(v => v ? -1 : 50)}
       heightRequest={vertical.as(v => v ? 50 : -1)}>
-      <box
+      <Gtk.Box
         valign={Gtk.Align.CENTER}
         halign={Gtk.Align.CENTER}
         spacing={2}
         orientation={vertical.as(v => v ?
           Gtk.Orientation.VERTICAL :
           Gtk.Orientation.HORIZONTAL)}>
-        <label
+        <Gtk.Label
           label={label}
           cssClasses={["title"]} />
-        <label
+        <Gtk.Label
           cssClasses={["body"]}
           label={value(v => (v * 100)
             .toFixed(0)
             .concat(unit))} />
-      </box>
+      </Gtk.Box>
     </Gtk.LevelBar >
 
-  return <button
+  return <Gtk.Button
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     onClicked={() =>
       settings.bar.systemMonitor ?
-        execAsync([(
+       AstalIO.Process.exec_async((
           settings.bar.systemMonitor as Accessor<any>)
           .get()
-        ]) : null}
+        ) : null}
     cssClasses={["pill", "sys-usage"]}>
-    <box
+    <Gtk.Box
       hexpand={vertical}
       vexpand={!vertical}
       orientation={vertical.as(v => v ?
@@ -115,6 +117,6 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) => {
         value={disk}
         label="DISK"
         unit="%" />
-    </box>
-  </button >
+    </Gtk.Box>
+  </Gtk.Button >
 }

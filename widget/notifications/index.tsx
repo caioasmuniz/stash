@@ -1,18 +1,18 @@
 import Notifd from "gi://AstalNotifd";
 import Hyprland from "gi://AstalHyprland";
-import App from "ags/gtk4/app";
-import { Astal, Gtk } from "ags/gtk4";
-import { For, createBinding, Accessor, createState, createComputed } from "ags";
-
+import Astal from "gi://Astal?version=4.0";
+import Gtk from "gi://Gtk?version=4.0";
+import AstalIO from "gi://AstalIO?version=0.1";
+import { For, createBinding, createState, createComputed } from "gnim";
 import Notification from "../common/notification";
-import { timeout } from "ags/time";
 
+import App from "ags/gtk4/app";
 const notifd = Notifd.get_default();
 const hyprland = Hyprland.get_default();
 
 const [notifs, setNotifs] = createState<Notifd.Notification[]>([])
 
-export default () => <window
+export default () => <Astal.Window
   name={"notifications"}
   margin={12}
   cssClasses={["notif-popup"]}
@@ -25,12 +25,12 @@ export default () => <window
     Astal.WindowAnchor.BOTTOM}
   monitor={createBinding(hyprland, "focusedMonitor")(m => m.id)}
   application={App}>
-  <box
+  <Gtk.Box
     orientation={Gtk.Orientation.VERTICAL}
     spacing={4}
     $={() => notifd.connect("notified",
       (self, id) => {
-        timeout(5000, () =>
+        AstalIO.Time.timeout(5000, () =>
           setNotifs(notifs.get().filter(n => id !== n.id)))
         setNotifs(notifs.get().concat(notifd.get_notification(id)))
       })}>
@@ -42,5 +42,5 @@ export default () => <window
           notif={n} />
       }
     </For>
-  </box>
-</window >
+  </Gtk.Box>
+</Astal.Window >

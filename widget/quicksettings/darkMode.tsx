@@ -1,6 +1,6 @@
-import { createBinding } from "ags"
-import { Gtk } from "ags/gtk4"
 import Adw from "gi://Adw?version=1";
+import Gtk from "gi://Gtk?version=4.0";
+import { createBinding } from "gnim"
 import Darkman from "../../lib/darkman";
 
 const darkman = Darkman.get_default()
@@ -8,20 +8,20 @@ const darkman = Darkman.get_default()
 export default () => <Adw.SplitButton
   popover={
     <popover>
-      <box
+      <Gtk.Box
         orientation={Gtk.Orientation.VERTICAL}
         cssClasses={["linked"]}>
-        <button onClicked={() => darkman.mode = "light"}>
+        <Gtk.Button onClicked={() => darkman.mode = "light"}>
           <Adw.ButtonContent
             iconName={"weather-clear-symbolic"}
             label="Light Mode" />
-        </button>
-        <button onClicked={() => darkman.mode = "dark"}>
+        </Gtk.Button>
+        <Gtk.Button onClicked={() => darkman.mode = "dark"}>
           <Adw.ButtonContent
             iconName={"weather-clear-night-symbolic"}
             label="Dark Mode" />
-        </button>
-      </box>
+        </Gtk.Button>
+      </Gtk.Box>
     </popover> as Gtk.Popover}
   widthRequest={150}
   $={self =>

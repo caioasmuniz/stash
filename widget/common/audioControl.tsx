@@ -1,7 +1,7 @@
-import { Accessor, createBinding, createState, For } from "ags"
-import { Gtk } from "ags/gtk4"
-import { Slider } from "./slider"
 import Wireplumber from "gi://AstalWp"
+import Gtk from "gi://Gtk?version=4.0"
+import { Accessor, createBinding, createState, For } from "gnim"
+import { Slider } from "./slider"
 
 interface AudioControlProps {
   defaultDevice: Wireplumber.Endpoint
@@ -12,10 +12,10 @@ export const AudioEndpointControl = ({ defaultDevice, devices }: AudioControlPro
   const [visible, setVisible] = createState(false)
 
   return (
-    <box
+    <Gtk.Box
       cssClasses={["audio-config"]}
       orientation={Gtk.Orientation.VERTICAL}>
-      <button onClicked={() => setVisible(!visible.get())}>
+      <Gtk.Button onClicked={() => setVisible(!visible.get())}>
         <Slider
           icon={createBinding(defaultDevice, "volumeIcon")}
           min={0}
@@ -24,27 +24,27 @@ export const AudioEndpointControl = ({ defaultDevice, devices }: AudioControlPro
             (v => v * 100)}
           setValue={value => defaultDevice.set_volume(value / 100)}
         />
-      </button>
+      </Gtk.Button>
       <Gtk.Revealer revealChild={visible}>
-        <box cssClasses={["buttonGroup"]}
+        <Gtk.Box cssClasses={["buttonGroup"]}
           orientation={Gtk.Orientation.VERTICAL}>
           <For each={devices}>
             {device =>
-              <button
+              <Gtk.Button
                 cssClasses={createBinding(device, "isDefault")
                   (isDefault => isDefault ? ['active', 'linked'] : ['linked'])}
                 onClicked={() => device.set_is_default(true)}>
-                <label
+                <Gtk.Label
                   $type="label"
                   label={device.description}
                   wrap
                   maxWidthChars={10}
                 />
-              </button>
+              </Gtk.Button>
             }
           </For>
-        </box>
+        </Gtk.Box>
       </Gtk.Revealer>
-    </box>
+    </Gtk.Box>
   )
 } 

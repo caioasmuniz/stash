@@ -1,7 +1,7 @@
 import AstalBluetooth from "gi://AstalBluetooth"
-import { createBinding, For } from "ags"
-import { Gtk } from "ags/gtk4"
 import Adw from "gi://Adw?version=1"
+import Gtk from "gi://Gtk?version=4.0"
+import { createBinding, For } from "gnim"
 
 const bluetooth = AstalBluetooth.get_default()
 
@@ -17,11 +17,11 @@ export default () => <Adw.SplitButton
   }}
   popover={
     <popover>
-      <box cssClasses={["linked"]}
+      <Gtk.Box cssClasses={["linked"]}
         orientation={Gtk.Orientation.VERTICAL}>
         <For each={createBinding(bluetooth, "devices")}>
           {(device: AstalBluetooth.Device) => (
-            <button onClicked={() => device.connected ? device.disconnect_device((_, res) => {
+            <Gtk.Button onClicked={() => device.connected ? device.disconnect_device((_, res) => {
               try {
                 device.disconnect_device_finish(res);
               } catch (e) {
@@ -39,10 +39,10 @@ export default () => <Adw.SplitButton
                   (connected => connected ? ["connected"] : [])}
                 iconName={device.icon}
                 label={device.name} />
-            </button>
+            </Gtk.Button>
           )}
         </For>
-      </box>
+      </Gtk.Box>
     </ popover> as Gtk.Popover}>
   <Adw.ButtonContent
     iconName={createBinding(bluetooth, "isPowered")
