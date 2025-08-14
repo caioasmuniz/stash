@@ -6,11 +6,13 @@ import { register } from "gnim/gobject"
 import { initSettings, SettingsContext } from "lib/settings";
 import Osd from "./widget/osd"
 import Applauncher from "widget/applauncher";
+import Notifications from "widget/notifications";
 
 @register()
 export class App extends Adw.Application {
   declare private osd: Astal.Window
   declare private applauncher: Astal.Window
+  declare private notifications: Astal.Window
 
   constructor() {
     super({
@@ -29,6 +31,9 @@ export class App extends Adw.Application {
           />
           <Applauncher app={this}
             $={(self) => (this.applauncher = self).present()}
+          />
+          <Notifications app={this}
+            $={(self) => (this.notifications = self).present()}
           />
         </>}
       </SettingsContext>
