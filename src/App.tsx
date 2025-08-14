@@ -7,12 +7,14 @@ import { initSettings, SettingsContext } from "lib/settings";
 import Osd from "./widget/osd"
 import Applauncher from "widget/applauncher";
 import Notifications from "widget/notifications";
+import Bar from "widget/bar";
 
 @register()
 export class App extends Adw.Application {
   declare private osd: Astal.Window
   declare private applauncher: Astal.Window
   declare private notifications: Astal.Window
+  declare private bar: Astal.Window
 
   constructor() {
     super({
@@ -34,6 +36,9 @@ export class App extends Adw.Application {
           />
           <Notifications app={this}
             $={(self) => (this.notifications = self).present()}
+          />
+          <Bar app={this}
+            $={(self) => (this.bar = self).present()}
           />
         </>}
       </SettingsContext>

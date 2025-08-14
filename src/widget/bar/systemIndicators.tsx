@@ -6,9 +6,9 @@ import Wireplumber from "gi://AstalWp"
 import PowerProf from "gi://AstalPowerProfiles"
 import Gdk from "gi://Gdk?version=4.0"
 import Gtk from "gi://Gtk?version=4.0"
-import { createBinding, createComputed } from "gnim"
+import { Accessor, createBinding, createComputed } from "gnim"
 
-import App from "ags/gtk4/app"
+// import App from "ags/gtk4/app"
 
 const audio = Wireplumber.get_default()!.audio
 const battery = Batery.get_default()
@@ -42,29 +42,29 @@ const NetworkIndicator = () => {
     (primary, wifi, wired) =>
       primary === Network.Primary.WIFI ?
         wifi.iconName : wired.iconName)
-  return <image
+  return <Gtk.Image
     iconName={icon}
     visible={createBinding(network, "primary")
-      (p => p !== Network.Primary.UNKNOWN)} />
+      .as(p => p !== Network.Primary.UNKNOWN)} />
 }
 
 const AudioIndicator = () => <Gtk.Image
   iconName={createBinding(audio.default_speaker, "volume_icon")}
   tooltipMarkup={createBinding(audio.default_speaker, "volume")
-    (v => "Volume: " + (v * 100).toFixed(0).toString() + "%")} />
+    .as(v => "Volume: " + (v * 100).toFixed(0).toString() + "%")} />
 
 const MicrophoneIndicator = () => <Gtk.Image
   visible={createBinding(audio, "recorders")
-    (rec => rec.length > 0)}
+    .as(rec => rec.length > 0)}
   iconName={createBinding(audio.default_microphone, "volume_icon")}
   tooltipMarkup={createBinding(audio.default_microphone, "volume")
-    (v => (v * 100).toFixed(0).toString() + "%")} />
+    .as(v => (v * 100).toFixed(0).toString() + "%")} />
 
 const BatteryIndicator = () => <Gtk.Image
   visible={createBinding(battery, "is_present")}
   iconName={createBinding(battery, "batteryIconName")}
   tooltipMarkup={createBinding(battery, "percentage")
-    ((p) => (p * 100).toFixed(0).toString() + "%")} />
+    .as((p) => (p * 100).toFixed(0).toString() + "%")} />
 
 
 export default ({ vertical }: { vertical: Accessor<boolean> }) =>
@@ -72,14 +72,15 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) =>
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     cssClasses={vertical.as(v =>
       ["pill", "sys-indicators", v ? "vert" : ""])}
-    active={createBinding(App.get_window("quicksettings")!, "visible")}
-    onClicked={() => App.toggle_window("quicksettings")}
+    // active={createBinding(App.get_window("quicksettings")!, "visible")}
+    // onClicked={() => App.toggle_window("quicksettings")}
     $={self => self.add_controller(
       <Gtk.EventControllerScroll
         flags={Gtk.EventControllerScrollFlags.VERTICAL}
         onScroll={(self, dx, dy) => {
-          dy > 0 ?
-            audio.default_speaker.volume -= 0.025 :
+          if (dy > 0)
+            audio.default_speaker.volume -= 0.025
+          else
             audio.default_speaker.volume += 0.025
         }}
       /> as Gtk.EventController)}>

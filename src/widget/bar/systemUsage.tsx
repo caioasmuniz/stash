@@ -4,8 +4,8 @@ import Gtk from "gi://Gtk?version=4.0";
 import Gdk from "gi://Gdk?version=4.0";
 import AstalIO from "gi://AstalIO?version=0.1";
 import { Accessor, createState } from "gnim";
+import { createPoll } from "lib/utils";
 
-import { createPoll } from "ags/time";
 
 export default ({ vertical }: { vertical: Accessor<boolean> }) => {
   const settings = useSettings()

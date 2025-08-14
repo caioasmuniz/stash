@@ -6,11 +6,13 @@ import SystemUsage from "./systemUsage";
 import Workspaces from "./workspaces";
 import Clock from "./clock";
 import Launcher from "./launcher";
-import App from "ags/gtk4/app"
 import { useSettings } from "../../lib/settings";
 import { createBinding, For } from "gnim";
 
-export default () => {
+export default ({ app, $ }: {
+  app: Gtk.Application
+  $: (self: Astal.Window) => void
+}) => {
   const hyprland = Hyprland.get_default()
   const settings = useSettings()
   const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
@@ -18,11 +20,12 @@ export default () => {
     p === LEFT || p === RIGHT)
   return <For each={createBinding(hyprland, "monitors")}>
     {(monitor: Hyprland.Monitor) => <Astal.Window
+      $={$}
       visible
       cssClasses={vertical.as(v =>
         ["bar", "background",
           v ? "vert" : ""])}
-      application={App}
+      application={app}
       monitor={monitor.id}
       name={`bar-${monitor.id}`}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
