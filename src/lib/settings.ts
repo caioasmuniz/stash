@@ -14,7 +14,7 @@ export const SettingsContext = createContext<Settings | null>(null)
 export function initSettings(): Settings {
   return {
     bar: createSettings(
-      new Gio.Settings({ schemaId: "stash.bar" }),
+      new Gio.Settings({ schemaId: `${import.meta.domain}.bar` }),
       barSchema)
   }
 }

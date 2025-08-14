@@ -1,7 +1,7 @@
 # FIXME: rename
 project('stash', version: '0.1.0')
 domain = 'dev.caioasmuniz.stash'
-resource = 'dev/caioasmuniz/stash'
+resource = '/dev/caioasmuniz/stash'
 
 name = meson.project_name()
 version = meson.project_version()

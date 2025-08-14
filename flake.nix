@@ -94,13 +94,7 @@
       };
 
       devShells.${system}.default = pkgs.mkShell {
-        GSETTINGS_SCHEMA_DIR = "./data";
         LD_PRELOAD = "${pkgs.gtk4-layer-shell}/lib/libgtk4-layer-shell.so";
-        ENV = "dev";
-        shellHook = ''
-          mkdir data
-          glib-compile-schemas data
-        '';
         inherit nativeBuildInputs;
         buildInputs =
           with pkgs;
