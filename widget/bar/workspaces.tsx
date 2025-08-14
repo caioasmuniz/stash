@@ -31,7 +31,7 @@ export default ({ monitor, vertical }:
     orientation={vertical.as(v => v ?
       Gtk.Orientation.VERTICAL :
       Gtk.Orientation.HORIZONTAL)}
-    spacing={4}>
+    spacing={8}>
     <For each={createBinding(hyprland, "workspaces")
       (ws => ws
         .filter(ws => ws.monitor === monitor)
