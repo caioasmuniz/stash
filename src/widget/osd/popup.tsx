@@ -1,6 +1,6 @@
 import AstalIO from "gi://AstalIO?version=0.1"
+import GObject from "gi://GObject?version=2.0"
 import Gtk from "gi://Gtk?version=4.0"
-import GObject from "gnim/gobject"
 
 const TIMEOUT_MS = 2000
 

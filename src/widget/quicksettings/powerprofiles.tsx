@@ -1,7 +1,7 @@
 import Powerprofiles from "gi://AstalPowerProfiles"
-import { createBinding } from "ags"
-import { Gtk } from "ags/gtk4"
 import Adw from "gi://Adw?version=1"
+import Gtk from "gi://Gtk?version=4.0"
+import { createBinding } from "gnim"
 
 const profile = Powerprofiles.get_default()
 export default () => <Adw.SplitButton
@@ -17,7 +17,7 @@ export default () => <Adw.SplitButton
         profile.set_active_profile("power-saver")
     })}
   popover={
-    <popover>
+    <Gtk.Popover>
       <Gtk.Box
         cssClasses={["linked"]}
         orientation={Gtk.Orientation.VERTICAL}>
@@ -37,7 +37,7 @@ export default () => <Adw.SplitButton
             label="Performance" />
         </Gtk.Button>
       </Gtk.Box>
-    </popover> as Gtk.Popover}>
+    </Gtk.Popover> as Gtk.Popover}>
   <Adw.ButtonContent
     iconName={createBinding(profile, "iconName")}
     label={createBinding(profile, "activeProfile")(p =>

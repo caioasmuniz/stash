@@ -1,5 +1,5 @@
 import Wireplumber from "gi://AstalWp"
-import { createBinding } from "ags"
+import { createBinding } from "gnim"
 import { AudioEndpointControl } from "../common/audioControl"
 
 const audio = Wireplumber.get_default()!.audio

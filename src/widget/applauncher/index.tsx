@@ -1,11 +1,14 @@
-import Astal from "gi://Astal?version=4.0";
+import Apps from "gi://AstalApps"
 import Hyprland from "gi://AstalHyprland"
+import Astal from "gi://Astal?version=4.0";
 import Gtk from "gi://Gtk?version=4.0";
 import Apps from "gi://AstalApps"
 import { App } from "../../App"
 import { createBinding, createState, For } from "gnim";
 import AppButton from "./appButton";
 import Settings from "../../lib/settings";
+
+import App from "ags/gtk4/app";
 
 const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
 
@@ -43,7 +46,7 @@ export default (
     application={App}
     visible={visible(v => v.applauncher)}
     cssClasses={["applauncher", "background"]}
-    keymode={Astal.Keymode.EXCLUSIVE}
+    keymode={Astal.Keymode.ON_DEMAND}
     monitor={createBinding(hyprland, "focusedMonitor")(m => m.id)}
     anchor={createBinding(settings.bar, "position")
       (p => TOP | (p === RIGHT ? RIGHT : LEFT) | BOTTOM)}

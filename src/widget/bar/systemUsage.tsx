@@ -1,9 +1,11 @@
-import { exec, execAsync } from "ags/process";
-import { Accessor, createState } from "ags";
-import { createPoll } from "ags/time";
-import { Gdk, Gtk } from "ags/gtk4";
 import GTop from "gi://GTop";
 import Settings from "../../lib/settings";
+import Gtk from "gi://Gtk?version=4.0";
+import Gdk from "gi://Gdk?version=4.0";
+import AstalIO from "gi://AstalIO?version=0.1";
+import { Accessor, createState } from "gnim";
+
+import { createPoll } from "ags/time";
 
 export default ({ vertical }: { vertical: boolean }) => {
   const settings = Settings.get_default()
@@ -37,7 +39,7 @@ export default ({ vertical }: { vertical: boolean }) => {
   const temp = createPoll(0, INTERVAL, () => {
     if (settings.bar.tempPath)
       return parseInt(
-        exec(`cat ${settings.bar.tempPath}`)
+       AstalIO.Process.exec(`cat ${settings.bar.tempPath}`)
       ) / 100000
     else
       return -1
@@ -81,7 +83,7 @@ export default ({ vertical }: { vertical: boolean }) => {
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     onClicked={() =>
       settings.bar.systemMonitor ?
-        execAsync([settings.bar.systemMonitor]) : null}
+       AstalIO.Process.exec_async(settings.bar.systemMonitor) : null}
     cssClasses={["pill", "sys-usage"]}>
     <Gtk.Box
       hexpand={vertical}

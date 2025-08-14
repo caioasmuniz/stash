@@ -1,7 +1,7 @@
 import Mpris from "gi://AstalMpris";
 import Apps from "gi://AstalApps"
-import { For, createBinding } from "ags";
-import { Astal, Gtk } from "ags/gtk4";
+import Gtk from "gi://Gtk?version=4.0";
+import { For, createBinding } from "gnim";
 
 const mpris = Mpris.get_default();
 const apps = new Apps.Apps()
@@ -13,29 +13,89 @@ function lengthStr(length: number) {
   return `${min}:${sec0}${sec}`;
 }
 
-const PlaybackButtons = ({ player }: { player: Mpris.Player }) => <Gtk.Box>
-  <Gtk.Button
-    onClicked={() => player.previous()}
-    visible={player.canGoPrevious}>
-    <Gtk.Image iconName={"media-skip-backwiconNameard-symbolic"} />
-  </Gtk.Button>
+const PlayerApp = ({ player }: { player: Mpris.Player }) =>
+  <box
+    halign={Gtk.Align.START}
+    spacing={4}>
+    <image
+      cssClasses={["icon"]}
+      hexpand
+      tooltipText={createBinding(player, "identity")
+        .as(id => id || "")}
+      iconName={createBinding(player, "entry")
+        .as(entry => apps.exact_query(entry)[0]!.iconName)} />
+    <label label={createBinding(player, "identity")
+      .as(id => id || "")} />
+  </box>
 
-  <Gtk.Button
-    onClicked={() =>
-      player.playbackStatus === Mpris.PlaybackStatus.PAUSED
-        ? player.play() : player.pause()}>
-    <Gtk.Image
-      iconName={createBinding(player, "playbackStatus")
-        (s => s === Mpris.PlaybackStatus.PLAYING
-          ? "media-playback-pause-symbolic"
-          : "media-playback-start-symbolic")} />
-  </Gtk.Button>
-  <Gtk.Button
-    onClicked={() => player.next()}
-    visible={player.canGoNext}>
-    <Gtk.Image iconName={"media-skip-forward-symbolic"} />
-  </Gtk.Button>
-</Gtk.Box>
+const CoverArt = ({ player }: { player: Mpris.Player }) =>
+  <image
+    file={createBinding(player, "coverArt")}
+    cssClasses={["thumbnail"]}
+    hexpand
+  />
+
+const TitleArtist = ({ player }: { player: Mpris.Player }) =>
+  <box
+    orientation={Gtk.Orientation.VERTICAL}
+    hexpand>
+    <label
+      wrap
+      maxWidthChars={10}
+      cssClasses={["heading"]}
+      label={createBinding(player, "title")}
+    />
+    <label
+      cssClasses={["artist"]}
+      label={createBinding(player, "artist")} />
+  </box>
+
+const PlaybackButtons = ({ player }: { player: Mpris.Player }) =>
+  <box>
+    <button
+      onClicked={() => player.previous()}
+      visible={player.canGoPrevious}>
+      <image iconName={"media-skip-backwiconNameard-symbolic"} />
+    </button>
+
+    <button
+      onClicked={() =>
+        player.playbackStatus === Mpris.PlaybackStatus.PAUSED
+          ? player.play() : player.pause()}>
+      <image
+        iconName={createBinding(player, "playbackStatus")
+          (s => s === Mpris.PlaybackStatus.PLAYING
+            ? "media-playback-pause-symbolic"
+            : "media-playback-start-symbolic")} />
+    </button>
+    <button
+      onClicked={() => player.next()}
+      visible={player.canGoNext}>
+      <image iconName={"media-skip-forward-symbolic"} />
+    </button>
+  </box>
+
+const PlaybackStatus = ({ player }: { player: Mpris.Player }) =>
+  <box orientation={Gtk.Orientation.VERTICAL}>
+    <slider
+      cssClasses={["position"]}
+      drawValue={false}
+      onNotifyValue={({ value }) =>
+        player.position = value}
+      min={0}
+      max={createBinding(player, "length")}
+      visible={createBinding(player, "canSeek")}
+      value={createBinding(player, "position")} />
+    <centerbox>
+      <label $type="start"
+        label={createBinding(player, "position")
+          .as(lengthStr)} />
+      <PlaybackButtons $type="center" player={player} />
+      <label $type="end"
+        label={createBinding(player, "length")
+          .as(lengthStr)} />
+    </centerbox>
+  </box>
 
 export default () => <Gtk.Box
   orientation={Gtk.Orientation.VERTICAL}
@@ -47,42 +107,12 @@ export default () => <Gtk.Box
         cssClasses={["media"]}
         orientation={Gtk.Orientation.VERTICAL}
         hexpand>
+        <PlayerApp player={player} />
         <Gtk.Box>
-          <Gtk.Image
-            file={player.coverArt}
-            cssClasses={["thumbnail"]}
-            hexpand
-          />
-          <Gtk.Label
-            wrap
-            maxWidthChars={10}
-            cssClasses={["heading"]}
-            label={createBinding(player, "title")} />
-          <Gtk.Image
-            cssClasses={["icon"]}
-            hexpand
-            tooltipText={createBinding(player, "identity")
-              (id => id || "")}
-            iconName={createBinding(player, "entry")
-              (entry => apps.exact_query(entry)[0]!.iconName)} />
+          <CoverArt player={player} />
+          <TitleArtist player={player} />
         </Gtk.Box>
-        <Gtk.Label
-          cssClasses={["artist"]}
-          label={createBinding(player, "artist")} />
-        <Astal.Slider
-          cssClasses={["position"]}
-          drawValue={false}
-          // onDragged={({ value }) => player.position = value}
-          min={0}
-          max={createBinding(player, "length")}
-          visible={createBinding(player, "canSeek")}
-          value={createBinding(player, "position")} />
-        <Gtk.CenterBox>
-          <Gtk.Label
-            label={createBinding(player, "position")(lengthStr)} />
-          <PlaybackButtons player={player} />
-          <Gtk.Label label={createBinding(player, "length")(lengthStr)} />
-        </Gtk.CenterBox>
+        <PlaybackStatus player={player} />
       </Gtk.Box>
     }
   </For>
