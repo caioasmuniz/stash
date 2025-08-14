@@ -71,7 +71,7 @@ export default ({ monitor, vertical }:
         </For>
         <With value={createBinding(ws, "clients").as(c => c.length < 1)}>
           {(c) => c ?
-            <Adw.Toggle iconName={""} /> : null}
+            <Adw.Toggle /> : null}
         </With>
       </Adw.ToggleGroup>}
     </For>
