@@ -4,7 +4,7 @@ import Network from "gi://AstalNetwork"
 import Batery from "gi://AstalBattery"
 import Wireplumber from "gi://AstalWp"
 import PowerProf from "gi://AstalPowerProfiles"
-import { Accessor, createBinding } from "ags"
+import { Accessor, createBinding, createComputed } from "ags"
 import { Gtk, Gdk } from "ags/gtk4"
 import App from "ags/gtk4/app"
 
@@ -32,12 +32,19 @@ const BluetoothIndicator = () => <image
     .as(adapter => adapter && adapter.powered)
   } />
 
-const NetworkIndicator = () => <image
-  iconName={createBinding(network, "primary")(primary =>
-    network[(primary === Network.Primary.WIRED ?
-      "wired" : "wifi")].iconName)}
-  visible={createBinding(network, "primary")
-    (p => p !== Network.Primary.UNKNOWN)} />
+const NetworkIndicator = () => {
+  const icon = createComputed([
+    createBinding(network, "primary"),
+    createBinding(network, "wifi"),
+    createBinding(network, "wired")],
+    (primary, wifi, wired) =>
+      primary === Network.Primary.WIFI ?
+        wifi.iconName : wired.iconName)
+  return <image
+    iconName={icon}
+    visible={createBinding(network, "primary")
+      (p => p !== Network.Primary.UNKNOWN)} />
+}
 
 const AudioIndicator = () => <image
   iconName={createBinding(audio.default_speaker, "volume_icon")}
@@ -70,8 +77,8 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) =>
         flags={Gtk.EventControllerScrollFlags.VERTICAL}
         onScroll={(self, dx, dy) => {
           dy > 0 ?
-          audio.default_speaker.volume -= 0.025 :
-          audio.default_speaker.volume += 0.025
+            audio.default_speaker.volume -= 0.025 :
+            audio.default_speaker.volume += 0.025
         }}
       /> as Gtk.EventController)}>
     <box
