@@ -1,14 +1,15 @@
 import Apps from "gi://AstalApps"
 import Gtk from "gi://Gtk?version=4.0";
 import Gdk from "gi://Gdk?version=4.0";
-import { App } from "../../../App";
+
+// import { App } from "App";
 
 export default ({ app }: { app: Apps.Application }) =>
   <Gtk.Button
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     cssClasses={["app-button"]}
     onClicked={() => {
-      App.get_window("applauncher")!.hide()
+      // App.get_window("applauncher")!.hide()
       app.launch();
     }}>
     <Gtk.Box spacing={8}>

@@ -2,49 +2,46 @@ import Apps from "gi://AstalApps"
 import Hyprland from "gi://AstalHyprland"
 import Astal from "gi://Astal?version=4.0";
 import Gtk from "gi://Gtk?version=4.0";
-import Apps from "gi://AstalApps"
-import { App } from "../../../App"
+import { Adw } from "gi://Adw?version=1";
 import { createBinding, createState, For } from "gnim";
 import AppButton from "./appButton";
 import { useSettings } from "../../lib/settings";
 
-import App from "ags/gtk4/app";
-
 const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
 
-export default (
-  [visible, SetVisible]: State<{
-    applauncher: boolean,
-    quicksettings: boolean
-  }>) => {
+export default ({ app, $ }:
+  { app: Adw.Application, $: (self: Astal.Window) => void }
+) => {
   const barCfg = useSettings().bar
   const hyprland = Hyprland.get_default()
   const apps = new Apps.Apps()
 
-  const [list, setList] = createState(apps.list)
+  const [list, setList] = createState(apps.get_list())
 
   const searchEntry = new Gtk.Entry()
 
   return <Astal.Window
-    onNotifyVisible={(self: Astal.Window) => {
-      if (self.visible)
-        searchEntry.grab_focus()
-      else
-        searchEntry.set_text("")
-      SetVisible({
-        applauncher: self.visible,
-        quicksettings: self.visible &&
-          (barCfg.position.get() === LEFT ||
-            barCfg.position.get() === RIGHT) ?
-          false :
-          visible.get().quicksettings
-      })
-    }}
+    // onNotifyVisible={(self: Astal.Window) => {
+    //   if (self.visible)
+    //     searchEntry.grab_focus()
+    //   else
+    //     searchEntry.set_text("")
+    //   SetVisible({
+    //     applauncher: self.visible,
+    //     quicksettings: self.visible &&
+    //       (barCfg.position.get() === LEFT ||
+    //         barCfg.position.get() === RIGHT) ?
+    //       false :
+    //       visible.get().quicksettings
+    //   })
+    // }}
+    $={$}
     valign={Gtk.Align.CENTER}
     name={"applauncher"}
     margin={12}
-    application={App}
-    visible={visible(v => v.applauncher)}
+    application={app}
+    // visible={visible(v => v.applauncher)}
+    visible={false}
     cssClasses={["applauncher", "background"]}
     keymode={Astal.Keymode.ON_DEMAND}
     monitor={createBinding(hyprland, "focusedMonitor")(m => m.id)}
@@ -63,7 +60,7 @@ export default (
           apps.fuzzy_query(self.text)
         )}
         onActivate={self => {
-          App.get_window("applauncher")!.hide()
+          // App.get_window("applauncher")!.hide()
           apps.fuzzy_query(self.text)[0].launch();
         }} />
       <Gtk.ScrolledWindow

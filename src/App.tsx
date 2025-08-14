@@ -5,10 +5,12 @@ import { createRoot } from "gnim";
 import { register } from "gnim/gobject"
 import { initSettings, SettingsContext } from "lib/settings";
 import Osd from "./widget/osd"
+import Applauncher from "widget/applauncher";
 
 @register()
 export class App extends Adw.Application {
   declare private osd: Astal.Window
+  declare private applauncher: Astal.Window
 
   constructor() {
     super({
@@ -21,9 +23,14 @@ export class App extends Adw.Application {
     createRoot((dispose) => {
       this.connect("shutdown", dispose)
       return <SettingsContext value={initSettings()}>
-        {() =>
-          <Osd app={this} $={(self) => (this.osd = self).present()} />
-        }
+        {() => <>
+          <Osd app={this}
+            $={(self) => (this.osd = self).present()}
+          />
+          <Applauncher app={this}
+            $={(self) => (this.applauncher = self).present()}
+          />
+        </>}
       </SettingsContext>
     })
   }
