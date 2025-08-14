@@ -39,7 +39,7 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) => {
   const temp = createPoll(0, INTERVAL, () => {
     if (settings.bar.tempPath.get())
       return parseInt(
-       AstalIO.Process.exec(`cat ${settings.bar.tempPath}`)
+       AstalIO.Process.exec(`cat ${settings.bar.tempPath.get()}`)
       ) / 100000
     else
       return -1
