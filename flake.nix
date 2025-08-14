@@ -50,6 +50,7 @@
           libadwaita
           libgtop
           gtk4
+          gtk4-layer-shell
           gjs
           esbuild
           nodejs
@@ -88,7 +89,7 @@
       };
 
       devShells.${system}.default = pkgs.mkShell {
-
+        LD_PRELOAD = "${pkgs.gtk4-layer-shell}/lib/libgtk4-layer-shell.so";
         ENV = "dev";
         inherit nativeBuildInputs;
         buildInputs =
