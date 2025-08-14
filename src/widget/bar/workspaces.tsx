@@ -3,7 +3,7 @@ import Apps from "gi://AstalApps"
 import Adw from "gi://Adw?version=1"
 import Gtk from "gi://Gtk?version=4.0"
 
-import { createBinding, For } from "gnim"
+import { createBinding, For, Accessor, With } from "gnim"
 
 const hyprland = Hyprland.get_default()
 
@@ -27,12 +27,12 @@ const getIcon = (client: Hyprland.Client) => {
 }
 
 export default ({ monitor, vertical }:
-  { monitor: Hyprland.Monitor, vertical: boolean }) =>
+  { monitor: Hyprland.Monitor, vertical: Accessor<boolean> }) =>
   <Gtk.Box
-    orientation={vertical ?
+    orientation={vertical.as(v => v ?
       Gtk.Orientation.VERTICAL :
-      Gtk.Orientation.HORIZONTAL}
-    spacing={4}>
+      Gtk.Orientation.HORIZONTAL)}
+    spacing={8}>
     <For each={createBinding(hyprland, "workspaces")
       (ws => ws
         .filter(ws => ws.monitor === monitor)
@@ -40,9 +40,9 @@ export default ({ monitor, vertical }:
       )
     }>
       {(ws: Hyprland.Workspace) => <Adw.ToggleGroup
-        orientation={vertical ?
+        orientation={vertical.as(v => v ?
           Gtk.Orientation.VERTICAL :
-          Gtk.Orientation.HORIZONTAL}
+          Gtk.Orientation.HORIZONTAL)}
         cssClasses={["round", "ws-toggle",
           ws.id < 0 ? "special" : ""]}
         onNotifyActive={self => {
@@ -68,9 +68,12 @@ export default ({ monitor, vertical }:
             <Adw.Toggle
               name={client.address}
               iconName={getIcon(client)}
-            />
-          }
+            />}
         </For>
+        <With value={createBinding(ws, "clients").as(c => c.length < 1)}>
+          {(c) => c ?
+            <Adw.Toggle /> : null}
+        </With>
       </Adw.ToggleGroup>}
     </For>
   </Gtk.Box >

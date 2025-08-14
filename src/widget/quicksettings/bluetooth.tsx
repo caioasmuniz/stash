@@ -5,8 +5,6 @@ import { createBinding, For } from "gnim"
 
 const bluetooth = AstalBluetooth.get_default()
 
-print(bluetooth.devices)
-
 export default () => <Adw.SplitButton
   widthRequest={150}
   $={self => {

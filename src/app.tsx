@@ -4,6 +4,8 @@ import osd from "./widget/osd";
 import applauncher from "./widget/applauncher";
 import quicksettings from "./widget/quicksettings";
 import notificationPopup from "./widget/notifications";
+import { initSettings, SettingsContext } from "./lib/settings";
+import settings from "./widget/settings";
 import style from "./style.scss";
 
 import App from "ags/gtk4/app"
@@ -17,11 +19,16 @@ App.start({
   css: style,
   instanceName: "stash",
   main() {
-    notificationPopup();
-    quicksettings(visible);
-    applauncher(visible);
-    osd();
-    bar();
+    <SettingsContext value={initSettings()}>
+      {() => <>
+        {notificationPopup()}
+        {quicksettings(visible)}
+        {applauncher(visible)}
+        {osd()}
+        {bar()}
+        {settings()}
+      </>}
+    </SettingsContext>
   },
   client(message: (msg: string) => string, ...args: Array<string>) {
     if (args[0] === "toggle") {

@@ -1,8 +1,8 @@
-import Hyprland from "gi://AstalHyprland";
+import Hyprland from "gi://AstalHyprland"
 import Astal from "gi://Astal?version=4.0";
 import Gtk from "gi://Gtk?version=4.0";
 import AstalIO from "gi://AstalIO?version=0.1";
-import { createBinding, State } from "gnim";
+import { Accessor, createBinding, State } from "gnim";
 import { Slider } from "../common/slider";
 import NotificationList from "./notificationList";
 import PwrProf from "./powerprofiles";
@@ -12,61 +12,72 @@ import { AudioConfig, MicConfig } from "./audioConfig";
 import Media from "./media";
 import Battery from "./battery";
 import Bluetooth from "./bluetooth";
-import Settings from "../../lib/settings";
 import Brightness from "../../lib/brightness";
+import { useSettings } from "../../lib/settings";
 
 import App from "ags/gtk4/app";
 
-const brightness = Brightness.get_default();
-
-const settings = Settings.get_default()
-const hyprland = Hyprland.get_default()
-const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
-
-const Lock = () => (
-  <Gtk.Button
-    cssClasses={["circular"]}
-    onClicked={() => {
-      AstalIO.Process.exec_asyncv(["bash", "-c", "hyprlock --immediate"]);
-    }}
-  >
-    <Gtk.Image iconName={"system-lock-screen-symbolic"} />
-  </Gtk.Button>
-);
-
-const Poweroff = () => (
-  <Gtk.Button
-    cssClasses={["circular", "destructive-action"]}
-    onClicked={() => {
-      AstalIO.Process.exec_asyncv(["bash", "-c", "systemctl poweroff"]);
-    }}
-  >
-    <Gtk.Image iconName={"system-shutdown-symbolic"} />
-  </Gtk.Button>
-);
-
-const RotateButton = () => <Gtk.Button
-  onClicked={() => {
-    if (settings.bar.position > 8)
-      settings.bar.position = 2
-    else
-      settings.bar.position *= 2
-  }}
-  cssClasses={["circular"]}
->
-  <Gtk.Image iconName={"object-rotate-right-symbolic"} />
-</Gtk.Button>
 export default ([visible, setVisible]: State<{
   applauncher: boolean,
   quicksettings: boolean
 }>) => {
+  const brightness = Brightness.get_default();
+
+  const barCfg = useSettings().bar
+  const hyprland = Hyprland.get_default()
+  const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
+
+  const Lock = () => (
+    <Gtk.Button
+      cssClasses={["circular"]}
+      onClicked={() => {
+        AstalIO.Process.exec_asyncv(["bash", "-c", "hyprlock --immediate"]);
+      }}
+    >
+      <Gtk.Image iconName={"system-lock-screen-symbolic"} />
+    </Gtk.Button>
+  );
+
+  const Poweroff = () => (
+    <Gtk.Button
+      cssClasses={["circular", "destructive-action"]}
+      onClicked={() => {
+        AstalIO.Process.exec_asyncv(["bash", "-c", "systemctl poweroff"]);
+      }}
+    >
+      <Gtk.Image iconName={"system-shutdown-symbolic"} />
+    </Gtk.Button>
+  );
+
+  const RotateButton = () => <Gtk.Button
+    onClicked={() => {
+      if ((barCfg.position as Accessor<any>).get() > 8)
+        barCfg.setPosition(2)
+      else
+        barCfg.setPosition(
+          (barCfg.position as Accessor<any>).get() * 2)
+    }}
+    cssClasses={["circular"]}
+  >
+    <Gtk.Image iconName={"object-rotate-right-symbolic"} />
+  </Gtk.Button>
+
+  const SettingsButton = () => <button
+    cssClasses={["circular"]}
+    onClicked={() => {
+      App.get_window("settings")!.visible = true;
+      App.get_window("quicksettings")!.visible = false;
+    }}>
+    <image iconName={"preferences-system-symbolic"} />
+  </button>
+
   return <Astal.Window
     onNotifyVisible={self => {
       setVisible({
         quicksettings: self.visible,
         applauncher: self.visible &&
-          (settings.bar.position === LEFT ||
-            settings.bar.position === RIGHT) ?
+          (barCfg.position.get() === LEFT ||
+            barCfg.position.get() === RIGHT) ?
           false :
           visible.get().applauncher
       })
@@ -77,7 +88,7 @@ export default ([visible, setVisible]: State<{
     application={App}
     name={"quicksettings"}
     cssClasses={["quicksettings", "background"]}
-    anchor={createBinding(settings.bar, "position")(p =>
+    anchor={barCfg.position.as(p =>
       TOP | (p === LEFT ? LEFT : RIGHT) | BOTTOM
     )}
     monitor={createBinding(hyprland, "focusedMonitor")
@@ -97,6 +108,7 @@ export default ([visible, setVisible]: State<{
       <Gtk.Box halign={Gtk.Align.CENTER} spacing={8}>
         <Tray />
         <Lock />
+        <SettingsButton />
         <RotateButton />
         <Poweroff />
       </Gtk.Box>

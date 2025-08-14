@@ -3,7 +3,7 @@ import Gio from "gi://Gio"
 import Astal from "gi://Astal?version=4.0";
 import { register } from "gnim/gobject"
 import { createContext, createRoot, createSettings } from "gnim"
-import { schema, SettingsContext } from "./settings"
+import { schema, SettingsContext } from "../settings"
 import Osd from "./widget/osd"
 
 @register()

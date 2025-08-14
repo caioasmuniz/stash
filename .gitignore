@@ -4,4 +4,4 @@ build/
 dist/
 @girs/
 .direnv
-
+result

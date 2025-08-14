@@ -76,6 +76,11 @@
           hash = "sha256-rfUXu8cU8/un7OhtLT3YhiPfEZMynBIEiRDZWW0TOAA=";
         };
 
+        postBuild = ''
+          install -Dm644 data/${pname}.gschema.xml -t $out/share/gsettings-schemas/$name/glib-2.0/schemas
+          glib-compile-schemas $out/share/gsettings-schemas/$name/glib-2.0/schemas
+        '';
+
         preFixup = ''
           gappsWrapperArgs+=(
             --prefix PATH : ${pkgs.lib.makeBinPath wrapperPackages}
@@ -89,8 +94,13 @@
       };
 
       devShells.${system}.default = pkgs.mkShell {
+        GSETTINGS_SCHEMA_DIR = "./data";
         LD_PRELOAD = "${pkgs.gtk4-layer-shell}/lib/libgtk4-layer-shell.so";
         ENV = "dev";
+        shellHook = ''
+          mkdir data
+          glib-compile-schemas data
+        '';
         inherit nativeBuildInputs;
         buildInputs =
           with pkgs;

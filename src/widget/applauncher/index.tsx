@@ -3,10 +3,10 @@ import Hyprland from "gi://AstalHyprland"
 import Astal from "gi://Astal?version=4.0";
 import Gtk from "gi://Gtk?version=4.0";
 import Apps from "gi://AstalApps"
-import { App } from "../../App"
+import { App } from "../../../App"
 import { createBinding, createState, For } from "gnim";
 import AppButton from "./appButton";
-import Settings from "../../lib/settings";
+import { useSettings } from "../../lib/settings";
 
 import App from "ags/gtk4/app";
 
@@ -17,7 +17,7 @@ export default (
     applauncher: boolean,
     quicksettings: boolean
   }>) => {
-  const settings = Settings.get_default()
+  const barCfg = useSettings().bar
   const hyprland = Hyprland.get_default()
   const apps = new Apps.Apps()
 
@@ -34,8 +34,8 @@ export default (
       SetVisible({
         applauncher: self.visible,
         quicksettings: self.visible &&
-          (settings.bar.position === LEFT ||
-            settings.bar.position === RIGHT) ?
+          (barCfg.position.get() === LEFT ||
+            barCfg.position.get() === RIGHT) ?
           false :
           visible.get().quicksettings
       })
@@ -48,8 +48,8 @@ export default (
     cssClasses={["applauncher", "background"]}
     keymode={Astal.Keymode.ON_DEMAND}
     monitor={createBinding(hyprland, "focusedMonitor")(m => m.id)}
-    anchor={createBinding(settings.bar, "position")
-      (p => TOP | (p === RIGHT ? RIGHT : LEFT) | BOTTOM)}
+    anchor={barCfg.position.as(p =>
+      TOP | (p === RIGHT ? RIGHT : LEFT) | BOTTOM)}
   >
     <Gtk.Box
       orientation={Gtk.Orientation.VERTICAL}

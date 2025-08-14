@@ -1,7 +1,7 @@
 import Apps from "gi://AstalApps"
 import Gtk from "gi://Gtk?version=4.0";
 import Gdk from "gi://Gdk?version=4.0";
-import { App } from "../../App";
+import { App } from "../../../App";
 
 export default ({ app }: { app: Apps.Application }) =>
   <Gtk.Button
