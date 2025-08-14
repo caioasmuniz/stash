@@ -1,4 +1,4 @@
-import { Accessor, createBinding, For } from "ags"
+import { Accessor, createBinding, For, With } from "ags"
 import { Gtk } from "ags/gtk4"
 import Hyprland from "gi://AstalHyprland"
 import Apps from "gi://AstalApps"
@@ -67,9 +67,12 @@ export default ({ monitor, vertical }:
             <Adw.Toggle
               name={client.address}
               iconName={getIcon(client)}
-            />
-          }
+            />}
         </For>
+        <With value={createBinding(ws, "clients").as(c => c.length < 1)}>
+          {(c) => c ?
+            <Adw.Toggle iconName={""} /> : null}
+        </With>
       </Adw.ToggleGroup>}
     </For>
   </box >
