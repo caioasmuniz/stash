@@ -172,6 +172,11 @@ window.bar {
 
   .ws-toggle {
     -gtk-icon-size: 24px;
+    
+    toggle {
+      min-width: 30px;
+      min-height: 30px;
+    }
 
     &.special {
       background: oklab(from var(--accent-bg-color) l a b / 0.25);
