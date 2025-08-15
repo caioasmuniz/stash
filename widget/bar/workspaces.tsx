@@ -45,30 +45,21 @@ export default ({ monitor, vertical }:
           Gtk.Orientation.HORIZONTAL)}
         cssClasses={["round", "ws-toggle",
           ws.id < 0 ? "special" : ""]}
-        onNotifyActive={self => {
-          if (hyprland.focusedClient && self.activeName !== null &&
-            hyprland.focusedClient.address !== self.activeName
-          )
-            hyprland.get_client(self.get_active_name() ?? "")
-              ?.focus()
-        }}
-        $={self => createBinding(hyprland, "focusedClient")
-          .subscribe(() => {
-            const f = hyprland.focusedClient
-            if (f) {
-              if (f.workspace === ws)
-                self.activeName = f.address
-              else
-                self.active = 128
-            }
-          })
-        }>
+        activeName={createBinding(hyprland, "focusedClient")
+          .as(c => c && c.workspace === ws ?
+            c.address :
+            null as unknown as string)}>
         <For each={createBinding(ws, "clients")}>
           {(client: Hyprland.Client) =>
             <Adw.Toggle
               name={client.address}
               iconName={getIcon(client)}
-            />}
+              child={<Gtk.Image
+                iconName={getIcon(client)}>
+                <Gtk.GestureClick
+                  onPressed={() =>
+                    client.focus()} />
+              </Gtk.Image> as Gtk.Widget} />}
         </For>
         <With value={createBinding(ws, "clients").as(c => c.length < 1)}>
           {(c) => c ?
