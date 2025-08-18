@@ -4,16 +4,19 @@ import Gtk from "gi://Gtk?version=4.0";
 import Gdk from "gi://Gdk?version=4.0";
 import AstalIO from "gi://AstalIO?version=0.1";
 import { Accessor, createState } from "gnim";
-import { createPoll } from "lib/utils";
 
 
 export default ({ vertical }: { vertical: Accessor<boolean> }) => {
   const settings = useSettings()
 
   const [lastCpuTop, setLastCpuTop] = createState(new GTop.glibtop_cpu())
+  const [cpu, setCpu] = createState(0)
+  const [memory, setMemory] = createState(0)
+  const [disk, setDisk] = createState(0)
+  const [temp, setTemp] = createState(0)
   const INTERVAL = 1000;
 
-  const cpu = createPoll(0, INTERVAL, () => {
+  setTimeout(() => {
     const cpuTop = new GTop.glibtop_cpu()
     GTop.glibtop_get_cpu(cpuTop);
     const total = cpuTop.total - lastCpuTop.get().total;
@@ -21,30 +24,24 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) => {
     const sys = cpuTop.sys - lastCpuTop.get().sys;
     const nice = cpuTop.nice - lastCpuTop.get().nice;
     setLastCpuTop(cpuTop)
-    return (user + sys + nice) / total;
-  })
+    setCpu((user + sys + nice) / total);
 
-  const memory = createPoll(0, INTERVAL, () => {
     const memTop = new GTop.glibtop_mem()
     GTop.glibtop_get_mem(memTop);
-    return memTop.user / memTop.total;
-  })
+    setMemory(memTop.user / memTop.total);
 
-  const disk = createPoll(0, INTERVAL, () => {
     const diskTop = new GTop.glibtop_fsusage()
     GTop.glibtop_get_fsusage(diskTop, "/");
-    return diskTop.bavail / diskTop.bfree;
-  })
+    setDisk(diskTop.bavail / diskTop.bfree);
 
-  const temp = createPoll(0, INTERVAL, () => {
     if (settings.bar.tempPath.get())
-      return parseInt(
-       AstalIO.Process.exec(`cat ${settings.bar.tempPath}`)
-      ) / 100000
+      setTemp(parseInt(
+        AstalIO.Process.exec(`cat ${settings.bar.tempPath}`)
+      ) / 100000)
     else
-      return -1
-  })
-
+      setTemp(-1)
+  }, INTERVAL)
+  
   const Indicator = ({ value, label, unit, vertical, visible = true }:
     {
       value: Accessor<number>,
@@ -83,7 +80,7 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) => {
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     onClicked={() =>
       settings.bar.systemMonitor ?
-       AstalIO.Process.exec_async((
+        AstalIO.Process.exec_async((
           settings.bar.systemMonitor as Accessor<any>)
           .get()
         ) : null}

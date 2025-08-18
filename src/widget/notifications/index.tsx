@@ -2,7 +2,6 @@ import Notifd from "gi://AstalNotifd";
 import Hyprland from "gi://AstalHyprland";
 import Astal from "gi://Astal?version=4.0";
 import Gtk from "gi://Gtk?version=4.0";
-import AstalIO from "gi://AstalIO?version=0.1";
 import { For, createBinding, createState, createComputed } from "gnim";
 import Notification from "../common/notification";
 
@@ -34,8 +33,8 @@ export default ({ app, $ }: {
       spacing={4}
       $={() => notifd.connect("notified",
         (self, id) => {
-          AstalIO.Time.timeout(5000, () =>
-            setNotifs(notifs.get().filter(n => id !== n.id)))
+          setTimeout(() =>
+            setNotifs(notifs.get().filter(n => id !== n.id)), 5000)
           setNotifs(notifs.get().concat(notifd.get_notification(id)))
         })}>
       <For each={notifs(n => n.reverse())}>

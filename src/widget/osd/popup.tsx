@@ -1,4 +1,3 @@
-import AstalIO from "gi://AstalIO?version=0.1"
 import GObject from "gi://GObject?version=2.0"
 import Gtk from "gi://Gtk?version=4.0"
 
@@ -19,12 +18,12 @@ export default ({ widget, connectable, signal }: {
         if (!self.revealChild) {
           self.visible = true
           self.revealChild = true
-          AstalIO.Time.timeout(TIMEOUT_MS, () => {
+          setTimeout(() => {
             self.revealChild = false
-            AstalIO.Time.timeout(200, () =>
+            setTimeout(() =>
               self.visible = false
-            )
-          })
+              , 200)
+          }, TIMEOUT_MS)
         }
       })
     }>
