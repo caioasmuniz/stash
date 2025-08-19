@@ -84,10 +84,8 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) => {
           settings.bar.systemMonitor as Accessor<any>)
           .get()
         ) : null}
-    cssClasses={["pill", "sys-usage"]}>
+    cssClasses={["circular", "sys-usage"]}>
     <Gtk.Box
-      hexpand={vertical}
-      vexpand={!vertical}
       orientation={vertical.as(v => v ?
         Gtk.Orientation.VERTICAL :
         Gtk.Orientation.HORIZONTAL)}

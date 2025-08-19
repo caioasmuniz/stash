@@ -19,8 +19,7 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) => {
     direction={vertical.as(v => v ?
       Gtk.ArrowType.RIGHT :
       Gtk.ArrowType.UP)}
-    hexpand={vertical}
-    cssClasses={["pill"]}
+    cssClasses={["circular"]}
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     popover={<Gtk.Popover
       valign={Gtk.Align.CENTER}

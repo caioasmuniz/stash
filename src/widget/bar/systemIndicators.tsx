@@ -71,7 +71,7 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) =>
   <Gtk.ToggleButton
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     cssClasses={vertical.as(v =>
-      ["pill", "sys-indicators", v ? "vert" : ""])}
+      ["circular", "sys-indicators", v ? "vert" : ""])}
     // active={createBinding(App.get_window("quicksettings")!, "visible")}
     // onClicked={() => App.toggle_window("quicksettings")}
     $={self => self.add_controller(

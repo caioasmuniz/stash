@@ -58,11 +58,7 @@ export default ({ app, $ }: {
         cssClasses={["linked"]}
         orientation={vertical.as(v => v ?
           Gtk.Orientation.VERTICAL :
-          Gtk.Orientation.HORIZONTAL)}
-        valign={vertical.as(v => v ?
-          Gtk.Align.END : Gtk.Align.FILL)}
-        halign={vertical.as(v => v ?
-          Gtk.Align.FILL : Gtk.Align.END)} >
+          Gtk.Orientation.HORIZONTAL)}>
         <Clock vertical={vertical} />
         <Gtk.Separator />
         <SystemIndicators vertical={vertical} />
