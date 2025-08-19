@@ -1,7 +1,7 @@
-import { register, Object, getter, setter } from "ags/gobject";
-import { exec, execAsync } from "ags/process";
+import AstalIO from "gi://AstalIO?version=0.1";
+import { register, Object, getter, setter } from "gnim/gobject";
 
-const get = () => exec(`darkman get`);
+const get = () => AstalIO.Process.exec(`darkman get`);
 
 @register({ GTypeName: "Darkman" })
 export default class Darkman extends Object {
@@ -23,7 +23,7 @@ export default class Darkman extends Object {
 
   @setter(String)
   set mode(mode) {
-    execAsync(`darkman set ${mode}`).then(() => {
+    AstalIO.Process.exec_async(`darkman set ${mode}`, () => {
       this.#mode = mode;
       this.notify("mode");
     });
