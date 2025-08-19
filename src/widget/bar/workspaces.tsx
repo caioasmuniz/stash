@@ -34,7 +34,7 @@ export default ({ monitor, vertical }:
       Gtk.Orientation.HORIZONTAL)}
     spacing={8}>
     <For each={createBinding(hyprland, "workspaces")
-      (ws => ws
+      .as(ws => ws
         .filter(ws => ws.monitor === monitor)
         .sort((a, b) => a.id - b.id)
       )

@@ -7,7 +7,7 @@ const darkman = Darkman.get_default()
 
 export default () => <Adw.SplitButton
   popover={
-    <popover>
+    <Gtk.Popover>
       <Gtk.Box
         orientation={Gtk.Orientation.VERTICAL}
         cssClasses={["linked"]}>
@@ -22,12 +22,13 @@ export default () => <Adw.SplitButton
             label="Dark Mode" />
         </Gtk.Button>
       </Gtk.Box>
-    </popover> as Gtk.Popover}
+    </Gtk.Popover> as Gtk.Popover}
   widthRequest={150}
   $={self =>
     self.connect("clicked", () => {
-      darkman.mode === "light" ?
-        darkman.mode = "dark" :
+      if (darkman.mode === "light")
+        darkman.mode = "dark"
+      else
         darkman.mode = "light"
     })}>
   <Adw.ButtonContent

@@ -62,14 +62,14 @@ export default ([visible, setVisible]: State<{
     <Gtk.Image iconName={"object-rotate-right-symbolic"} />
   </Gtk.Button>
 
-  const SettingsButton = () => <button
+  const SettingsButton = () => <Gtk.Button
     cssClasses={["circular"]}
     onClicked={() => {
-      App.get_window("settings")!.visible = true;
-      App.get_window("quicksettings")!.visible = false;
+      // App.get_window("settings")!.visible = true;
+      // App.get_window("quicksettings")!.visible = false;
     }}>
-    <image iconName={"preferences-system-symbolic"} />
-  </button>
+    <Gtk.Image iconName={"preferences-system-symbolic"} />
+  </Gtk.Button>
 
   return <Astal.Window
     onNotifyVisible={self => {

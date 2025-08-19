@@ -19,10 +19,10 @@ const bluetooth = Bluetooth.get_default()
 
 const ProfileIndicator = () => <Gtk.Image
   visible={createBinding(powerprof, "activeProfile")
-    (p => p !== "balanced")}
+    .as(p => p !== "balanced")}
   iconName={createBinding(powerprof, "iconName")}
   tooltipMarkup={createBinding(powerprof, "active_profile")
-    (String)} />
+    .as(String)} />
 
 const DNDIndicator = () => <Gtk.Image
   visible={createBinding(notifd, "dontDisturb")}

@@ -16,7 +16,7 @@ export default () => <Adw.SplitButton
     })
   }}
   popover={
-    <popover>
+    <Gtk.Popover>
       <Gtk.Box cssClasses={["linked"]}
         orientation={Gtk.Orientation.VERTICAL}>
         <For each={createBinding(bluetooth, "devices")}>
@@ -36,20 +36,20 @@ export default () => <Adw.SplitButton
             })}>
               <Adw.ButtonContent
                 cssClasses={createBinding(device, 'connected')
-                  (connected => connected ? ["connected"] : [])}
+                  .as(connected => connected ? ["connected"] : [])}
                 iconName={device.icon}
                 label={device.name} />
             </Gtk.Button>
           )}
         </For>
       </Gtk.Box>
-    </ popover> as Gtk.Popover}>
+    </ Gtk.Popover> as Gtk.Popover}>
   <Adw.ButtonContent
     iconName={createBinding(bluetooth, "isPowered")
-      (isPowered => isPowered ?
+      .as(isPowered => isPowered ?
         "bluetooth-symbolic" :
         "bluetooth-disabled-symbolic"
       )}
     label={createBinding(bluetooth, "isPowered")
-      (isPowered => isPowered ? "Bluetooth" : "Bluetooth Off")} />
+      .as(isPowered => isPowered ? "Bluetooth" : "Bluetooth Off")} />
 </Adw.SplitButton>
