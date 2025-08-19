@@ -16,7 +16,7 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) => {
   const [temp, setTemp] = createState(0)
   const INTERVAL = 1000;
 
-  setTimeout(() => {
+  setInterval(() => {
     const cpuTop = new GTop.glibtop_cpu()
     GTop.glibtop_get_cpu(cpuTop);
     const total = cpuTop.total - lastCpuTop.get().total;

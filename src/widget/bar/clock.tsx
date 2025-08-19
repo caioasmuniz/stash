@@ -1,18 +1,19 @@
 import GLib from "gi://GLib"
 import Gtk from "gi://Gtk?version=4.0"
 import Gdk from "gi://Gdk?version=4.0"
-import { Accessor } from "gnim"
-import { createPoll } from "lib/utils"
+import { Accessor, createState } from "gnim"
 
 export default ({ vertical }: { vertical: Accessor<boolean> }) => {
-  const day = createPoll("", 1000, () =>
-    GLib.DateTime.new_now_local().get_day_of_month().toString())
-  const month = createPoll("", 1000, () =>
-    GLib.DateTime.new_now_local().format("%b")!)
-  const hour = createPoll("", 1000, () =>
-    GLib.DateTime.new_now_local().format("%H")!)
-  const minute = createPoll("", 1000, () =>
-    GLib.DateTime.new_now_local().format("%M")!)
+
+  const [time, setTime] = createState(new GLib.DateTime)
+  setInterval(() => {
+    setTime(GLib.DateTime.new_now_local())
+  }, 1000);
+
+  const day = time.as(t => t.get_day_of_month().toString())
+  const month = time.as(t => t.format("%b")!)
+  const hour = time.as(t => t.format("%H")!)
+  const minute = time.as(t => t.format("%M")!)
 
   return <Gtk.MenuButton
     direction={vertical.as(v => v ?
