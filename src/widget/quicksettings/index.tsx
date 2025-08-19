@@ -2,7 +2,7 @@ import Hyprland from "gi://AstalHyprland"
 import Astal from "gi://Astal?version=4.0";
 import Gtk from "gi://Gtk?version=4.0";
 import AstalIO from "gi://AstalIO?version=0.1";
-import { Accessor, createBinding, State } from "gnim";
+import { Accessor, createBinding } from "gnim";
 import { Slider } from "../common/slider";
 import NotificationList from "./notificationList";
 import PwrProf from "./powerprofiles";
@@ -15,12 +15,10 @@ import Bluetooth from "./bluetooth";
 import Brightness from "../../lib/brightness";
 import { useSettings } from "../../lib/settings";
 
-import App from "ags/gtk4/app";
-
-export default ([visible, setVisible]: State<{
-  applauncher: boolean,
-  quicksettings: boolean
-}>) => {
+export default ({ app, $ }: {
+  app: Gtk.Application
+  $?: (self: Astal.Window) => void
+}) => {
   const brightness = Brightness.get_default();
 
   const barCfg = useSettings().bar
@@ -72,27 +70,18 @@ export default ([visible, setVisible]: State<{
   </Gtk.Button>
 
   return <Astal.Window
-    onNotifyVisible={self => {
-      setVisible({
-        quicksettings: self.visible,
-        applauncher: self.visible &&
-          (barCfg.position.get() === LEFT ||
-            barCfg.position.get() === RIGHT) ?
-          false :
-          visible.get().applauncher
-      })
-    }}
+    $={$}
     valign={Gtk.Align.FILL}
     margin={12}
-    visible={visible(v => v.quicksettings)}
-    application={App}
+    // visible={visible(v => v.quicksettings)}
+    application={app}
     name={"quicksettings"}
     cssClasses={["quicksettings", "background"]}
     anchor={barCfg.position.as(p =>
       TOP | (p === LEFT ? LEFT : RIGHT) | BOTTOM
     )}
     monitor={createBinding(hyprland, "focusedMonitor")
-      (m => m.id)}>
+      .as(m => m.id)}>
     <Gtk.Box
       cssClasses={["quicksettings-body"]}
       orientation={Gtk.Orientation.VERTICAL}
@@ -117,7 +106,7 @@ export default ([visible, setVisible]: State<{
         min={0}
         max={100}
         value={createBinding(brightness, "screen")
-          ((v) => v * 100)}
+          .as((v) => v * 100)}
         setValue={(value) => (
           brightness.set({ screen: value / 100 }))}
       />

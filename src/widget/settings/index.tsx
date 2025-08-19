@@ -1,12 +1,13 @@
 import Adw from "gi://Adw?version=1";
 import Gtk from "gi://Gtk?version=4.0";
-import General from "./general";
 import Bar from "./bar";
 
-import app from "ags/gtk4/app";
-
-export default () => {
+export default ({ app, $ }: {
+  app: Gtk.Application
+  $?: (self: Adw.Window) => void
+}) => {
   return <Adw.Window
+    $={$}
     hideOnClose
     name={"settings"}
     application={app}

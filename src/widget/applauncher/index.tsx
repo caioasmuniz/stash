@@ -41,7 +41,6 @@ export default ({ app, $ }:
     margin={12}
     application={app}
     // visible={visible(v => v.applauncher)}
-    visible={false}
     cssClasses={["applauncher", "background"]}
     keymode={Astal.Keymode.ON_DEMAND}
     monitor={createBinding(hyprland, "focusedMonitor")(m => m.id)}
