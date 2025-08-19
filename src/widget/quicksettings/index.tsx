@@ -14,9 +14,10 @@ import Battery from "./battery";
 import Bluetooth from "./bluetooth";
 import Brightness from "../../lib/brightness";
 import { useSettings } from "../../lib/settings";
+import { App } from "App";
 
 export default ({ app, $ }: {
-  app: Gtk.Application
+  app: App
   $?: (self: Astal.Window) => void
 }) => {
   const brightness = Brightness.get_default();
@@ -63,8 +64,8 @@ export default ({ app, $ }: {
   const SettingsButton = () => <Gtk.Button
     cssClasses={["circular"]}
     onClicked={() => {
-      // App.get_window("settings")!.visible = true;
-      // App.get_window("quicksettings")!.visible = false;
+      app.settings.visible = true;
+      app.quicksettings.visible = false;
     }}>
     <Gtk.Image iconName={"preferences-system-symbolic"} />
   </Gtk.Button>

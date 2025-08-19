@@ -13,12 +13,12 @@ import Settings from "widget/settings";
 
 @register()
 export class App extends Adw.Application {
-  declare private osd: Astal.Window
-  declare private applauncher: Astal.Window
-  declare private notifications: Astal.Window
-  declare private bar: Astal.Window
-  declare private quicksettings: Astal.Window
-  declare private settings: Adw.Window
+  declare osd: Astal.Window
+  declare applauncher: Astal.Window
+  declare notifications: Astal.Window
+  declare bar: Astal.Window
+  declare quicksettings: Astal.Window
+  declare settings: Adw.Window
 
   constructor() {
     super({
@@ -27,31 +27,30 @@ export class App extends Adw.Application {
     })
   }
 
-  vfunc_activate(): void {
+  vfunc_startup(): void {
+    super.vfunc_startup()
     createRoot((dispose) => {
       this.connect("shutdown", dispose)
       return <SettingsContext value={initSettings()}>
         {() => <>
           <Osd app={this}
-            $={(self) => (this.osd = self).present()}
-          />
+            $={(self) => (this.osd = self)} />
           <Applauncher app={this}
-            $={(self) => (this.applauncher = self)}
-          />
+            $={(self) => (this.applauncher = self)} />
           <Notifications app={this}
-            $={(self) => (this.notifications = self).present()}
-          />
-          <Bar app={this}
-            $={(self) => (this.bar = self).present()}
-          />
+            $={(self) => (this.notifications = self)} />
           <Quicksettings app={this}
-            $={(self) => (this.quicksettings = self)}
-          />
+            $={(self) => (this.quicksettings = self)} />
+          <Bar app={this}
+            $={(self) => (this.bar = self)} />
           <Settings app={this}
-            $={(self) => (this.settings = self)}
-          />
+            $={(self) => (this.settings = self)} />
         </>}
       </SettingsContext>
     })
+  }
+
+  vfunc_activate(): void {
+    this.bar.present()
   }
 }

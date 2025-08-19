@@ -8,9 +8,10 @@ import Clock from "./clock";
 import Launcher from "./launcher";
 import { useSettings } from "../../lib/settings";
 import { createBinding } from "gnim";
+import { App } from "App";
 
 export default ({ app, $ }: {
-  app: Gtk.Application
+  app: App
   $?: (self: Astal.Window) => void
 }) => {
   const hyprland = Hyprland.get_default()
@@ -45,7 +46,7 @@ export default ({ app, $ }: {
         orientation={vertical.as(v => v ?
           Gtk.Orientation.VERTICAL :
           Gtk.Orientation.HORIZONTAL)}>
-        <Launcher />
+        <Launcher app={app} />
         <SystemUsage vertical={vertical} />
       </Gtk.Box>
       <Gtk.Box $type="center">
@@ -61,7 +62,7 @@ export default ({ app, $ }: {
           Gtk.Orientation.HORIZONTAL)}>
         <Clock vertical={vertical} />
         <Gtk.Separator />
-        <SystemIndicators vertical={vertical} />
+        <SystemIndicators app={app} vertical={vertical} />
       </Gtk.Box>
     </Gtk.CenterBox>
   </Astal.Window>
