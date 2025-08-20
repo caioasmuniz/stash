@@ -9,7 +9,7 @@ export default ({ notif, closeAction }: {
 }) =>
   <Gtk.Box
     name={notif.id.toString()}
-    cssClasses={["notification"]}
+    cssClasses={["card"]}
     spacing={8}
     orientation={Gtk.Orientation.VERTICAL}>
     <Gtk.Box spacing={8}>
@@ -24,9 +24,9 @@ export default ({ notif, closeAction }: {
       <Gtk.Button
         halign={Gtk.Align.END}
         valign={Gtk.Align.CENTER}
-        cssClasses={["circular"]}
+        cssClasses={["circular","destructive-action"]}
         onClicked={self => closeAction(notif, self.parent.parent)}
-        iconName={"Astal.Window-close-symbolic"} />
+        iconName={"window-close-symbolic"} />
     </Gtk.Box>
     <Gtk.Label
       wrap

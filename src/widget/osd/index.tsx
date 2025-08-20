@@ -42,7 +42,7 @@ export default ({ app, $ }: {
     margin={24}
     layer={Astal.Layer.OVERLAY}
     monitor={createBinding(hyprland, "focusedMonitor")(m => m.id && 1)}
-    cssClasses={["osd-popup"]}
+    cssClasses={[]}
     anchor={Astal.WindowAnchor.BOTTOM}
     visible={createComputed(
       (popupList as Gtk.Revealer[])
@@ -52,7 +52,7 @@ export default ({ app, $ }: {
         (a, b) => a || b)
     )}>
     <Gtk.Box
-      cssClasses={["linked", "background", "osd-container"]}
+      cssClasses={["linked", "toolbar", "osd"]}
       orientation={Gtk.Orientation.VERTICAL}
       valign={Gtk.Align.END}
       spacing={12}
