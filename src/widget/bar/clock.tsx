@@ -19,7 +19,6 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) => {
     direction={vertical.as(v => v ?
       Gtk.ArrowType.RIGHT :
       Gtk.ArrowType.UP)}
-    cssClasses={["circular"]}
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     popover={<Gtk.Popover
       valign={Gtk.Align.CENTER}
@@ -28,7 +27,6 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) => {
       <Gtk.Calendar />
     </Gtk.Popover> as Gtk.Popover}>
     <Gtk.Box
-      cssClasses={vertical.as(v => ["clock", v ? "vert" : ""])}
       halign={Gtk.Align.CENTER}
       valign={Gtk.Align.CENTER}
       orientation={vertical.as(v => v ?
@@ -42,24 +40,21 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) => {
         spacing={vertical.as(v => v ? 0 : 4)}>
         <Gtk.Label
           label={hour}
-          cssClasses={["time"]} />
+          cssClasses={["title-1", "numeric"]} />
         <Gtk.Label
           label={minute}
-          cssClasses={["time"]} />
+          cssClasses={["title-1", "numeric"]} />
       </Gtk.Box>
       <Gtk.Box
         orientation={Gtk.Orientation.VERTICAL}
-        spacing={vertical.as(v => v ? 2 : 0)}
         halign={Gtk.Align.CENTER}
         valign={Gtk.Align.CENTER}>
         <Gtk.Label
-          cssClasses={["date"]}
-          label={day}
-        />
+          cssClasses={["caption-heading"]}
+          label={day} />
         <Gtk.Label
-          cssClasses={["date"]}
-          label={month}
-        />
+          cssClasses={["caption"]}
+          label={month} />
       </Gtk.Box>
     </Gtk.Box>
   </Gtk.MenuButton >

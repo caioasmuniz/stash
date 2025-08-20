@@ -25,17 +25,19 @@ export default ({ vertical, app }: {
       .as(p => p !== "balanced")}
     iconName={createBinding(powerprof, "iconName")}
     tooltipMarkup={createBinding(powerprof, "active_profile")
-      .as(String)} />
+      .as(String)}
+    pixelSize={18} />
 
   const DNDIndicator = () => <Gtk.Image
     visible={createBinding(notifd, "dontDisturb")}
-    iconName="notifications-disabled-symbolic" />
+    iconName="notifications-disabled-symbolic"
+    pixelSize={18} />
 
   const BluetoothIndicator = () => <Gtk.Image
     iconName="bluetooth-active-symbolic"
     visible={createBinding(bluetooth, "adapter")
-      .as(adapter => adapter && adapter.powered)
-    } />
+      .as(adapter => adapter && adapter.powered)}
+    pixelSize={18} />
 
   const NetworkIndicator = () => {
     const icon = createComputed([
@@ -48,31 +50,33 @@ export default ({ vertical, app }: {
     return <Gtk.Image
       iconName={icon}
       visible={createBinding(network, "primary")
-        .as(p => p !== Network.Primary.UNKNOWN)} />
+        .as(p => p !== Network.Primary.UNKNOWN)}
+      pixelSize={18} />
   }
 
   const AudioIndicator = () => <Gtk.Image
     iconName={createBinding(audio.default_speaker, "volume_icon")}
     tooltipMarkup={createBinding(audio.default_speaker, "volume")
-      .as(v => "Volume: " + (v * 100).toFixed(0).toString() + "%")} />
+      .as(v => "Volume: " + (v * 100).toFixed(0).toString() + "%")}
+    pixelSize={18} />
 
   const MicrophoneIndicator = () => <Gtk.Image
     visible={createBinding(audio, "recorders")
       .as(rec => rec.length > 0)}
     iconName={createBinding(audio.default_microphone, "volume_icon")}
     tooltipMarkup={createBinding(audio.default_microphone, "volume")
-      .as(v => (v * 100).toFixed(0).toString() + "%")} />
+      .as(v => (v * 100).toFixed(0).toString() + "%")}
+    pixelSize={18} />
 
   const BatteryIndicator = () => <Gtk.Image
     visible={createBinding(battery, "is_present")}
     iconName={createBinding(battery, "batteryIconName")}
     tooltipMarkup={createBinding(battery, "percentage")
-      .as((p) => (p * 100).toFixed(0).toString() + "%")} />
+      .as((p) => (p * 100).toFixed(0).toString() + "%")}
+    pixelSize={18} />
 
   return <Gtk.ToggleButton
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
-    cssClasses={vertical.as(v =>
-      ["circular", "sys-indicators", v ? "vert" : ""])}
     active={createBinding(app.quicksettings, "visible")}
     onClicked={() =>
       app.quicksettings.visible = !app.quicksettings.visible}

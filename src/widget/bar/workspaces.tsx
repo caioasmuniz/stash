@@ -2,7 +2,6 @@ import Hyprland from "gi://AstalHyprland"
 import Apps from "gi://AstalApps"
 import Adw from "gi://Adw?version=1"
 import Gtk from "gi://Gtk?version=4.0"
-
 import { createBinding, For, Accessor, With } from "gnim"
 
 const hyprland = Hyprland.get_default()
@@ -43,10 +42,10 @@ export default ({ monitor, vertical }:
         orientation={vertical.as(v => v ?
           Gtk.Orientation.VERTICAL :
           Gtk.Orientation.HORIZONTAL)}
-        cssClasses={["round", "ws-toggle",
-          ws.id < 0 ? "special" : ""]}
+        cssClasses={[ws.id < 0 ? "success" : ""]}
         onNotifyActive={self => {
-          if (hyprland.focusedClient && self.activeName !== null &&
+          if (hyprland.focusedClient &&
+            self.activeName !== null &&
             hyprland.focusedClient.address !== self.activeName
           )
             hyprland.get_client(self.get_active_name() ?? "")
@@ -66,9 +65,12 @@ export default ({ monitor, vertical }:
         <For each={createBinding(ws, "clients")}>
           {(client: Hyprland.Client) =>
             <Adw.Toggle
-              name={client.address}
-              iconName={getIcon(client)}
-            />}
+              name={client.address} child={
+                <Gtk.Image
+                  iconName={getIcon(client)}
+                  pixelSize={24}
+                /> as Gtk.Image
+              } />}
         </For>
         <With value={createBinding(ws, "clients").as(c => c.length < 1)}>
           {(c) => c ?
@@ -76,5 +78,5 @@ export default ({ monitor, vertical }:
         </With>
       </Adw.ToggleGroup>}
     </For>
-  </Gtk.Box >
+  </Gtk.Box> as Gtk.Box
 

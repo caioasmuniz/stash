@@ -41,7 +41,7 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) => {
     else
       setTemp(-1)
   }, INTERVAL)
-  
+
   const Indicator = ({ value, label, unit, vertical, visible = true }:
     {
       value: Accessor<number>,
@@ -49,32 +49,32 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) => {
       unit: string,
       vertical: Accessor<boolean>,
       visible?: Accessor<boolean> | boolean
-    }) => <Gtk.LevelBar
+    }) => <Gtk.Box
       visible={visible}
+      spacing={2}
       orientation={vertical.as(v => v ?
         Gtk.Orientation.VERTICAL :
-        Gtk.Orientation.HORIZONTAL)}
-      inverted={vertical}
-      value={value}
-      widthRequest={vertical.as(v => v ? -1 : 50)}
-      heightRequest={vertical.as(v => v ? 50 : -1)}>
-      <Gtk.Box
-        valign={Gtk.Align.CENTER}
-        halign={Gtk.Align.CENTER}
-        spacing={2}
+        Gtk.Orientation.HORIZONTAL)}>
+      <Gtk.Label
+        label={label}
+        cssClasses={["caption-heading"]} />
+      <Gtk.LevelBar
         orientation={vertical.as(v => v ?
           Gtk.Orientation.VERTICAL :
-          Gtk.Orientation.HORIZONTAL)}>
-        <Gtk.Label
-          label={label}
-          cssClasses={["title"]} />
-        <Gtk.Label
-          cssClasses={["body"]}
-          label={value(v => (v * 100)
-            .toFixed(0)
-            .concat(unit))} />
-      </Gtk.Box>
-    </Gtk.LevelBar >
+          Gtk.Orientation.HORIZONTAL)}
+        halign={Gtk.Align.CENTER}
+        valign={Gtk.Align.CENTER}
+        inverted={vertical}
+        value={value}
+        widthRequest={vertical.as(v => v ? -1 : 50)}
+        heightRequest={vertical.as(v => v ? 50 : -1)}
+      />
+      <Gtk.Label
+        cssClasses={["caption"]}
+        label={value(v => (v * 100)
+          .toFixed(0)
+          .concat(unit))} />
+    </Gtk.Box>
 
   return <Gtk.Button
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
@@ -83,8 +83,7 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) => {
         AstalIO.Process.exec_async((
           settings.bar.systemMonitor as Accessor<any>)
           .get()
-        ) : null}
-    cssClasses={["circular", "sys-usage"]}>
+        ) : null}>
     <Gtk.Box
       orientation={vertical.as(v => v ?
         Gtk.Orientation.VERTICAL :

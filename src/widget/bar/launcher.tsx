@@ -7,10 +7,12 @@ export default ({ app }: { app: App }) => {
   return <Gtk.ToggleButton
     cursor={Gdk.Cursor.new_from_name("pointer", null)}
     active={createBinding(app.applauncher, "visible")}
-    cssClasses={["circular", "launcher"]}
     onClicked={() =>
       app.applauncher.visible = !app.applauncher.visible
     }>
-    <Gtk.Image iconName={"nix-snowflake"} />
+    <Gtk.Image
+      iconName={"nix-snowflake"}
+      pixelSize={24}
+    />
   </Gtk.ToggleButton>
 }

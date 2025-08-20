@@ -22,9 +22,8 @@ export default ({ app, $ }: {
   return <Astal.Window
     $={$}
     visible
-    cssClasses={vertical.as(v =>
-      ["bar", "background",
-        v ? "vert" : ""])}
+    cssClasses={["osd", "toolbar"]}
+    margin={4}
     application={app}
     monitor={createBinding(hyprland.focusedMonitor, "id")}
     name={`bar`}
@@ -39,30 +38,36 @@ export default ({ app, $ }: {
       cssClasses={["bar-centerbox"]}
       orientation={vertical.as(v => v ?
         Gtk.Orientation.VERTICAL :
-        Gtk.Orientation.HORIZONTAL)}>
+        Gtk.Orientation.HORIZONTAL)}
+    >
       <Gtk.Box
         $type="start"
         spacing={4}
         orientation={vertical.as(v => v ?
           Gtk.Orientation.VERTICAL :
-          Gtk.Orientation.HORIZONTAL)}>
+          Gtk.Orientation.HORIZONTAL)}
+      >
         <Launcher app={app} />
         <SystemUsage vertical={vertical} />
       </Gtk.Box>
-      <Gtk.Box $type="center">
-        <Workspaces vertical={vertical}
-          monitor={hyprland.focusedMonitor}
-        />
-      </Gtk.Box>
+      <Workspaces
+        $type={"center"}
+        vertical={vertical}
+        monitor={hyprland.focusedMonitor}
+      />
       <Gtk.Box
         $type="end"
         cssClasses={["linked"]}
         orientation={vertical.as(v => v ?
           Gtk.Orientation.VERTICAL :
-          Gtk.Orientation.HORIZONTAL)}>
+          Gtk.Orientation.HORIZONTAL)}
+      >
         <Clock vertical={vertical} />
         <Gtk.Separator />
-        <SystemIndicators app={app} vertical={vertical} />
+        <SystemIndicators
+          app={app}
+          vertical={vertical}
+        />
       </Gtk.Box>
     </Gtk.CenterBox>
   </Astal.Window>
