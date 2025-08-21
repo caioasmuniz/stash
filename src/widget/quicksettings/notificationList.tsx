@@ -54,56 +54,51 @@ export default () => {
     cssClasses={["notif-list"]}
     spacing={4}>
     <Header />
-    <Gtk.ScrolledWindow
-      propagateNaturalHeight
-      hscrollbarPolicy={Gtk.PolicyType.NEVER}
-      vexpand>
-      <Gtk.Box
-        orientation={Gtk.Orientation.VERTICAL}
-        spacing={6}>
-        <For each={createBinding(notifd, "notifications")
-          .as(n => n
-            .sort((a, b) => b.time - a.time)
-            .reduce((res, notif) => {
-              const i = res.findIndex(n =>
-                n[0].appName === notif.appName)
-              if (i === -1)
-                res.push([notif]);
-              else
-                res[i].push(notif);
-              return res;
-            }, [] as Notifd.Notification[][]))
-        }>
-          {(n: Notifd.Notification[]) => {
-            if (n.length === 1)
-              return <Notification
-                notif={n[0]}
-                closeAction={n => n.dismiss()} />
-            return <Adw.ExpanderRow
-            // title={n[0].appName}
-            // iconName={n[0].appIcon}
-            >
+    <Gtk.Box
+      orientation={Gtk.Orientation.VERTICAL}
+      spacing={6}>
+      <For each={createBinding(notifd, "notifications")
+        .as(n => n
+          .sort((a, b) => b.time - a.time)
+          .reduce((res, notif) => {
+            const i = res.findIndex(n =>
+              n[0].appName === notif.appName)
+            if (i === -1)
+              res.push([notif]);
+            else
+              res[i].push(notif);
+            return res;
+          }, [] as Notifd.Notification[][]))
+      }>
+        {(n: Notifd.Notification[]) => {
+          if (n.length === 1)
+            return <Notification
+              notif={n[0]}
+              closeAction={n => n.dismiss()} />
+          return <Adw.ExpanderRow
+          // title={n[0].appName}
+          // iconName={n[0].appIcon}
+          >
+            <Notification
+              $type="prefix"
+              notif={n[0]}
+              closeAction={n => n.dismiss()} />
+            {n.map(notif =>
               <Notification
-                $type="prefix"
-                notif={n[0]}
+                notif={notif}
                 closeAction={n => n.dismiss()} />
-              {n.map(notif =>
-                <Notification
-                  notif={notif}
-                  closeAction={n => n.dismiss()} />
-              )}
-            </Adw.ExpanderRow>
-          }}
-        </For>
-        <Adw.StatusPage
-          visible={createBinding(notifd, "notifications")
-            .as(n => n.length < 1)}
-          vexpand
-          cssClasses={["compact"]}
-          title={"No new Notifications"}
-          description={"You're up-to-date"}
-          iconName={"user-offline-symbolic"} />
-      </Gtk.Box>
-    </Gtk.ScrolledWindow>
+            )}
+          </Adw.ExpanderRow>
+        }}
+      </For>
+      <Adw.StatusPage
+        visible={createBinding(notifd, "notifications")
+          .as(n => n.length < 1)}
+        vexpand
+        cssClasses={["compact"]}
+        title={"No new Notifications"}
+        description={"You're up-to-date"}
+        iconName={"user-offline-symbolic"} />
+    </Gtk.Box>
   </Gtk.Box >
 }

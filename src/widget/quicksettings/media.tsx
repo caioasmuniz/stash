@@ -98,10 +98,22 @@ const PlaybackStatus = ({ player }: { player: Mpris.Player }) =>
     </Gtk.CenterBox>
   </Gtk.Box>
 
-export default () => <Gtk.Box
+export const MediaIcon = () =>
+  <Gtk.Box>
+    <Gtk.Image
+      iconName={"media-playback-start-symbolic"}
+    />
+    <Gtk.Label
+      label={createBinding(mpris, "players")
+        .as(p => p.length.toString())
+      } />
+  </Gtk.Box>
+
+export const Media = () => <Gtk.Box
   orientation={Gtk.Orientation.VERTICAL}
   spacing={4}
-  visible={createBinding(mpris, "players")(p => p.length > 0)}>
+  visible={createBinding(mpris, "players")
+    .as(p => p.length > 0)}>
   <For each={createBinding(mpris, "players")}>
     {(player: Mpris.Player) =>
       <Gtk.Box

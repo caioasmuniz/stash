@@ -12,11 +12,21 @@ const timeTo = createComputed([
   (charging, timeToEmpty, timeToFull) =>
     charging ? timeToFull : -timeToEmpty)
 
-export default () => <Gtk.Box
+export const BatteryIcon = () =>
+  <Gtk.Box>
+    <Gtk.Image
+      iconName={createBinding(battery, "iconName")}
+    />
+    <Gtk.Label
+      label={createBinding(battery, "percentage")
+        .as(p => (p * 100).toString() + "%")}
+    />
+  </Gtk.Box>
+
+export const Battery = () => <Gtk.Box
   orientation={Gtk.Orientation.VERTICAL}
   cssClasses={["card"]}
   spacing={4}
-  visible={timeTo(timeTo => Math.abs(timeTo) > 0)}
 >
   <Gtk.Label
     cssClasses={["title-3"]}
