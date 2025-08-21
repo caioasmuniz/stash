@@ -105,7 +105,7 @@ export default () => <Gtk.Box
   <For each={createBinding(mpris, "players")}>
     {(player: Mpris.Player) =>
       <Gtk.Box
-        cssClasses={["media"]}
+        cssClasses={["card"]}
         orientation={Gtk.Orientation.VERTICAL}
         hexpand>
         <PlayerApp player={player} />

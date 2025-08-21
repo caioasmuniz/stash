@@ -57,7 +57,7 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) => {
         Gtk.Orientation.HORIZONTAL)}>
       <Gtk.Label
         label={label}
-        cssClasses={["caption-heading"]} />
+        cssClasses={["caption-heading", "numeral"]} />
       <Gtk.LevelBar
         orientation={vertical.as(v => v ?
           Gtk.Orientation.VERTICAL :
@@ -70,7 +70,7 @@ export default ({ vertical }: { vertical: Accessor<boolean> }) => {
         heightRequest={vertical.as(v => v ? 50 : -1)}
       />
       <Gtk.Label
-        cssClasses={["caption"]}
+        cssClasses={["caption", "numeral"]}
         label={value(v => (v * 100)
           .toFixed(0)
           .concat(unit))} />

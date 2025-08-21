@@ -15,6 +15,7 @@ import Bluetooth from "./bluetooth";
 import Brightness from "../../lib/brightness";
 import { useSettings } from "../../lib/settings";
 import { App } from "App";
+import Adw from "@girs/adw-1";
 
 export default ({ app, $ }: {
   app: App
@@ -72,19 +73,16 @@ export default ({ app, $ }: {
 
   return <Astal.Window
     $={$}
-    valign={Gtk.Align.FILL}
     margin={12}
-    // visible={visible(v => v.quicksettings)}
     application={app}
     name={"quicksettings"}
-    cssClasses={["quicksettings", "background"]}
+    cssClasses={["osd", "toolbar"]}
     anchor={barCfg.position.as(p =>
       TOP | (p === LEFT ? LEFT : RIGHT) | BOTTOM
     )}
     monitor={createBinding(hyprland, "focusedMonitor")
       .as(m => m.id)}>
     <Gtk.Box
-      cssClasses={["quicksettings-body"]}
       orientation={Gtk.Orientation.VERTICAL}
       spacing={8}
     >
@@ -113,8 +111,12 @@ export default ({ app, $ }: {
       />
       <AudioConfig />
       <MicConfig />
-      <Battery />
-      <Media />
+      <Adw.ExpanderRow iconName={"display-brightness-symbolic"}>
+        <Battery />
+        <Media />
+        <Gtk.Calendar
+          cssClasses={["card"]} />
+      </Adw.ExpanderRow>
       <NotificationList />
     </Gtk.Box>
   </Astal.Window>

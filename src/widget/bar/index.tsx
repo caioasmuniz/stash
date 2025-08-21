@@ -42,12 +42,12 @@ export default ({ app, $ }: {
     >
       <Gtk.Box
         $type="start"
-        spacing={4}
+        cssClasses={["linked"]}
         orientation={vertical.as(v => v ?
           Gtk.Orientation.VERTICAL :
-          Gtk.Orientation.HORIZONTAL)}
-      >
+          Gtk.Orientation.HORIZONTAL)}>
         <Launcher app={app} />
+        <Gtk.Separator />
         <SystemUsage vertical={vertical} />
       </Gtk.Box>
       <Workspaces

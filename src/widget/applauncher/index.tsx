@@ -2,15 +2,15 @@ import Apps from "gi://AstalApps"
 import Hyprland from "gi://AstalHyprland"
 import Astal from "gi://Astal?version=4.0";
 import Gtk from "gi://Gtk?version=4.0";
-import { Adw } from "gi://Adw?version=1";
 import { createBinding, createState, For } from "gnim";
 import AppButton from "./appButton";
 import { useSettings } from "../../lib/settings";
+import { App } from "App";
 
 const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
 
 export default ({ app, $ }:
-  { app: Adw.Application, $: (self: Astal.Window) => void }
+  { app: App, $: (self: Astal.Window) => void }
 ) => {
   const barCfg = useSettings().bar
   const hyprland = Hyprland.get_default()
@@ -18,32 +18,16 @@ export default ({ app, $ }:
 
   const [list, setList] = createState(apps.get_list())
 
-  const searchEntry = new Gtk.Entry()
-
   return <Astal.Window
-    // onNotifyVisible={(self: Astal.Window) => {
-    //   if (self.visible)
-    //     searchEntry.grab_focus()
-    //   else
-    //     searchEntry.set_text("")
-    //   SetVisible({
-    //     applauncher: self.visible,
-    //     quicksettings: self.visible &&
-    //       (barCfg.position.get() === LEFT ||
-    //         barCfg.position.get() === RIGHT) ?
-    //       false :
-    //       visible.get().quicksettings
-    //   })
-    // }}
     $={$}
     valign={Gtk.Align.CENTER}
     name={"applauncher"}
     margin={12}
     application={app}
-    // visible={visible(v => v.applauncher)}
-    cssClasses={["applauncher", "background"]}
+    cssClasses={["osd", "toolbar"]}
     keymode={Astal.Keymode.ON_DEMAND}
-    monitor={createBinding(hyprland, "focusedMonitor")(m => m.id)}
+    monitor={createBinding(hyprland, "focusedMonitor")
+      .as(m => m.id)}
     anchor={barCfg.position.as(p =>
       TOP | (p === RIGHT ? RIGHT : LEFT) | BOTTOM)}
   >
@@ -52,14 +36,13 @@ export default ({ app, $ }:
       cssClasses={["applauncher-body"]}
       spacing={8}>
       <Gtk.Entry
-        $={self => self = searchEntry}
         hexpand
         placeholderText={"Search your apps"}
         onNotifyText={self => setList(
           apps.fuzzy_query(self.text)
         )}
         onActivate={self => {
-          // App.get_window("applauncher")!.hide()
+          app.applauncher.visible = false;
           apps.fuzzy_query(self.text)[0].launch();
         }} />
       <Gtk.ScrolledWindow
